@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:madlabzdevs/pages/app_page/app_page.dart';
+import 'package:madlabzdevs/pages/home/home_page.dart';
+import 'package:madlabzdevs/pages/message_board_page/message_board_page.dart';
+import 'package:madlabzdevs/pages/shared_links_page/shared_links_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,28 +11,13 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MadLabzDevs',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
       themeMode: ThemeMode.system,
       darkTheme: ThemeData(
@@ -38,105 +27,71 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      home: const RootScreen(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
+class RootScreen extends StatefulWidget {
+  const RootScreen({super.key});
+
+  @override
+  State<RootScreen> createState() => _RootScreenState();
+}
+
+class _RootScreenState extends State<RootScreen> {
+  int _currentIndex = 0;
+
+  static const List<Widget> _pages = <Widget>[
+    HomePage(),
+    AppPage(),
+    MessageBoardPage(),
+    SharedLinksPage(),
+  ];
+
+  static const List<NavigationRailDestination> _navDestinations = <NavigationRailDestination>[
+    NavigationRailDestination(
+      icon: Icon(Icons.home_outlined),
+      selectedIcon: Icon(Icons.home),
+      label: Text('Home'),
+    ),
+    NavigationRailDestination(
+      icon: Icon(Icons.apps_outlined),
+      selectedIcon: Icon(Icons.apps),
+      label: Text('Apps'),
+    ),
+    NavigationRailDestination(
+      icon: Icon(Icons.message_outlined),
+      selectedIcon: Icon(Icons.message),
+      label: Text('Messages'),
+    ),
+    NavigationRailDestination(
+      icon: Icon(Icons.link_outlined),
+      selectedIcon: Icon(Icons.link),
+      label: Text('Links'),
+    ),
+  ];
+
+  void _onDestinationSelected(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Constrain content width for larger screens
-    const maxContentWidth = 800.0;
-
     return Scaffold(
-      body: Column(
+      body: Row(
         children: [
-          // Header / Nav bar
-          Container(
-            color: Theme.of(context).colorScheme.primary,
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: maxContentWidth),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('MadLabzDevs',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall
-                          ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
-                  Row(
-                    children: [
-                      TextButton(
-                          onPressed: () {},
-                          child: const Text('Home', style: TextStyle(color: Colors.white))),
-                      TextButton(
-                          onPressed: () {},
-                          child: const Text('Projects', style: TextStyle(color: Colors.white))),
-                      TextButton(
-                          onPressed: () {},
-                          child: const Text('Forums', style: TextStyle(color: Colors.white))),
-                      TextButton(
-                          onPressed: () {},
-                          child: const Text('Contact', style: TextStyle(color: Colors.white))),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+          NavigationRail(
+            selectedIndex: _currentIndex,
+            onDestinationSelected: _onDestinationSelected,
+            labelType: NavigationRailLabelType.all,
+            destinations: _navDestinations,
           ),
-
-          // Main content
+          const VerticalDivider(thickness: 1, width: 1),
           Expanded(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: maxContentWidth),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Welcome to',
-                        style: Theme.of(context).textTheme.headlineMedium),
-                    const SizedBox(height: 12),
-                    Text('MadLabzDevs',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineLarge
-                            ?.copyWith(fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 24),
-                    const Text(
-                      'Showcasing projects, forums, and community resources, all in one place.',
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 32),
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: maxContentWidth),
-                      child: const Text(
-                        'Hello! I’m the creator of MadLabzDevs, a passionate software developer and lifelong tinkerer who loves turning ideas into polished web experiences. '
-                        'I specialize in Flutter for the web—building small tools, sharing bigger projects, and growing a friendly community where anyone can ask questions, '
-                        'swap tips, or showcase what they’re working on. This site is a temporary home base for now.',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          // Footer
-          Container(
-            color: Theme.of(context).colorScheme.surfaceVariant,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: maxContentWidth),
-              child: const Text(
-                '© 2025 MadLabzDevs. All rights reserved.',
-                textAlign: TextAlign.center,
-              ),
-            ),
+            child: _pages[_currentIndex],
           ),
         ],
       ),

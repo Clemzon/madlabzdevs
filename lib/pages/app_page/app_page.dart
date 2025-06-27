@@ -1,41 +1,55 @@
-
-
 import 'package:flutter/material.dart';
 
-/// A placeholder page to display the applications you’re working on.
-class ApplicationsPage extends StatelessWidget {
-  const ApplicationsPage({super.key});
+class AppPage extends StatelessWidget {
+  const AppPage({super.key});
+
+  static const List<String> _appNames = <String>[
+    'App 1',
+    'App 2',
+    'App 3',
+    'App 4',
+    'App 5',
+    'App 6',
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Applications',
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: ListView(
-              children: const [
-                ListTile(
-                  leading: Icon(Icons.android),
-                  title: Text('App 1'),
-                  subtitle: Text('Description of App 1'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Apps'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: GridView.count(
+          crossAxisCount: 3,
+          mainAxisSpacing: 16,
+          crossAxisSpacing: 16,
+          children: _appNames.map((name) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.apps,
+                        size: 48,
+                      ),
+                    ),
+                  ),
                 ),
-                ListTile(
-                  leading: Icon(Icons.apps),
-                  title: Text('App 2'),
-                  subtitle: Text('Description of App 2'),
+                const SizedBox(height: 8),
+                Text(
+                  name,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                // TODO: Replace with your actual applications
               ],
-            ),
-          ),
-        ],
+            );
+          }).toList(),
+        ),
       ),
     );
   }
