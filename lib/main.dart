@@ -48,51 +48,60 @@ class _RootScreenState extends State<RootScreen> {
     MessageBoardPage(),
     SharedLinksPage(),
   ];
-
-  static const List<NavigationRailDestination> _navDestinations = <NavigationRailDestination>[
-    NavigationRailDestination(
-      icon: Icon(Icons.home_outlined),
-      selectedIcon: Icon(Icons.home),
-      label: Text('Home'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.apps_outlined),
-      selectedIcon: Icon(Icons.apps),
-      label: Text('Apps'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.message_outlined),
-      selectedIcon: Icon(Icons.message),
-      label: Text('Messages'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.link_outlined),
-      selectedIcon: Icon(Icons.link),
-      label: Text('Links'),
-    ),
+  static const List<String> _labels = <String>[
+    'Home',
+    'Apps',
+    'Message Board',
+    'Links',
   ];
 
-  void _onDestinationSelected(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
+  void _navigate(int index) => setState(() => _currentIndex = index);
 
   @override
   Widget build(BuildContext context) {
+    final surface = Theme.of(context).colorScheme.surface;
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+
     return Scaffold(
-      body: Row(
+      body: Column(
         children: [
-          NavigationRail(
-            selectedIndex: _currentIndex,
-            onDestinationSelected: _onDestinationSelected,
-            labelType: NavigationRailLabelType.all,
-            destinations: _navDestinations,
+          // Custom web-style header
+          Container(
+            height: 60,
+            color: surface,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Image logo acting as Home button
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: GestureDetector(
+                    onTap: () => _navigate(0),
+                    child: Image.asset(
+                      'header_text.png',
+                      height: 40,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                // Nav links
+                Row(
+                  children: [
+                    for (var i = 1; i < _labels.length; i++)
+                      TextButton(
+                        onPressed: () => _navigate(i),
+                        child: Text(
+                          _labels[i],
+                          style: TextStyle(color: onSurface),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const VerticalDivider(thickness: 1, width: 1),
-          Expanded(
-            child: _pages[_currentIndex],
-          ),
+          // Page content
+          Expanded(child: _pages[_currentIndex]),
         ],
       ),
     );
