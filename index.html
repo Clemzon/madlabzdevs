@@ -5,24 +5,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Simple Sidebar - Start Bootstrap Template</title>
+        <title>Simple Sidebar - MadLabzDevs Template</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Core theme CSS (includes Bootstrap)-->
+        <!-- Core theme CSS (includes MadLabzDevs)-->
         <link href="css/styles.css" rel="stylesheet" />
     </head>
     <body>
-        <div class="d-flex" id="wrapper">
+        <div class="d-flex toggled" id="wrapper">
             <!-- Sidebar-->
             <div class="border-end bg-white" id="sidebar-wrapper">
-                <div class="sidebar-heading border-bottom bg-light">Start Bootstrap</div>
+                <div class="sidebar-heading border-bottom bg-light">MadLabzDevs</div>
                 <div class="list-group list-group-flush">
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Dashboard</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Shortcuts</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Overview</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Status</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="index.html">Dashboard</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="projects.html">Projects</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="message_board.html">Message Board</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="events.html">Events</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="portfolio.html">Portfolio</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="profile.html">Profile</a>
                 </div>
             </div>
             <!-- Page content wrapper-->
@@ -30,7 +30,10 @@
                 <!-- Top navigation-->
                 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
                     <div class="container-fluid">
-                        <button class="btn btn-primary" id="sidebarToggle">Toggle Menu</button>
+                        <button id="sidebarToggle" class="btn btn-link text-muted p-0 me-3" type="button">
+                          <img src="assets/img/header_text.png" alt="MadLabzDevs" height="24" class="align-middle">
+                          <i class="fas fa-chevron-left align-middle ms-1"></i>
+                        </button>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
@@ -50,22 +53,80 @@
                     </div>
                 </nav>
                 <!-- Page content-->
-                <div class="container-fluid">
-                    <h1 class="mt-4">Simple Sidebar</h1>
-                    <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
-                    <p>
-                        Make sure to keep all page content within the
-                        <code>#page-content-wrapper</code>
-                        . The top navbar is optional, and just for demonstration. Just create an element with the
-                        <code>#sidebarToggle</code>
-                        ID which will toggle the menu when clicked.
-                    </p>
-                </div>
+                <div class="container-fluid py-4">
+  <!-- Under Construction Banner -->
+  <div class="alert alert-warning text-center mb-4" role="alert">
+    <strong>Under Construction!</strong> This website is being updated. Please bear with us.
+  </div>
+  <!-- Dashboard Overview -->
+  <div class="row mb-4">
+    <div class="col-lg-3 col-sm-6 mb-3">
+      <div class="card h-100 border-primary">
+        <div class="card-body text-center">
+          <h5 class="card-title">Projects</h5>
+          <p class="display-6 mb-0">12</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-3">
+      <div class="card h-100 border-success">
+        <div class="card-body text-center">
+          <h5 class="card-title">Messages</h5>
+          <p class="display-6 mb-0">5</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-3">
+      <div class="card h-100 border-warning">
+        <div class="card-body text-center">
+          <h5 class="card-title">Upcoming Events</h5>
+          <p class="display-6 mb-0">2</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-3">
+      <div class="card h-100 border-info">
+        <div class="card-body text-center">
+          <h5 class="card-title">Profile Completeness</h5>
+          <p class="display-6 mb-0">80%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Recent Activity -->
+  <div class="card">
+    <div class="card-header">
+      <i class="fas fa-history me-2"></i> Recent Activity
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-striped mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Date</th>
+              <th>Activity</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- RECENT_ACTIVITY_START -->
+            <tr>
+              <td>2025-07-19</td>
+              <td>Placeholder update: Added under-construction banner</td>
+              <td><span class="badge bg-success">Completed</span></td>
+            </tr>
+            <!-- RECENT_ACTIVITY_END -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
             </div>
         </div>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
+        <!-- Core theme JS (MadLabzDevs scripts)-->
         <script src="js/scripts.js"></script>
     </body>
 </html>
