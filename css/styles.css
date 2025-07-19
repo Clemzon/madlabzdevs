@@ -1,3 +1,9 @@
+/* Constrain mobile offcanvas sidebar width to match desktop sidebar */
+@media (max-width: 767.98px) {
+  .offcanvas-start {
+    width: 15rem !important;
+  }
+}
 @charset "UTF-8";
 /*!
 * Start Bootstrap - Simple Sidebar v6.0.6 (https://startbootstrap.com/template/simple-sidebar)
