@@ -1,9 +1,7 @@
-
-
 // scripts/firebase.js
 
-// 1. Firebase SDK imports (v9 modular)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+// 1. Firebase SDK imports (v12 modular)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 import {
   getFirestore,
   collection,
@@ -13,7 +11,7 @@ import {
   limit,
   startAfter,
   getDocs
-} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -21,16 +19,16 @@ import {
   signOut,
   onAuthStateChanged,
   updateProfile
-} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-// 2. Your Firebase config (replace with YOUR values)
+// 2. Your real Firebase config
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDAaHSlRVCDVQtjDjPMk3Rpfzth76aoEbc",
+  authDomain: "madlabzdevs.firebaseapp.com",
+  projectId: "madlabzdevs",
+  storageBucket: "madlabzdevs.firebasestorage.app",
+  messagingSenderId: "1035683722173",
+  appId: "1:1035683722173:web:383168a79ec9b118b0d8d4"
 };
 
 // 3. Initialize Firebase App, Auth, Firestore
@@ -47,11 +45,10 @@ export const auth = getAuth(app);
  * @param {string} email 
  * @param {string} password 
  * @param {string} username 
- * @returns {Promise<import("https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js").UserCredential>}
+ * @returns {Promise<import("https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js").UserCredential>}
  */
 export async function signUp(email, password, username) {
   const userCred = await createUserWithEmailAndPassword(auth, email, password);
-  // set displayName
   await updateProfile(userCred.user, { displayName: username });
   return userCred;
 }
@@ -60,7 +57,7 @@ export async function signUp(email, password, username) {
  * Sign in an existing user.
  * @param {string} email 
  * @param {string} password 
- * @returns {Promise<import("https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js").UserCredential>}
+ * @returns {Promise<import("https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js").UserCredential>}
  */
 export function signIn(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
@@ -76,8 +73,8 @@ export function signOutUser() {
 
 /**
  * Listen for auth state changes.
- * @param {(user: import("https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js").User|null) => void} callback
- * @returns {import("https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js").Unsubscribe}
+ * @param {(user: import("https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js").User|null) => void} callback
+ * @returns {import("https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js").Unsubscribe}
  */
 export function onAuthChange(callback) {
   return onAuthStateChanged(auth, callback);
@@ -102,8 +99,8 @@ export async function loadSubforums() {
  * @param {string} subforumId 
  * @param {object} [options]
  * @param {number} [options.pageSize=20]
- * @param {import("https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js").QueryDocumentSnapshot} [options.startAfterDoc]
- * @returns {Promise<import("https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js").QueryDocumentSnapshot[]>}
+ * @param {import("https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js").QueryDocumentSnapshot} [options.startAfterDoc]
+ * @returns {Promise<import("https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js").QueryDocumentSnapshot[]>}
  */
 export async function loadTopics(subforumId, options = {}) {
   const { pageSize = 20, startAfterDoc } = options;
