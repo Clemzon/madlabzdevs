@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>MadLabzDevs Forums</title>
+  <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
+  <!-- Core theme CSS (includes Bootstrap) -->
+  <link href="../css/styles.css" rel="stylesheet" />
+</head>
+<body id="page-top">
+
+  <!-- Static Header Bar (unchanged) -->
+  <header class="bg-dark text-white py-2 fixed-top w-100" role="banner">
+    <div class="container px-4 px-lg-5">
+      <span class="h5 mb-0">MadLabzDevs</span>
+    </div>
+  </header>
+
+  <!-- Horizontal scrolling top nav bar (unchanged) -->
+  <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom overflow-auto fixed-top"
+       style="top:32px; z-index:1030;"
+       role="navigation" aria-label="Primary">
+    <div class="container px-4 px-lg-5">
+      <ul class="navbar-nav flex-row flex-nowrap">
+        <li class="nav-item"><a class="nav-link px-3" href="../projects.html">Projects</a></li>
+        <li class="nav-item"><a class="nav-link px-3 active" href="../forums/forums.html">Forums</a></li>
+        <li class="nav-item"><a class="nav-link px-3" href="../events.html">Events</a></li>
+        <li class="nav-item"><a class="nav-link px-3" href="../portfolio.html">Portfolio</a></li>
+        <li class="nav-item"><a class="nav-link px-3" href="../profile.html">Profile</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container-fluid py-5">
+    <div class="row gx-4 gx-lg-5">
+
+      <!-- Sidebar: Subforums List -->
+      <aside class="col-lg-3 mb-4">
+        <h4 class="mb-3">Subforums</h4>
+        <ul class="list-group">
+          <!-- subforums will be rendered here -->
+        </ul>
+      </aside>
+
+      <!-- Main Content: Topic Listings -->
+      <section class="col-lg-9">
+
+        <!-- Breadcrumb & New Topic Button -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item"><a href="../forums/forums.html">Forums</a></li>
+              <li class="breadcrumb-item active" aria-current="page">General Discussion</li>
+            </ol>
+          </nav>
+          <button class="btn btn-primary" id="btnNewTopic">
+            <i class="bi bi-plus-lg"></i> New Topic
+          </button>
+          <!-- TODO: Hook #btnNewTopic to open a "Create Topic" modal or page -->
+        </div>
+
+        <!-- Search Topics -->
+        <form class="mb-3" id="topicSearchForm">
+          <div class="input-group">
+            <input
+              type="text"
+              id="topicSearchInput"
+              class="form-control"
+              placeholder="Search topics…"
+              aria-label="Search topics"
+            />
+            <button class="btn btn-outline-secondary" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+          <!-- TODO: On submit, filter topic list via Firebase query -->
+        </form>
+
+        <!-- Topics Table -->
+        <div class="table-responsive">
+          <table class="table table-hover align-middle" id="topicsTable">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">Topic</th>
+                <th scope="col">Starter</th>
+                <th scope="col">Replies</th>
+                <th scope="col">Last Post</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- TODO: Populate with Firestore data -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Topics pagination">
+          <ul class="pagination justify-content-center" id="topicsPagination">
+            <!-- TODO: Render pagination controls -->
+          </ul>
+        </nav>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- Bootstrap core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Forum-specific scripts -->
+  <script type="module">
+    import { loadSubforums, loadTopics } from "./scripts/firebase.js";
+    import { renderSubforums } from "./components/subforumList.js";
+    import { renderTopics } from "./components/topicList.js";
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const sidebarUl    = document.querySelector("aside .list-group");
+      const topicsTbody  = document.querySelector("#topicsTable tbody");
+      const breadcrumbLi = document.querySelector(".breadcrumb .active");
+
+      try {
+        // 1) Load & render subforums
+        const subs = await loadSubforums();
+        renderSubforums(sidebarUl, subs);
+
+        // 2) Handle clicks on subforum links
+        sidebarUl.addEventListener("click", async e => {
+          const link = e.target.closest("a[data-subforum-id]");
+          if (!link) return;
+          e.preventDefault();
+
+          // Highlight active subforum
+          sidebarUl.querySelectorAll(".list-group-item").forEach(li => li.classList.remove("active"));
+          link.closest("li").classList.add("active");
+
+          // Update breadcrumb
+          breadcrumbLi.textContent = link.textContent.trim();
+
+          // Load topics for selected subforum
+          const subId = link.dataset.subforumId;
+          const topicDocs = await loadTopics(subId, { pageSize: 20 });
+          renderTopics(topicsTbody, topicDocs);
+
+          // TODO: store lastDoc for pagination
+        });
+
+        // 3) Trigger initial load (first subforum)
+        sidebarUl.querySelector("a[data-subforum-id]")?.click();
+      } catch (e) {
+        console.error("Forum init error:", e);
+        sidebarUl.innerHTML = `
+          <li class="list-group-item text-danger">
+            Failed to load subforums
+          </li>`;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign Up – MadLabzDevs</title>
+  <link rel="icon" href="../../assets/favicon.ico" />
+  <!-- Bootstrap & Core CSS -->
+  <link href="../../css/styles.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+
+  <main class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+
+        <h2 class="mb-4 text-center">Create Your Account</h2>
+
+        <!-- Sign-Up Form -->
+        <form id="signupForm" class="card p-4 shadow-sm bg-white">
+          <!-- Username -->
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input id="username" type="text" class="form-control" placeholder="Choose a username" required />
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input id="email" type="email" class="form-control" placeholder="you@example.com" required />
+          </div>
+
+          <!-- Password -->
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input id="password" type="password" class="form-control" placeholder="••••••••" required minlength="6" />
+          </div>
+
+          <!-- Error / Success Message -->
+          <div id="signupFeedback" class="mb-3 text-center"></div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+
+          <!-- Link to Sign-In -->
+          <p class="mt-3 text-center">
+            Already have an account?
+            <a href="#" id="showSignIn">Sign In</a>
+          </p>
+        </form>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Firebase & Auth Scripts -->
+  <script type="module">
+    import { signUp, onAuthChange } from "../../scripts/firebase.js";
+
+    const form      = document.getElementById("signupForm");
+    const feedback  = document.getElementById("signupFeedback");
+
+    // Listen for form submit
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      feedback.textContent = ""; // clear
+
+      const username = form.username.value.trim();
+      const email    = form.email.value.trim();
+      const pass     = form.password.value;
+
+      try {
+        feedback.textContent = "Creating account…";
+        const userCred = await signUp(email, pass, username);
+        feedback.className = "text-success";
+        feedback.textContent = `Success! Welcome, ${userCred.user.displayName}.`;
+
+        // TODO: Redirect to profile or forums page after a short delay
+        // setTimeout(() => window.location.href = "../../profile.html", 1500);
+      } catch (err) {
+        feedback.className = "text-danger";
+        feedback.textContent = `Error: ${err.message}`;
+      }
+    });
+
+    // Optional: if user is already signed in, redirect away
+    onAuthChange(user => {
+      if (user) {
+        // TODO: If user navigates here while signed in, send them to profile/forums
+        // window.location.href = "../../profile.html";
+      }
+    });
+
+    // TODO: Hook up #showSignIn click to open your sign-in page or modal
+    document.getElementById("showSignIn").addEventListener("click", e => {
+      e.preventDefault();
+      // window.location.href = "signin.html";
+    });
+  </script>
+</body>
+</html>
