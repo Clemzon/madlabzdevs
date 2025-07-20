@@ -12,13 +12,15 @@
   </style>
 </head>
 <body id="page-top">
-  <!-- Static Header Bar -->
+
+  <!-- Static Header Bar (unchanged) -->
   <header class="bg-dark text-white py-2 fixed-top">
     <div class="container px-4 px-lg-5">
       <span class="h5 mb-0">MadLabzDevs</span>
     </div>
   </header>
-  <!-- Horizontal scrolling top nav bar -->
+
+  <!-- Horizontal scrolling top nav bar (unchanged) -->
   <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom overflow-auto fixed-top"
        style="top:32px; z-index:1030;">
     <div class="container px-4 px-lg-5">
@@ -34,57 +36,93 @@
 
   <!-- Page content-->
   <div class="container-fluid py-4">
-    <!-- Sign In Button -->
-    <div class="text-end mb-3">
-      <!-- Redirect back to this profile page after sign-in -->
-      <a href="auth/accounts/signin.html?redirect=/profile.html" class="btn btn-outline-primary">
-        Sign In
-      </a>
+    <!-- Signed-out view -->
+    <div id="signedOutView" class="text-center">
+      <img src="assets/img/default_avatar.png" alt="Default Avatar"
+           class="rounded-circle mb-3" width="120" height="120">
+      <h2 class="mb-3">Your Profile</h2>
+      <p class="mb-4">Please sign in to view and edit your profile details.</p>
+      <a href="auth/accounts/signin.html?redirect=/profile.html" class="btn btn-primary me-2">Sign In</a>
+      <a href="auth/accounts/signup.html?redirect=/profile.html" class="btn btn-outline-secondary">Create Account</a>
     </div>
 
-    <h1 class="mb-4">Edit Profile</h1>
-    <form id="profileForm" class="row g-3">
-      <!-- Profile Picture Upload -->
-      <div class="col-12 text-center">
-        <img src="assets/img/profile.jpg" alt="Profile Photo" class="rounded-circle mb-3" width="120" height="120">
-        <div>
-          <label for="profilePic" class="form-label">Change Photo</label>
-          <input class="form-control" type="file" id="profilePic" accept="image/*" />
+    <!-- Signed-in view -->
+    <div id="signedInView" class="d-none">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Edit Your Profile</h1>
+        <button class="btn btn-outline-danger" id="btnSignOut">Sign Out</button>
+      </div>
+
+      <form id="profileForm" class="row g-3">
+        <!-- Avatar -->
+        <div class="col-12 text-center">
+          <img id="avatarPreview" src="assets/img/default_avatar.png"
+               alt="Your Avatar" class="rounded-circle mb-3" width="120" height="120">
+          <div class="mt-2">
+            <label for="profilePic" class="form-label">Change Photo</label>
+            <input class="form-control" type="file" id="profilePic" accept="image/*" />
+          </div>
         </div>
-      </div>
-      <!-- Username -->
-      <div class="col-md-6">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" placeholder="Enter your username" required />
-      </div>
-      <!-- Email -->
-      <div class="col-md-6">
-        <label for="email" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="email" placeholder="name@example.com" required />
-      </div>
-      <!-- Current Password (for verification) -->
-      <div class="col-md-6">
-        <label for="currentPassword" class="form-label">Current Password</label>
-        <input type="password" class="form-control" id="currentPassword" placeholder="Current password" required />
-      </div>
-      <!-- New Password -->
-      <div class="col-md-6">
-        <label for="newPassword" class="form-label">New Password</label>
-        <input type="password" class="form-control" id="newPassword" placeholder="New password" />
-      </div>
-      <!-- Confirm New Password -->
-      <div class="col-md-6">
-        <label for="confirmPassword" class="form-label">Confirm New Password</label>
-        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm new password" />
-      </div>
-      <!-- Save Changes Button -->
-      <div class="col-12">
-        <button class="btn btn-primary" type="submit">Save Changes</button>
-      </div>
-    </form>
+
+        <!-- Username -->
+        <div class="col-md-6">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username" required />
+        </div>
+
+        <!-- Email -->
+        <div class="col-md-6">
+          <label for="email" class="form-label">Email address</label>
+          <input type="email" class="form-control" id="email" required />
+        </div>
+
+        <!-- Save Changes -->
+        <div class="col-12 mt-3">
+          <button type="submit" class="btn btn-success">Save Changes</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- MadLabzDevs core JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Profile page script -->
+  <script type="module">
+    import { onAuthChange, auth, signOutUser } from '/scripts/firebase.js';
+
+    const signedOutView = document.getElementById('signedOutView');
+    const signedInView  = document.getElementById('signedInView');
+    const avatarPreview = document.getElementById('avatarPreview');
+    const profileForm   = document.getElementById('profileForm');
+    const btnSignOut    = document.getElementById('btnSignOut');
+
+    // Toggle views based on auth state
+    onAuthChange(user => {
+      if (user) {
+        signedOutView.classList.add('d-none');
+        signedInView.classList.remove('d-none');
+        // Populate fields from Auth user
+        avatarPreview.src = user.photoURL || 'assets/img/default_avatar.png';
+        document.getElementById('username').value = user.displayName || '';
+        document.getElementById('email').value    = user.email || '';
+      } else {
+        signedOutView.classList.remove('d-none');
+        signedInView.classList.add('d-none');
+      }
+    });
+
+    // Sign-out
+    btnSignOut.addEventListener('click', async () => {
+      await signOutUser();
+    });
+
+    // TODO: Handle profile updates (upload photo, update displayName, updateEmail, save to Firestore)
+    profileForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      // Implementation goes here...
+      alert('Profile update logic placeholder');
+    });
+  </script>
 </body>
 </html>
