@@ -21,14 +21,14 @@ import {
   updateProfile
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-// 2. Your real Firebase config
+// 2. Your updated Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDAaHSlRVCDVQtjDjPMk3Rpfzth76aoEbc",
   authDomain: "madlabzdevs.firebaseapp.com",
   projectId: "madlabzdevs",
   storageBucket: "madlabzdevs.firebasestorage.app",
   messagingSenderId: "1035683722173",
-  appId: "1:1035683722173:web:383168a79ec9b118b0d8d4"
+  appId: "1:1035683722173:web:bd3091cd587a53a7b0d8d4"
 };
 
 // 3. Initialize Firebase App, Auth, Firestore
@@ -42,10 +42,6 @@ export const auth = getAuth(app);
 
 /**
  * Sign up a new user with email & password, and set their displayName to `username`.
- * @param {string} email 
- * @param {string} password 
- * @param {string} username 
- * @returns {Promise<import("https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js").UserCredential>}
  */
 export async function signUp(email, password, username) {
   const userCred = await createUserWithEmailAndPassword(auth, email, password);
@@ -55,9 +51,6 @@ export async function signUp(email, password, username) {
 
 /**
  * Sign in an existing user.
- * @param {string} email 
- * @param {string} password 
- * @returns {Promise<import("https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js").UserCredential>}
  */
 export function signIn(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
@@ -65,7 +58,6 @@ export function signIn(email, password) {
 
 /**
  * Sign out the current user.
- * @returns {Promise<void>}
  */
 export function signOutUser() {
   return signOut(auth);
@@ -73,8 +65,6 @@ export function signOutUser() {
 
 /**
  * Listen for auth state changes.
- * @param {(user: import("https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js").User|null) => void} callback
- * @returns {import("https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js").Unsubscribe}
  */
 export function onAuthChange(callback) {
   return onAuthStateChanged(auth, callback);
@@ -86,7 +76,6 @@ export function onAuthChange(callback) {
 
 /**
  * Load all subforums.
- * @returns {Promise<Array<{id: string, name: string, description: string, iconClass?: string}>>}
  */
 export async function loadSubforums() {
   const col = collection(db, "subforums");
@@ -96,11 +85,6 @@ export async function loadSubforums() {
 
 /**
  * Load a page of topics for a given subforum.
- * @param {string} subforumId 
- * @param {object} [options]
- * @param {number} [options.pageSize=20]
- * @param {import("https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js").QueryDocumentSnapshot} [options.startAfterDoc]
- * @returns {Promise<import("https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js").QueryDocumentSnapshot[]>}
  */
 export async function loadTopics(subforumId, options = {}) {
   const { pageSize = 20, startAfterDoc } = options;

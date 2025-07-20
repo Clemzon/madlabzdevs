@@ -19,7 +19,8 @@
     </div>
   </header>
   <!-- Horizontal scrolling top nav bar -->
-  <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom overflow-auto fixed-top" style="top:32px; z-index:1030;">
+  <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom overflow-auto fixed-top"
+       style="top:32px; z-index:1030;">
     <div class="container px-4 px-lg-5">
       <ul class="navbar-nav flex-row flex-nowrap">
         <li class="nav-item"><a class="nav-link px-3" href="projects.html">Projects</a></li>
@@ -33,10 +34,11 @@
 
   <!-- Page content-->
   <div class="container-fluid py-4">
-    <!-- Sign Up Button -->
+    <!-- Sign In Button -->
     <div class="text-end mb-3">
-      <a href="auth/accounts/signup.html" class="btn btn-outline-primary">
-        Sign Up
+      <!-- Redirect back to this profile page after sign-in -->
+      <a href="auth/accounts/signin.html?redirect=/profile.html" class="btn btn-outline-primary">
+        Sign In
       </a>
     </div>
 

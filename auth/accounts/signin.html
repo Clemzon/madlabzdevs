@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign In – MadLabzDevs</title>
+  <link rel="icon" href="../../assets/favicon.ico" />
+  <!-- Bootstrap & Core CSS -->
+  <link href="../../css/styles.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+
+  <main class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+
+        <h2 class="mb-4 text-center">Welcome Back</h2>
+
+        <!-- Sign-In Form -->
+        <form id="signinForm" class="card p-4 shadow-sm bg-white">
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input id="email" type="email" class="form-control" placeholder="you@example.com" required />
+          </div>
+
+          <!-- Password -->
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-group">
+              <input id="password" type="password" class="form-control" placeholder="••••••••" required />
+              <button class="btn btn-outline-secondary" type="button" id="togglePassword" aria-label="Show password">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Feedback Message -->
+          <div id="signinFeedback" class="mb-3 text-center"></div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn btn-primary w-100">Sign In</button>
+
+          <!-- Link to Sign-Up -->
+          <p class="mt-3 text-center">
+            Don’t have an account?
+            <a href="signup.html" id="showSignUp">Create one</a>
+          </p>
+        </form>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Firebase & Auth Scripts -->
+  <script type="module">
+    import { signIn, onAuthChange } from "/scripts/firebase.js";
+
+    const form     = document.getElementById("signinForm");
+    const feedback = document.getElementById("signinFeedback");
+
+    // Helper to read ?redirect=...
+    function getRedirect() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('redirect') || '/';
+    }
+    const redirect = getRedirect();
+
+    // Update Sign-Up link to include redirect
+    document.getElementById('showSignUp').href =
+      `signup.html?redirect=${encodeURIComponent(redirect)}`;
+
+    // Listen for form submit
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      feedback.textContent = ""; // clear
+
+      try {
+        feedback.textContent = "Signing in…";
+        await signIn(form.email.value.trim(), form.password.value);
+        feedback.className = "text-success";
+        feedback.textContent = "Success! Redirecting…";
+        setTimeout(() => window.location.href = redirect, 800);
+      } catch (err) {
+        feedback.className = "text-danger";
+        feedback.textContent = `Error: ${err.message}`;
+      }
+    });
+
+    // If already signed in, redirect immediately
+    onAuthChange(user => {
+      if (user) window.location.href = redirect;
+    });
+
+    // Toggle password visibility
+    const toggleBtn = document.getElementById('togglePassword');
+    toggleBtn.addEventListener('click', () => {
+      const pwd = document.getElementById('password');
+      const type = pwd.getAttribute('type') === 'password' ? 'text' : 'password';
+      pwd.setAttribute('type', type);
+      toggleBtn.innerHTML = type === 'password' ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
+    });
+  </script>
+</body>
+</html>

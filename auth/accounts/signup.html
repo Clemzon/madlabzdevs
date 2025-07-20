@@ -45,7 +45,7 @@
           <!-- Link to Sign-In -->
           <p class="mt-3 text-center">
             Already have an account?
-            <a href="#" id="showSignIn">Sign In</a>
+            <a href="signin.html" id="showSignIn">Sign In</a>
           </p>
         </form>
 
@@ -57,8 +57,18 @@
   <script type="module">
     import { signUp, onAuthChange } from "/scripts/firebase.js";
 
-    const form      = document.getElementById("signupForm");
-    const feedback  = document.getElementById("signupFeedback");
+    const form     = document.getElementById("signupForm");
+    const feedback = document.getElementById("signupFeedback");
+
+    // Helper to read ?redirect=...
+    function getRedirect() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('redirect') || '/';
+    }
+    const redirect = getRedirect();
+
+    // Update Sign In link to preserve redirect
+    document.getElementById('showSignIn').href = `signin.html?redirect=${encodeURIComponent(redirect)}`;
 
     // Listen for form submit
     form.addEventListener("submit", async e => {
@@ -73,28 +83,21 @@
         feedback.textContent = "Creating account…";
         const userCred = await signUp(email, pass, username);
         feedback.className = "text-success";
-        feedback.textContent = `Success! Welcome, ${userCred.user.displayName}.`;
+        feedback.textContent = `Success! Welcome, ${userCred.user.displayName}. Redirecting…`;
 
-        // TODO: Redirect to profile or forums page after a short delay
-        // setTimeout(() => window.location.href = "../../profile.html", 1500);
+        // Auto-redirect back to original page
+        setTimeout(() => window.location.href = redirect, 1000);
       } catch (err) {
         feedback.className = "text-danger";
         feedback.textContent = `Error: ${err.message}`;
       }
     });
 
-    // Optional: if user is already signed in, redirect away
+    // If already signed in, redirect away immediately
     onAuthChange(user => {
       if (user) {
-        // TODO: If user navigates here while signed in, send them to profile/forums
-        // window.location.href = "../../profile.html";
+        window.location.href = redirect;
       }
-    });
-
-    // TODO: Hook up #showSignIn click to open your sign-in page or modal
-    document.getElementById("showSignIn").addEventListener("click", e => {
-      e.preventDefault();
-      // window.location.href = "signin.html";
     });
   </script>
 </body>
