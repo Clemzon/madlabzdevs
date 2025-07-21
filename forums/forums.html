@@ -10,21 +10,21 @@
 </head>
 <body id="page-top">
 
-  <!-- Static Header Bar -->
+  <!-- Static Header Bar (unchanged) -->
   <header class="bg-dark text-white py-2 fixed-top w-100" role="banner">
     <div class="container px-4 px-lg-5">
       <span class="h5 mb-0">MadLabzDevs</span>
     </div>
   </header>
 
-  <!-- Horizontal scrolling top nav bar -->
+  <!-- Horizontal scrolling top nav bar (unchanged) -->
   <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom overflow-auto fixed-top"
        style="top:32px; z-index:1030;"
        role="navigation" aria-label="Primary">
     <div class="container px-4 px-lg-5">
       <ul class="navbar-nav flex-row flex-nowrap">
         <li class="nav-item"><a class="nav-link px-3" href="../projects.html">Projects</a></li>
-        <li class="nav-item"><a class="nav-link px-3 active" href="forums.html">Forums</a></li>
+        <li class="nav-item"><a class="nav-link px-3 active" href="../forums/forums.html">Forums</a></li>
         <li class="nav-item"><a class="nav-link px-3" href="../events.html">Events</a></li>
         <li class="nav-item"><a class="nav-link px-3" href="../portfolio.html">Portfolio</a></li>
         <li class="nav-item"><a class="nav-link px-3" href="../profile.html">Profile</a></li>
@@ -32,13 +32,13 @@
     </div>
   </nav>
 
-  <main class="container-fluid py-5" style="margin-top:80px;">
+  <main class="container-fluid py-5">
     <div class="row gx-4 gx-lg-5">
 
       <!-- Sidebar: Subforums List -->
       <aside class="col-lg-3 mb-4">
         <h4 class="mb-3">Subforums</h4>
-        <ul id="subforumList" class="list-group">
+        <ul class="list-group">
           <!-- subforums will be rendered here -->
         </ul>
       </aside>
@@ -50,7 +50,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-              <li class="breadcrumb-item"><a href="forums.html">Forums</a></li>
+              <li class="breadcrumb-item"><a href="../forums/forums.html">Forums</a></li>
               <li class="breadcrumb-item active" aria-current="page">General Discussion</li>
             </ol>
           </nav>
@@ -62,13 +62,11 @@
         <!-- Search Topics -->
         <form class="mb-3" id="topicSearchForm">
           <div class="input-group">
-            <input
-              type="text"
-              id="topicSearchInput"
-              class="form-control"
-              placeholder="Search topics…"
-              aria-label="Search topics"
-            />
+            <input type="text"
+                   id="topicSearchInput"
+                   class="form-control"
+                   placeholder="Search topics…"
+                   aria-label="Search topics" />
             <button class="btn btn-outline-secondary" type="submit">
               <i class="bi bi-search"></i>
             </button>
@@ -87,7 +85,7 @@
               </tr>
             </thead>
             <tbody>
-              <!-- Topics will be populated here -->
+              <!-- TODO: Populate with Firestore data -->
             </tbody>
           </table>
         </div>
@@ -95,7 +93,7 @@
         <!-- Pagination -->
         <nav aria-label="Topics pagination">
           <ul class="pagination justify-content-center" id="topicsPagination">
-            <!-- Pagination controls will render here -->
+            <!-- TODO: Render pagination controls -->
           </ul>
         </nav>
 
@@ -111,24 +109,24 @@
 
   <!-- Forum-specific scripts -->
   <script type="module">
-    import { loadSubforums, loadTopics, auth, db } from "../js/firebase.js";
+    import { loadSubforums, loadTopics, auth, db } from "../scripts/firebase.js";
     import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-    import { loadSubforums as renderSubforums } from "../js/subforumList.js";
-    import { loadTopics as renderTopics } from "../js/topicList.js";
+    import { renderSubforums } from "./components/subforumList.js";
+    import { renderTopics } from "./components/topicList.js";
 
     let currentSubforumId = null;
     let newTopicModal;
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      // 1) Inject & initialize New Topic modal
+    // 1) Inject & initialize New Topic modal
+    (async () => {
       try {
         const modalContainer = document.getElementById('newTopicContainer');
-        const res  = await fetch('./components/new_topic.html');
-        const html = await res.text();
+        const res   = await fetch('./components/new_topic.html');
+        const html  = await res.text();
         modalContainer.innerHTML = html;
         newTopicModal = new bootstrap.Modal(document.getElementById('newTopicModal'));
 
-        // Bind New Topic button
+        // Bind the button (now that it exists)
         document.getElementById('btnNewTopic').addEventListener('click', () => {
           if (!auth.currentUser) {
             return alert('You must be signed in to post a topic.');
@@ -138,20 +136,19 @@
           newTopicModal.show();
         });
 
-        // Handle New Topic form submit
+        // Handle form submission
         document.getElementById('newTopicForm').addEventListener('submit', async e => {
           e.preventDefault();
           const title   = document.getElementById('topicTitle').value.trim();
           const content = document.getElementById('topicContent').value.trim();
           const fb      = document.getElementById('newTopicFeedback');
-
           if (!currentSubforumId) {
             fb.textContent = 'Please select a subforum first.';
             return;
           }
-
           try {
-            await addDoc(collection(db, 'subforums', currentSubforumId, 'topics'), {
+            await addDoc(collection(db, 'topics'), {
+              subforumId:   currentSubforumId,
               title,
               content,
               starterId:    auth.currentUser.uid,
@@ -161,7 +158,7 @@
               lastUpdated:  serverTimestamp()
             });
             newTopicModal.hide();
-            const docs = await loadTopics(currentSubforumId);
+            const docs = await loadTopics(currentSubforumId, { pageSize: 20 });
             renderTopics(document.querySelector('#topicsTable tbody'), docs);
           } catch (err) {
             fb.textContent = err.message;
@@ -170,10 +167,12 @@
       } catch (err) {
         console.error('Failed to load New Topic component:', err);
       }
+    })();
 
-      // 2) Load & render subforums + topics
+    // 2) Load & render subforums + topics
+    (async () => {
       try {
-        const sidebarUl    = document.getElementById("subforumList");
+        const sidebarUl    = document.querySelector("aside .list-group");
         const topicsTbody  = document.querySelector("#topicsTable tbody");
         const breadcrumbLi = document.querySelector(".breadcrumb .active");
 
@@ -181,27 +180,29 @@
         renderSubforums(sidebarUl, subs);
 
         sidebarUl.addEventListener("click", async e => {
-          const link = e.target.closest("button[data-id]");
+          const link = e.target.closest("a[data-subforum-id]");
           if (!link) return;
+          e.preventDefault();
 
           sidebarUl.querySelectorAll(".list-group-item").forEach(li => li.classList.remove("active"));
           link.closest("li").classList.add("active");
-          breadcrumbLi.textContent = link.closest("li").querySelector("span").textContent;
+          breadcrumbLi.textContent = link.textContent.trim();
 
-          currentSubforumId = link.dataset.id;
-          const docs = await loadTopics(currentSubforumId);
+          currentSubforumId = link.dataset.subforumId;
+          const docs = await loadTopics(currentSubforumId, { pageSize: 20 });
           renderTopics(topicsTbody, docs);
         });
 
         // Trigger initial load
-        sidebarUl.querySelector("button[data-id]")?.click();
+        sidebarUl.querySelector("a[data-subforum-id]")?.click();
       } catch (e) {
         console.error("Forum init error:", e);
-        document.getElementById("subforumList").innerHTML = `
-          <li class="list-group-item text-danger">Failed to load subforums</li>
-        `;
+        document.querySelector("aside .list-group").innerHTML = `
+          <li class="list-group-item text-danger">
+            Failed to load subforums
+          </li>`;
       }
-    });
+    })();
   </script>
 </body>
 </html>
