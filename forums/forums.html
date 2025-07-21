@@ -5,21 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <title>MadLabzDevs Forums</title>
   <link rel="icon" href="../assets/favicon.ico" type="image/x-icon" />
-  <!-- Core theme CSS (includes Bootstrap)-->
   <link href="../css/styles.css" rel="stylesheet" />
 </head>
 <body id="page-top">
 
-  <!-- Static Header Bar -->
-  <header class="bg-dark text-white py-2 fixed-top w-100" role="banner">
+  <!-- Header -->
+  <header class="bg-dark text-white py-2 fixed-top w-100">
     <div class="container px-4 px-lg-5">
       <span class="h5 mb-0">MadLabzDevs</span>
     </div>
   </header>
 
-  <!-- Navigation Bar -->
-  <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom overflow-auto fixed-top"
-       style="top:32px; z-index:1030;" role="navigation" aria-label="Primary">
+  <!-- Nav Bar -->
+  <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom fixed-top"
+       style="top:32px; z-index:1030;">
     <div class="container px-4 px-lg-5">
       <ul class="navbar-nav flex-row flex-nowrap">
         <li class="nav-item"><a class="nav-link px-3" href="../projects.html">Projects</a></li>
@@ -31,4 +30,120 @@
     </div>
   </nav>
 
-  <m
+  <!-- Forum Layout -->
+  <div class="container-fluid py-5">
+    <div class="row">
+
+      <!-- Sidebar -->
+      <aside class="col-lg-3 mb-4">
+        <h4>Subforums</h4>
+        <ul id="subforumList" class="list-group">
+          <!-- JS will inject subforums here -->
+        </ul>
+      </aside>
+
+      <!-- Main Content -->
+      <section class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 id="currentSubforumName">Select a Subforum</h2>
+          <button id="btnNewTopic" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> New Topic
+          </button>
+        </div>
+
+        <!-- Topics Table -->
+        <table class="table table-hover" id="topicsTable">
+          <thead>
+            <tr><th>Topic</th><th>Starter</th><th>Replies</th><th>Last Post</th></tr>
+          </thead>
+          <tbody>
+            <!-- JS will inject topics here -->
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </div>
+
+  <!-- Modal placeholder -->
+  <div id="newTopicContainer"></div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Forum Logic -->
+  <script type="module">
+    import { loadSubforums, loadTopics, auth, db } from "../js/firebase.js";
+    import { renderSubforums } from "../js/subforumList.js";
+    import { renderTopics   } from "../js/topicList.js";
+    import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    let currentSubforumId = null;
+    let newTopicModal;
+
+    // Inject modal HTML
+    (async () => {
+      const res = await fetch('./components/new_topic.html');
+      const html = await res.text();
+      document.getElementById('newTopicContainer').innerHTML = html;
+      newTopicModal = new bootstrap.Modal(document.getElementById('newTopicModal'));
+
+      // Bind New Topic button
+      document.getElementById('btnNewTopic').addEventListener('click', () => {
+        if (!auth.currentUser) return alert('Sign in to post a topic.');
+        document.getElementById('newTopicForm').reset();
+        document.getElementById('newTopicFeedback').textContent = '';
+        newTopicModal.show();
+      });
+
+      // Handle new-topic submission
+      document.getElementById('newTopicForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const title   = document.getElementById('topicTitle').value.trim();
+        const content = document.getElementById('topicContent').value.trim();
+        const fb      = document.getElementById('newTopicFeedback');
+        if (!currentSubforumId) {
+          fb.textContent = 'Please select a subforum first.';
+          return;
+        }
+        await addDoc(collection(db, 'topics'), {
+          subforumId:   currentSubforumId,
+          title, content,
+          starterId:    auth.currentUser.uid,
+          starterName:  auth.currentUser.displayName,
+          replyCount:   0,
+          createdAt:    serverTimestamp(),
+          lastUpdated:  serverTimestamp()
+        });
+        newTopicModal.hide();
+        const docs = await loadTopics(currentSubforumId, { pageSize: 20 });
+        renderTopics(document.querySelector('#topicsTable tbody'), docs);
+      });
+    })();
+
+    // Load subforums and topics
+    (async () => {
+      const sideUl = document.getElementById('subforumList');
+      const topicsTb = document.querySelector('#topicsTable tbody');
+      const nameHdr = document.getElementById('currentSubforumName');
+
+      const subs = await loadSubforums();
+      renderSubforums(sideUl, subs);
+
+      sideUl.addEventListener('click', async e => {
+        const a = e.target.closest('a[data-subforum-id]');
+        if (!a) return;
+        e.preventDefault();
+        sideUl.querySelectorAll('.list-group-item').forEach(li => li.classList.remove('active'));
+        a.closest('li').classList.add('active');
+        currentSubforumId = a.dataset.subforumId;
+        nameHdr.textContent = a.textContent.trim();
+        const docs = await loadTopics(currentSubforumId, { pageSize: 20 });
+        renderTopics(topicsTb, docs);
+      });
+
+      // Initial select
+      sideUl.querySelector('a[data-subforum-id]')?.click();
+    })();
+  </script>
+</body>
+</html>
