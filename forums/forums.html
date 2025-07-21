@@ -10,21 +10,21 @@
 </head>
 <body id="page-top">
 
-  <!-- Static Header Bar (unchanged) -->
+  <!-- Static Header Bar -->
   <header class="bg-dark text-white py-2 fixed-top w-100" role="banner">
     <div class="container px-4 px-lg-5">
       <span class="h5 mb-0">MadLabzDevs</span>
     </div>
   </header>
 
-  <!-- Horizontal scrolling top nav bar (unchanged) -->
+  <!-- Horizontal scrolling top nav bar -->
   <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom overflow-auto fixed-top"
        style="top:32px; z-index:1030;"
        role="navigation" aria-label="Primary">
     <div class="container px-4 px-lg-5">
       <ul class="navbar-nav flex-row flex-nowrap">
         <li class="nav-item"><a class="nav-link px-3" href="../projects.html">Projects</a></li>
-        <li class="nav-item"><a class="nav-link px-3 active" href="../forums/forums.html">Forums</a></li>
+        <li class="nav-item"><a class="nav-link px-3 active" href="forums.html">Forums</a></li>
         <li class="nav-item"><a class="nav-link px-3" href="../events.html">Events</a></li>
         <li class="nav-item"><a class="nav-link px-3" href="../portfolio.html">Portfolio</a></li>
         <li class="nav-item"><a class="nav-link px-3" href="../profile.html">Profile</a></li>
@@ -32,13 +32,13 @@
     </div>
   </nav>
 
-  <main class="container-fluid py-5">
+  <main class="container-fluid py-5" style="margin-top:80px;">
     <div class="row gx-4 gx-lg-5">
 
       <!-- Sidebar: Subforums List -->
       <aside class="col-lg-3 mb-4">
         <h4 class="mb-3">Subforums</h4>
-        <ul class="list-group">
+        <ul id="subforumList" class="list-group">
           <!-- subforums will be rendered here -->
         </ul>
       </aside>
@@ -50,7 +50,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-              <li class="breadcrumb-item"><a href="../forums/forums.html">Forums</a></li>
+              <li class="breadcrumb-item"><a href="forums.html">Forums</a></li>
               <li class="breadcrumb-item active" aria-current="page">General Discussion</li>
             </ol>
           </nav>
@@ -87,7 +87,7 @@
               </tr>
             </thead>
             <tbody>
-              <!-- TODO: Populate with Firestore data -->
+              <!-- Topics will be populated here -->
             </tbody>
           </table>
         </div>
@@ -95,7 +95,7 @@
         <!-- Pagination -->
         <nav aria-label="Topics pagination">
           <ul class="pagination justify-content-center" id="topicsPagination">
-            <!-- TODO: Render pagination controls -->
+            <!-- Pagination controls will render here -->
           </ul>
         </nav>
 
@@ -111,10 +111,10 @@
 
   <!-- Forum-specific scripts -->
   <script type="module">
-    import { loadSubforums, loadTopics, auth, db } from "./scripts/firebase.js";
+    import { loadSubforums, loadTopics, auth, db } from "../js/firebase.js";
     import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-    import { renderSubforums } from "./components/subforumList.js";
-    import { renderTopics } from "./components/topicList.js";
+    import { loadSubforums as renderSubforums } from "../js/subforumList.js";
+    import { loadTopics as renderTopics } from "../js/topicList.js";
 
     let currentSubforumId = null;
     let newTopicModal;
@@ -128,7 +128,7 @@
         modalContainer.innerHTML = html;
         newTopicModal = new bootstrap.Modal(document.getElementById('newTopicModal'));
 
-        // 1a) Bind New Topic button
+        // Bind New Topic button
         document.getElementById('btnNewTopic').addEventListener('click', () => {
           if (!auth.currentUser) {
             return alert('You must be signed in to post a topic.');
@@ -138,7 +138,7 @@
           newTopicModal.show();
         });
 
-        // 1b) Handle New Topic form submit
+        // Handle New Topic form submit
         document.getElementById('newTopicForm').addEventListener('submit', async e => {
           e.preventDefault();
           const title   = document.getElementById('topicTitle').value.trim();
@@ -151,8 +151,7 @@
           }
 
           try {
-            await addDoc(collection(db, 'topics'), {
-              subforumId:   currentSubforumId,
+            await addDoc(collection(db, 'subforums', currentSubforumId, 'topics'), {
               title,
               content,
               starterId:    auth.currentUser.uid,
@@ -162,8 +161,7 @@
               lastUpdated:  serverTimestamp()
             });
             newTopicModal.hide();
-            // Refresh topics list
-            const docs = await loadTopics(currentSubforumId, { pageSize: 20 });
+            const docs = await loadTopics(currentSubforumId);
             renderTopics(document.querySelector('#topicsTable tbody'), docs);
           } catch (err) {
             fb.textContent = err.message;
@@ -175,7 +173,7 @@
 
       // 2) Load & render subforums + topics
       try {
-        const sidebarUl    = document.querySelector("aside .list-group");
+        const sidebarUl    = document.getElementById("subforumList");
         const topicsTbody  = document.querySelector("#topicsTable tbody");
         const breadcrumbLi = document.querySelector(".breadcrumb .active");
 
@@ -183,24 +181,23 @@
         renderSubforums(sidebarUl, subs);
 
         sidebarUl.addEventListener("click", async e => {
-          const link = e.target.closest("a[data-subforum-id]");
+          const link = e.target.closest("button[data-id]");
           if (!link) return;
-          e.preventDefault();
 
           sidebarUl.querySelectorAll(".list-group-item").forEach(li => li.classList.remove("active"));
           link.closest("li").classList.add("active");
-          breadcrumbLi.textContent = link.textContent.trim();
+          breadcrumbLi.textContent = link.closest("li").querySelector("span").textContent;
 
-          currentSubforumId = link.dataset.subforumId;
-          const docs = await loadTopics(currentSubforumId, { pageSize: 20 });
+          currentSubforumId = link.dataset.id;
+          const docs = await loadTopics(currentSubforumId);
           renderTopics(topicsTbody, docs);
         });
 
         // Trigger initial load
-        sidebarUl.querySelector("a[data-subforum-id]")?.click();
+        sidebarUl.querySelector("button[data-id]")?.click();
       } catch (e) {
         console.error("Forum init error:", e);
-        document.querySelector("aside .list-group").innerHTML = `
+        document.getElementById("subforumList").innerHTML = `
           <li class="list-group-item text-danger">Failed to load subforums</li>
         `;
       }
