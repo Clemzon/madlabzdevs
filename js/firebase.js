@@ -1,6 +1,8 @@
-// scripts/firebase.js
+// js/firebase.js
 
+// ─────────────────────────────────────────────────────────────────────────────
 // 1. Firebase SDK imports (v12 modular)
+// ─────────────────────────────────────────────────────────────────────────────
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 import {
   getFirestore,
@@ -10,7 +12,9 @@ import {
   orderBy,
   limit,
   startAfter,
-  getDocs
+  getDocs,
+  addDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 import {
   getAuth,
@@ -21,7 +25,9 @@ import {
   updateProfile
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-// 2. Your updated Firebase config
+// ─────────────────────────────────────────────────────────────────────────────
+// 2. Your Firebase config (unchanged)
+// ─────────────────────────────────────────────────────────────────────────────
 const firebaseConfig = {
   apiKey: "AIzaSyDAaHSlRVCDVQtjDjPMk3Rpfzth76aoEbc",
   authDomain: "madlabzdevs.firebaseapp.com",
@@ -31,67 +37,73 @@ const firebaseConfig = {
   appId: "1:1035683722173:web:bd3091cd587a53a7b0d8d4"
 };
 
+// ─────────────────────────────────────────────────────────────────────────────
 // 3. Initialize Firebase App, Auth, Firestore
+// ─────────────────────────────────────────────────────────────────────────────
 const app  = initializeApp(firebaseConfig);
 export const db   = getFirestore(app);
 export const auth = getAuth(app);
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Authentication Helpers
+// Authentication Helpers (EXACTLY as you had them — NO CHANGES!)
 // ─────────────────────────────────────────────────────────────────────────────
-
-/**
- * Sign up a new user with email & password, and set their displayName to `username`.
- */
 export async function signUp(email, password, username) {
   const userCred = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(userCred.user, { displayName: username });
   return userCred;
 }
 
-/**
- * Sign in an existing user.
- */
 export function signIn(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
 }
 
-/**
- * Sign out the current user.
- */
 export function signOutUser() {
   return signOut(auth);
 }
 
-/**
- * Listen for auth state changes.
- */
 export function onAuthChange(callback) {
   return onAuthStateChanged(auth, callback);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Firestore Helpers
+// Firestore Helpers for Forums
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Load all subforums.
+ * Load all forums (top-level categories).
  */
-export async function loadSubforums() {
-  const col = collection(db, "subforums");
+export async function loadForums() {
+  const col = collection(db, "forums");
   const snap = await getDocs(col);
   return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
 
 /**
- * Load a page of topics for a given subforum.
+ * Create a new forum/category.
+ * @param {{ title: string, description: string, createdBy: string }} data
  */
-export async function loadTopics(subforumId, options = {}) {
+export async function createForum({ title, description, createdBy }) {
+  const col = collection(db, "forums");
+  const docRef = await addDoc(col, {
+    title,
+    description,
+    createdBy,
+    createdAt: serverTimestamp(),
+    lastUpdated: serverTimestamp()
+  });
+  return docRef;
+}
+
+/**
+ * Load a page of topics for a given forum.
+ * (Renamed from loadTopics → loadForumTopics)
+ */
+export async function loadForumTopics(forumId, options = {}) {
   const { pageSize = 20, startAfterDoc } = options;
 
   let q = query(
     collection(db, "topics"),
-    where("subforumId", "==", subforumId),
+    where("forumId", "==", forumId),
     orderBy("lastUpdated", "desc"),
     limit(pageSize)
   );
@@ -101,5 +113,34 @@ export async function loadTopics(subforumId, options = {}) {
   }
 
   const snap = await getDocs(q);
-  return snap.docs;
+  return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+/**
+ * Load comments for a given topic/thread.
+ */
+export async function loadComments(topicId) {
+  const col = collection(db, "comments");
+  const q = query(
+    col,
+    where("topicId", "==", topicId),
+    orderBy("createdAt", "asc")
+  );
+  const snap = await getDocs(q);
+  return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+/**
+ * Add a comment to a topic.
+ * @param {{ topicId: string, text: string, createdBy: string }} data
+ */
+export async function addComment({ topicId, text, createdBy }) {
+  const col = collection(db, "comments");
+  const docRef = await addDoc(col, {
+    topicId,
+    text,
+    createdBy,
+    createdAt: serverTimestamp()
+  });
+  return docRef;
 }

@@ -14,7 +14,7 @@
     rel="stylesheet"
   />
 
-  <!-- Optional: Your own CSS -->
+  <!-- Your CSS -->
   <link href="../css/styles.css" rel="stylesheet" />
 </head>
 <body>
@@ -35,7 +35,6 @@
           <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
           <li class="nav-item"><a class="nav-link active" href="forums.html">Forums</a></li>
           <li class="nav-item"><a class="nav-link" href="../profile.html">Profile</a></li>
-          <!-- etc. -->
         </ul>
       </div>
     </div>
@@ -45,23 +44,21 @@
   <div class="container my-4">
     <div class="d-flex align-items-center mb-3">
       <h1 class="me-auto">Forums</h1>
-      <!-- New Category button (shown to admins) -->
-      <button id="btnNewForum" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newForumModal">
+      <button
+        id="btnNewForum"
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#newForumModal"
+      >
         + New Forum
       </button>
     </div>
 
     <!-- Forums Grid -->
-    <div id="forumsContainer" class="row g-4">
-      <!--
-        Individual forum cards will be injected here by js/forumsList.js
-        Each forumCard component (forums/components/forumCard.html) will render as a
-        <div class="col-md-4"><div class="card">…</div></div>
-      -->
-    </div>
+    <div id="forumsContainer" class="row g-4"></div>
   </div>
 
-  <!-- Include your New Forum modal markup (we’ll build this next) -->
+  <!-- New Forum Modal -->
   <div
     class="modal fade"
     id="newForumModal"
@@ -103,17 +100,10 @@
     </div>
   </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js"></script>
-  <!-- Your Firebase initialization -->
-  <script src="../js/firebase.js"></script>
+  <!-- ONLY one module loader: forumsList.js imports firebase.js itself -->
+  <script type="module" src="../js/forumsList.js"></script>
 
-  <!-- Forum logic: listing & creation -->
-  <script src="../js/forumsList.js"></script>
-
-  <!-- Bootstrap Bundle (includes Popper) -->
+  <!-- Bootstrap Bundle -->
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
   ></script>
