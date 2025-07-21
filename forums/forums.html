@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <title>MadLabzDevs Forums</title>
-  <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
-  <!-- Core theme CSS (includes Bootstrap) -->
+  <link rel="icon" href="../assets/favicon.ico" type="image/x-icon" />
+  <!-- Core theme CSS (includes Bootstrap)-->
   <link href="../css/styles.css" rel="stylesheet" />
 </head>
 <body id="page-top">
@@ -17,7 +17,7 @@
     </div>
   </header>
 
-  <!-- Nav Bar -->
+  <!-- Navigation Bar -->
   <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom overflow-auto fixed-top"
        style="top:32px; z-index:1030;" role="navigation" aria-label="Primary">
     <div class="container px-4 px-lg-5">
@@ -31,159 +31,4 @@
     </div>
   </nav>
 
-  <main class="container-fluid py-5">
-    <div class="row gx-4 gx-lg-5">
-
-      <!-- Sidebar -->
-      <aside class="col-lg-3 mb-4">
-        <h4 class="mb-3">Subforums</h4>
-        <ul class="list-group">
-          <!-- rendered here -->
-        </ul>
-      </aside>
-
-      <!-- Topics -->
-      <section class="col-lg-9">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0">
-              <li class="breadcrumb-item"><a href="../forums/forums.html">Forums</a></li>
-              <li class="breadcrumb-item active" aria-current="page">General Discussion</li>
-            </ol>
-          </nav>
-          <button class="btn btn-primary" id="btnNewTopic">
-            <i class="bi bi-plus-lg"></i> New Topic
-          </button>
-        </div>
-
-        <form id="topicSearchForm" class="mb-3">
-          <div class="input-group">
-            <input type="text" id="topicSearchInput" class="form-control" placeholder="Search topics…" />
-            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
-          </div>
-        </form>
-
-        <div class="table-responsive">
-          <table class="table table-hover align-middle" id="topicsTable">
-            <thead class="table-light">
-              <tr><th>Topic</th><th>Starter</th><th>Replies</th><th>Last Post</th></tr>
-            </thead>
-            <tbody><!-- data --></tbody>
-          </table>
-        </div>
-
-        <nav aria-label="Topics pagination">
-          <ul class="pagination justify-content-center" id="topicsPagination"></ul>
-        </nav>
-      </section>
-    </div>
-  </main>
-
-  <!-- Inlined New Topic Modal -->
-  <div class="modal fade" id="newTopicModal" tabindex="-1" aria-labelledby="newTopicLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <form id="newTopicForm" class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="newTopicLabel">Create New Topic</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label" for="topicTitle">Topic Title</label>
-            <input id="topicTitle" class="form-control" placeholder="Enter topic title" required />
-          </div>
-          <div class="mb-3">
-            <label class="form-label" for="topicContent">Content</label>
-            <textarea id="topicContent" class="form-control" rows="6" placeholder="Write your post..." required></textarea>
-          </div>
-          <div id="newTopicFeedback" class="text-danger small"></div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary"><i class="bi bi-send"></i> Post Topic</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x"></i> Cancel</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Forum Script -->
-  <script type="module">
-    // Immediate feedback on click
-    document.getElementById('btnNewTopic').addEventListener('click', () => {
-      alert('New Topic button pressed');
-    });
-
-    import { loadSubforums, loadTopics, auth, db } from "../scripts/firebase.js";
-    import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-    import { renderSubforums } from "./components/subforumList.js";
-    import { renderTopics } from "./components/topicList.js";
-
-    let currentSubforumId = null;
-    const newTopicModal = new bootstrap.Modal(document.getElementById('newTopicModal'));
-
-    // Bind the actual modal open after feedback test
-    document.getElementById('btnNewTopic').addEventListener('click', () => {
-      if (!auth.currentUser) return;
-      document.getElementById('newTopicFeedback').textContent = '';
-      document.getElementById('newTopicForm').reset();
-      newTopicModal.show();
-    });
-
-    document.getElementById('newTopicForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      const title = document.getElementById('topicTitle').value.trim();
-      const content = document.getElementById('topicContent').value.trim();
-      const fb = document.getElementById('newTopicFeedback');
-      if (!currentSubforumId) {
-        fb.textContent = 'Select a subforum.';
-        return;
-      }
-      try {
-        await addDoc(collection(db,'topics'), {
-          subforumId: currentSubforumId,
-          title, content,
-          starterId: auth.currentUser.uid,
-          starterName: auth.currentUser.displayName,
-          replyCount:0,
-          createdAt: serverTimestamp(),
-          lastUpdated: serverTimestamp()
-        });
-        newTopicModal.hide();
-        const docs = await loadTopics(currentSubforumId,{pageSize:20});
-        renderTopics(document.querySelector('#topicsTable tbody'),docs);
-      } catch(err) {
-        fb.textContent = err.message;
-      }
-    });
-
-    // Load lists
-    (async()=>{
-      const ul = document.querySelector('aside .list-group');
-      const tb = document.querySelector('#topicsTable tbody');
-      const bc = document.querySelector('.breadcrumb .active');
-      try {
-        const subs = await loadSubforums();
-        renderSubforums(ul, subs);
-        ul.addEventListener('click', async e => {
-          const a = e.target.closest('a[data-subforum-id]');
-          if (!a) return;
-          e.preventDefault();
-          ul.querySelectorAll('.list-group-item').forEach(li=>li.classList.remove('active'));
-          a.closest('li').classList.add('active');
-          bc.textContent = a.textContent.trim();
-          currentSubforumId = a.dataset.subforumId;
-          const docs = await loadTopics(currentSubforumId,{pageSize:20});
-          renderTopics(tb, docs);
-        });
-        ul.querySelector('a[data-subforum-id]')?.click();
-      } catch(e) {
-        console.error(e);
-        ul.innerHTML = '<li class="list-group-item text-danger">Failed to load subforums</li>';
-      }
-    })();
-  </script>
-</body>
-</html>
+  <m

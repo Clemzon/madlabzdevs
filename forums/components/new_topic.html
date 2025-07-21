@@ -1,4 +1,4 @@
-<!-- New Topic Modal -->
+<!-- forums/components/new_topic.html -->
 <div class="modal fade" id="newTopicModal" tabindex="-1" aria-labelledby="newTopicLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <form id="newTopicForm" class="modal-content">
@@ -9,11 +9,23 @@
       <div class="modal-body">
         <div class="mb-3">
           <label for="topicTitle" class="form-label">Topic Title</label>
-          <input type="text" id="topicTitle" class="form-control" placeholder="Enter topic title" required />
+          <input
+            type="text"
+            id="topicTitle"
+            class="form-control"
+            placeholder="Enter topic title"
+            required
+          />
         </div>
         <div class="mb-3">
           <label for="topicContent" class="form-label">Content</label>
-          <textarea id="topicContent" class="form-control" rows="6" placeholder="Write your post here..." required></textarea>
+          <textarea
+            id="topicContent"
+            class="form-control"
+            rows="6"
+            placeholder="Write your post here..."
+            required
+          ></textarea>
         </div>
         <div id="newTopicFeedback" class="text-danger small"></div>
       </div>
