@@ -57,7 +57,6 @@
           <button class="btn btn-primary" id="btnNewTopic">
             <i class="bi bi-plus-lg"></i> New Topic
           </button>
-          <!-- TODO: Hook #btnNewTopic to open a "Create Topic" modal or page -->
         </div>
 
         <!-- Search Topics -->
@@ -74,7 +73,6 @@
               <i class="bi bi-search"></i>
             </button>
           </div>
-          <!-- TODO: On submit, filter topic list via Firebase query -->
         </form>
 
         <!-- Topics Table -->
@@ -110,9 +108,65 @@
 
   <!-- Forum-specific scripts -->
   <script type="module">
-    import { loadSubforums, loadTopics } from "./scripts/firebase.js";
+    import { loadSubforums, loadTopics, auth, db } from "./scripts/firebase.js";
+    import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
     import { renderSubforums } from "./components/subforumList.js";
     import { renderTopics } from "./components/topicList.js";
+
+    // 1) Inject and initialize New Topic modal
+    const modalContainer = document.getElementById('newTopicContainer');
+    fetch('./components/new_topic.html')
+      .then(res => res.text())
+      .then(html => {
+        modalContainer.innerHTML = html;
+        window.newTopicModal = new bootstrap.Modal(document.getElementById('newTopicModal'));
+
+        // Wire New Topic button to open modal
+        document.getElementById('btnNewTopic').addEventListener('click', () => {
+          if (!auth.currentUser) {
+            alert('You must sign in to post a topic.');
+            return;
+          }
+          document.getElementById('newTopicFeedback').textContent = '';
+          document.getElementById('newTopicForm').reset();
+          newTopicModal.show();
+        });
+
+        // Handle New Topic form submit
+        document.getElementById('newTopicForm').addEventListener('submit', async e => {
+          e.preventDefault();
+          const title = document.getElementById('topicTitle').value.trim();
+          const content = document.getElementById('topicContent').value.trim();
+          const fb = document.getElementById('newTopicFeedback');
+
+          if (!currentSubforumId) {
+            fb.textContent = 'Select a subforum first.';
+            return;
+          }
+
+          try {
+            await addDoc(collection(db, 'topics'), {
+              subforumId: currentSubforumId,
+              title,
+              content,
+              starterId: auth.currentUser.uid,
+              starterName: auth.currentUser.displayName,
+              replyCount: 0,
+              createdAt: serverTimestamp(),
+              lastUpdated: serverTimestamp()
+            });
+            newTopicModal.hide();
+            // Refresh topics list
+            const docs = await loadTopics(currentSubforumId, { pageSize: 20 });
+            renderTopics(document.querySelector('#topicsTable tbody'), docs);
+          } catch (err) {
+            fb.textContent = err.message;
+          }
+        });
+      })
+      .catch(err => console.error('Failed to load New Topic component:', err));
+
+    let currentSubforumId = null;
 
     document.addEventListener("DOMContentLoaded", async () => {
       const sidebarUl    = document.querySelector("aside .list-group");
@@ -120,41 +174,34 @@
       const breadcrumbLi = document.querySelector(".breadcrumb .active");
 
       try {
-        // 1) Load & render subforums
         const subs = await loadSubforums();
         renderSubforums(sidebarUl, subs);
 
-        // 2) Handle clicks on subforum links
         sidebarUl.addEventListener("click", async e => {
           const link = e.target.closest("a[data-subforum-id]");
           if (!link) return;
           e.preventDefault();
 
-          // Highlight active subforum
           sidebarUl.querySelectorAll(".list-group-item").forEach(li => li.classList.remove("active"));
           link.closest("li").classList.add("active");
 
-          // Update breadcrumb
           breadcrumbLi.textContent = link.textContent.trim();
+          currentSubforumId = link.dataset.subforumId;
 
-          // Load topics for selected subforum
-          const subId = link.dataset.subforumId;
-          const topicDocs = await loadTopics(subId, { pageSize: 20 });
+          const topicDocs = await loadTopics(currentSubforumId, { pageSize: 20 });
           renderTopics(topicsTbody, topicDocs);
-
-          // TODO: store lastDoc for pagination
         });
 
-        // 3) Trigger initial load (first subforum)
+        // Initial load
         sidebarUl.querySelector("a[data-subforum-id]")?.click();
       } catch (e) {
         console.error("Forum init error:", e);
-        sidebarUl.innerHTML = `
-          <li class="list-group-item text-danger">
-            Failed to load subforums
-          </li>`;
+        sidebarUl.innerHTML = `<li class="list-group-item text-danger">Failed to load subforums</li>`;
       }
     });
   </script>
+
+  <!-- New Topic modal container -->
+  <div id="newTopicContainer"></div>
 </body>
 </html>
