@@ -103,6 +103,9 @@
     </div>
   </main>
 
+  <!-- New Topic modal container -->
+  <div id="newTopicContainer"></div>
+
   <!-- Bootstrap core JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -113,47 +116,50 @@
     import { renderSubforums } from "./components/subforumList.js";
     import { renderTopics } from "./components/topicList.js";
 
-    // 1) Inject and initialize New Topic modal
-    const modalContainer = document.getElementById('newTopicContainer');
-    fetch('./components/new_topic.html')
-      .then(res => res.text())
-      .then(html => {
-        modalContainer.innerHTML = html;
-        window.newTopicModal = new bootstrap.Modal(document.getElementById('newTopicModal'));
+    let currentSubforumId = null;
+    let newTopicModal;
 
-        // Wire New Topic button to open modal
+    document.addEventListener("DOMContentLoaded", async () => {
+      // 1) Inject & initialize New Topic modal
+      try {
+        const modalContainer = document.getElementById('newTopicContainer');
+        const res  = await fetch('./components/new_topic.html');
+        const html = await res.text();
+        modalContainer.innerHTML = html;
+        newTopicModal = new bootstrap.Modal(document.getElementById('newTopicModal'));
+
+        // 1a) Bind New Topic button
         document.getElementById('btnNewTopic').addEventListener('click', () => {
           if (!auth.currentUser) {
-            alert('You must sign in to post a topic.');
-            return;
+            return alert('You must be signed in to post a topic.');
           }
           document.getElementById('newTopicFeedback').textContent = '';
           document.getElementById('newTopicForm').reset();
           newTopicModal.show();
         });
 
-        // Handle New Topic form submit
+        // 1b) Handle New Topic form submit
         document.getElementById('newTopicForm').addEventListener('submit', async e => {
           e.preventDefault();
-          const title = document.getElementById('topicTitle').value.trim();
+          const title   = document.getElementById('topicTitle').value.trim();
           const content = document.getElementById('topicContent').value.trim();
-          const fb = document.getElementById('newTopicFeedback');
+          const fb      = document.getElementById('newTopicFeedback');
 
           if (!currentSubforumId) {
-            fb.textContent = 'Select a subforum first.';
+            fb.textContent = 'Please select a subforum first.';
             return;
           }
 
           try {
             await addDoc(collection(db, 'topics'), {
-              subforumId: currentSubforumId,
+              subforumId:   currentSubforumId,
               title,
               content,
-              starterId: auth.currentUser.uid,
-              starterName: auth.currentUser.displayName,
-              replyCount: 0,
-              createdAt: serverTimestamp(),
-              lastUpdated: serverTimestamp()
+              starterId:    auth.currentUser.uid,
+              starterName:  auth.currentUser.displayName,
+              replyCount:   0,
+              createdAt:    serverTimestamp(),
+              lastUpdated:  serverTimestamp()
             });
             newTopicModal.hide();
             // Refresh topics list
@@ -163,17 +169,16 @@
             fb.textContent = err.message;
           }
         });
-      })
-      .catch(err => console.error('Failed to load New Topic component:', err));
+      } catch (err) {
+        console.error('Failed to load New Topic component:', err);
+      }
 
-    let currentSubforumId = null;
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      const sidebarUl    = document.querySelector("aside .list-group");
-      const topicsTbody  = document.querySelector("#topicsTable tbody");
-      const breadcrumbLi = document.querySelector(".breadcrumb .active");
-
+      // 2) Load & render subforums + topics
       try {
+        const sidebarUl    = document.querySelector("aside .list-group");
+        const topicsTbody  = document.querySelector("#topicsTable tbody");
+        const breadcrumbLi = document.querySelector(".breadcrumb .active");
+
         const subs = await loadSubforums();
         renderSubforums(sidebarUl, subs);
 
@@ -184,24 +189,22 @@
 
           sidebarUl.querySelectorAll(".list-group-item").forEach(li => li.classList.remove("active"));
           link.closest("li").classList.add("active");
-
           breadcrumbLi.textContent = link.textContent.trim();
-          currentSubforumId = link.dataset.subforumId;
 
-          const topicDocs = await loadTopics(currentSubforumId, { pageSize: 20 });
-          renderTopics(topicsTbody, topicDocs);
+          currentSubforumId = link.dataset.subforumId;
+          const docs = await loadTopics(currentSubforumId, { pageSize: 20 });
+          renderTopics(topicsTbody, docs);
         });
 
-        // Initial load
+        // Trigger initial load
         sidebarUl.querySelector("a[data-subforum-id]")?.click();
       } catch (e) {
         console.error("Forum init error:", e);
-        sidebarUl.innerHTML = `<li class="list-group-item text-danger">Failed to load subforums</li>`;
+        document.querySelector("aside .list-group").innerHTML = `
+          <li class="list-group-item text-danger">Failed to load subforums</li>
+        `;
       }
     });
   </script>
-
-  <!-- New Topic modal container -->
-  <div id="newTopicContainer"></div>
 </body>
 </html>
