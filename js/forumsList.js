@@ -5,11 +5,23 @@ let allForums = [];
 let forumCardTpl = "";
 
 /**
- * Render the grid of forum cards.
+ * Fetch the forum card template.
+ * Because this script is loaded from forums.html via src="../js/forumsList.js",
+ * the components folder is at "../forums/components/" relative to this file.
+ */
+async function loadTemplate() {
+  const res = await fetch("../forums/components/forumCard.html");
+  if (!res.ok) throw new Error("Forum card template not found");
+  forumCardTpl = await res.text();
+}
+
+/**
+ * Render the grid of forums in the main area.
  */
 function displayForums(forums) {
   const container = document.getElementById("forumsContainer");
   container.innerHTML = "";
+
   forums.forEach(forum => {
     const tpl = document.createElement("template");
     tpl.innerHTML = forumCardTpl.trim();
@@ -27,11 +39,12 @@ function displayForums(forums) {
 }
 
 /**
- * Render the sidebar navigation links.
+ * Populate the left‐hand sidebar navigation.
  */
 function populateSidebar(forums) {
   const sidebar = document.getElementById("forumsSidebar");
   sidebar.innerHTML = "";
+
   forums.forEach(forum => {
     const li = document.createElement("li");
     li.className = "nav-item";
@@ -44,25 +57,13 @@ function populateSidebar(forums) {
   });
 }
 
-async function init() {
-  const searchInput  = document.getElementById("forumSearch");
-  const newForumForm = document.getElementById("formNewForum");
-
-  // 1. Load the forumCard template from the correct location
-  const tplRes = await fetch("../forums/components/forumCard.html");
-  if (!tplRes.ok) throw new Error("Forum card template not found");
-  forumCardTpl = await tplRes.text();
-
-  // 2. Fetch all forums once
-  allForums = await loadForums();
-
-  // 3. Initial render of grid + sidebar
-  displayForums(allForums);
-  populateSidebar(allForums);
-
-  // 4. Live-search filtering on the grid
-  searchInput.addEventListener("input", () => {
-    const term = searchInput.value.trim().toLowerCase();
+/**
+ * Setup live filtering of forums by title/description.
+ */
+function setupSearch() {
+  const input = document.getElementById("forumSearch");
+  input.addEventListener("input", () => {
+    const term = input.value.trim().toLowerCase();
     const filtered = term
       ? allForums.filter(f =>
           f.title.toLowerCase().includes(term) ||
@@ -71,9 +72,14 @@ async function init() {
       : allForums;
     displayForums(filtered);
   });
+}
 
-  // 5. Handle "New Forum" submissions
-  newForumForm.addEventListener("submit", async ev => {
+/**
+ * Handle the “New Forum” form submission.
+ */
+function setupNewForumForm() {
+  const form = document.getElementById("formNewForum");
+  form.addEventListener("submit", async ev => {
     ev.preventDefault();
     const title = document.getElementById("forumTitle").value.trim();
     const desc  = document.getElementById("forumDesc").value.trim();
@@ -86,16 +92,34 @@ async function init() {
       createdBy: user ? user.uid : "anonymous"
     });
 
-    // Close & reset
+    // Close modal & reset
     new bootstrap.Modal(document.getElementById("newForumModal")).hide();
-    newForumForm.reset();
+    form.reset();
 
-    // Reload data, clear search, re-render everything
+    // Reload data & UI
     allForums = await loadForums();
-    searchInput.value = "";
+    document.getElementById("forumSearch").value = "";
     displayForums(allForums);
     populateSidebar(allForums);
   });
+}
+
+/**
+ * Main initialization
+ */
+async function init() {
+  try {
+    await loadTemplate();
+    allForums = await loadForums();
+    displayForums(allForums);
+    populateSidebar(allForums);
+    setupSearch();
+    setupNewForumForm();
+  } catch (e) {
+    console.error("forumsList init error:", e);
+    document.getElementById("forumsContainer").innerHTML =
+      `<div class="alert alert-danger">${e.message}</div>`;
+  }
 }
 
 document.addEventListener("DOMContentLoaded", init);
