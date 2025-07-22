@@ -4,7 +4,7 @@ import {
   loadComments,
   addComment,
   auth
-} from "./firebase.js";
+} from "../js/firebase.js";
 
 function getQueryParam(key) {
   return new URLSearchParams(window.location.search).get(key);
@@ -12,9 +12,14 @@ function getQueryParam(key) {
 
 async function renderThread() {
   const topicId = getQueryParam("topicId");
-  const allThreads = await loadForumTopics(/* forumId not needed here */);
-  // Alternatively, you may fetch the single topic directly from Firestore:
+
+  // Fetch all threads (or fetch single doc directly)
+  const allThreads = await loadForumTopics(/* forumId not needed */);
   const thread = allThreads.find(t => t.id === topicId);
+  if (!thread) {
+    document.getElementById("threadTitle").textContent = "Thread not found";
+    return;
+  }
 
   document.getElementById("threadTitle").textContent = thread.title;
   document.getElementById("threadBody").textContent = thread.body;
@@ -27,16 +32,21 @@ async function renderComments() {
   const container = document.getElementById("commentsContainer");
   container.innerHTML = "";
 
-  const tplText = await fetch("./forums/components/commentItem.html").then(r => r.text());
-  const comments = await loadComments(topicId);
+  // correct relative path from forums/thread.html
+  const tplText = await fetch("./components/commentItem.html").then(r => {
+    if (!r.ok) throw new Error("Comment template not found");
+    return r.text();
+  });
 
+  const comments = await loadComments(topicId);
   comments.forEach(c => {
     const temp = document.createElement("template");
     temp.innerHTML = tplText.trim();
     const card = temp.content.firstElementChild;
 
     card.querySelector(".comment-author").textContent = c.createdBy;
-    card.querySelector(".comment-timestamp").textContent = new Date(c.createdAt.toDate()).toLocaleString();
+    card.querySelector(".comment-timestamp").textContent =
+      new Date(c.createdAt.toDate()).toLocaleString();
     card.querySelector(".comment-text").textContent = c.text;
 
     container.appendChild(card);
@@ -45,7 +55,12 @@ async function renderComments() {
 
 async function setupCommentForm() {
   const container = document.getElementById("commentFormContainer");
-  const tplText = await fetch("./forums/components/newCommentForm.html").then(r => r.text());
+
+  // correct relative path from forums/thread.html
+  const tplText = await fetch("./components/newCommentForm.html").then(r => {
+    if (!r.ok) throw new Error("Comment form template not found");
+    return r.text();
+  });
   container.innerHTML = tplText;
 
   const form = document.getElementById("formNewComment");
