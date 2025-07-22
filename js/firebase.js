@@ -66,7 +66,7 @@ export function onAuthChange(callback) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Firestore Helpers for Forums
+// Firestore Helpers for Forums & Threads
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
@@ -95,8 +95,7 @@ export async function createForum({ title, description, createdBy }) {
 }
 
 /**
- * Load a page of topics for a given forum.
- * (Renamed from loadTopics → loadForumTopics)
+ * Load a page of topics (threads) for a given forum.
  */
 export async function loadForumTopics(forumId, options = {}) {
   const { pageSize = 20, startAfterDoc } = options;
@@ -114,6 +113,23 @@ export async function loadForumTopics(forumId, options = {}) {
 
   const snap = await getDocs(q);
   return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+/**
+ * Create a new thread/topic in a forum.
+ * @param {{ forumId: string, title: string, body: string, createdBy: string }} data
+ */
+export async function createTopic({ forumId, title, body, createdBy }) {
+  const col = collection(db, "topics");
+  const docRef = await addDoc(col, {
+    forumId,
+    title,
+    body,
+    createdBy,
+    createdAt: serverTimestamp(),
+    lastUpdated: serverTimestamp()
+  });
+  return docRef;
 }
 
 /**
