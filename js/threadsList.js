@@ -2,24 +2,23 @@
 import {
   loadForums,
   loadForumTopics,
-  // you’ll need createTopic in firebase.js (see note below)
   createTopic,
   auth
 } from "../js/firebase.js";
 
-function getQueryParam(key) {
-  const params = new URLSearchParams(window.location.search);
-  return params.get(key);
+function getForumId() {
+  return new URLSearchParams(window.location.search).get("forumId");
 }
 
 async function renderThreads() {
-  const forumId = getQueryParam("forumId");
+  const forumId = getForumId();
   const titleEl = document.getElementById("forumTitle");
   const descEl  = document.getElementById("forumDesc");
-  const list     = document.getElementById("threadsContainer");
-  list.innerHTML = "";
+  const list    = document.getElementById("threadsContainer");
 
-  // 1. Load forum metadata
+  list.innerHTML = ""; // clear existing
+
+  // Load forum info
   const forums = await loadForums();
   const forum  = forums.find(f => f.id === forumId);
   if (!forum) {
@@ -30,57 +29,62 @@ async function renderThreads() {
   titleEl.textContent = forum.title;
   descEl.textContent  = forum.description;
 
-  // 2. Load & render threads
+  // Load threads
   const topics = await loadForumTopics(forumId);
-  const tplText = await fetch("./components/threadCard.html").then(r => {
-    if (!r.ok) throw new Error("Template not found");
-    return r.text();
-  });
 
+  // Fetch threadCard template (relative to threads.html)
+  const res = await fetch("./components/threadCard.html");
+  if (!res.ok) {
+    list.innerHTML = `<div class="alert alert-danger">Template not found</div>`;
+    return;
+  }
+  const tplText = await res.text();
+
+  // Render each thread
   topics.forEach(topic => {
-    const temp = document.createElement("template");
-    temp.innerHTML = tplText.trim();
-    const item = temp.content.firstElementChild;
+    const tmp = document.createElement("template");
+    tmp.innerHTML = tplText.trim();
+    const item = tmp.content.firstElementChild;
 
     item.href = `thread.html?topicId=${topic.id}`;
-    item.querySelector(".thread-title").textContent = topic.title;
-    item.querySelector(".thread-body-snippet").textContent =
-      topic.body.slice(0, 100) + (topic.body.length > 100 ? "…" : "");
-    item.querySelector(".thread-author").textContent = `by ${topic.createdBy || "anon"}`;
-    item.querySelector(".thread-updated").textContent =
-      new Date(topic.lastUpdated?.toDate()).toLocaleString();
+    item.querySelector(".thread-title").textContent        = topic.title;
+    item.querySelector(".thread-body-snippet").textContent = 
+      topic.body.slice(0,100) + (topic.body.length>100 ? "…" : "");
+    item.querySelector(".thread-author").textContent       = `by ${topic.createdBy||"anon"}`;
+    item.querySelector(".thread-updated").textContent      = 
+      new Date(topic.lastUpdated.toDate()).toLocaleString();
 
     list.appendChild(item);
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderThreads();
-
-  // Handle New Thread
+function setupForm() {
   const form = document.getElementById("formNewThread");
+  if (!form) return;
+
   form.addEventListener("submit", async ev => {
     ev.preventDefault();
     const title = document.getElementById("threadTitle").value.trim();
     const body  = document.getElementById("threadBody").value.trim();
     if (!title || !body) return;
 
-    const forumId = getQueryParam("forumId");
+    const forumId = getForumId();
     const user    = auth.currentUser;
-    const createdBy = user ? user.uid : "anonymous";
+    await createTopic({ forumId, title, body, createdBy: user?.uid || "anonymous" });
 
-    await createTopic({ forumId, title, body, createdBy });
-
-    // close modal + reset
+    // Close modal & reset
     const modalEl = document.getElementById("newThreadModal");
     bootstrap.Modal.getInstance(modalEl).hide();
     form.reset();
 
-    // re-render
-    renderThreads();
+    // Re-render
+    await renderThreads();
   });
-});
 }
 
-// Kick off once the DOM is ready
+async function init() {
+  await renderThreads();
+  setupForm();
+}
+
 document.addEventListener("DOMContentLoaded", init);
