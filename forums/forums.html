@@ -22,21 +22,11 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="../index.html">MadlabzDevs</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navMenu"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navMenu">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link active" href="forums.html">Forums</a></li>
-          <li class="nav-item"><a class="nav-link" href="../profile.html">Profile</a></li>
-        </ul>
-      </div>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="forums.html">Forums</a></li>
+        <li class="nav-item"><a class="nav-link" href="../profile.html">Profile</a></li>
+      </ul>
     </div>
   </nav>
 
@@ -44,7 +34,7 @@
   <div class="container-fluid">
     <div class="row">
       <!-- Sidebar -->
-      <aside class="col-md-3 bg-light vh-100 p-3">
+      <aside class="col-md-3 bg-light vh-100 p-3 border-end">
         <h6 class="text-muted">Forums Navigation</h6>
         <ul id="forumsSidebar" class="nav flex-column">
           <!-- Populated by js/forumsList.js -->
@@ -81,8 +71,8 @@
           </div>
         </div>
 
-        <!-- Forums Grid -->
-        <div id="forumsContainer" class="row g-4"></div>
+        <!-- Forums List -->
+        <div id="forumsContainer" class="list-group"></div>
       </main>
     </div>
   </div>
