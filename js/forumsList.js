@@ -4,22 +4,17 @@ import { loadForums, createForum, auth } from "./firebase.js";
 let allForums = [];
 let forumCardTpl = "";
 
-/**
- * Fetch the forum card template.
- * Because this script is loaded from forums.html via src="../js/forumsList.js",
- * the components folder is at "../forums/components/" relative to this file.
- */
+/** Load the forumCard template from the correct path */
 async function loadTemplate() {
   const res = await fetch("../forums/components/forumCard.html");
   if (!res.ok) throw new Error("Forum card template not found");
   forumCardTpl = await res.text();
 }
 
-/**
- * Render the grid of forums in the main area.
- */
+/** Render the grid of forum cards */
 function displayForums(forums) {
   const container = document.getElementById("forumsContainer");
+  if (!container) return;
   container.innerHTML = "";
 
   forums.forEach(forum => {
@@ -38,11 +33,10 @@ function displayForums(forums) {
   });
 }
 
-/**
- * Populate the left‐hand sidebar navigation.
- */
+/** Populate the sidebar navigation links */
 function populateSidebar(forums) {
   const sidebar = document.getElementById("forumsSidebar");
+  if (!sidebar) return;  // guard missing sidebar
   sidebar.innerHTML = "";
 
   forums.forEach(forum => {
@@ -57,11 +51,10 @@ function populateSidebar(forums) {
   });
 }
 
-/**
- * Setup live filtering of forums by title/description.
- */
+/** Wire up the live search filter */
 function setupSearch() {
   const input = document.getElementById("forumSearch");
+  if (!input) return;
   input.addEventListener("input", () => {
     const term = input.value.trim().toLowerCase();
     const filtered = term
@@ -74,15 +67,14 @@ function setupSearch() {
   });
 }
 
-/**
- * Handle the “New Forum” form submission.
- */
+/** Handle “New Forum” submissions */
 function setupNewForumForm() {
   const form = document.getElementById("formNewForum");
+  if (!form) return;
   form.addEventListener("submit", async ev => {
     ev.preventDefault();
-    const title = document.getElementById("forumTitle").value.trim();
-    const desc  = document.getElementById("forumDesc").value.trim();
+    const title = document.getElementById("forumTitle")?.value.trim();
+    const desc  = document.getElementById("forumDesc")?.value.trim();
     if (!title || !desc) return;
 
     const user = auth.currentUser;
@@ -93,32 +85,35 @@ function setupNewForumForm() {
     });
 
     // Close modal & reset
-    new bootstrap.Modal(document.getElementById("newForumModal")).hide();
+    const modal = bootstrap.Modal.getInstance(document.getElementById("newForumModal"));
+    modal?.hide();
     form.reset();
 
     // Reload data & UI
     allForums = await loadForums();
-    document.getElementById("forumSearch").value = "";
+    const searchInput = document.getElementById("forumSearch");
+    if (searchInput) searchInput.value = "";
     displayForums(allForums);
     populateSidebar(allForums);
   });
 }
 
-/**
- * Main initialization
- */
+/** Entry point */
 async function init() {
   try {
     await loadTemplate();
     allForums = await loadForums();
+
     displayForums(allForums);
     populateSidebar(allForums);
     setupSearch();
     setupNewForumForm();
   } catch (e) {
     console.error("forumsList init error:", e);
-    document.getElementById("forumsContainer").innerHTML =
-      `<div class="alert alert-danger">${e.message}</div>`;
+    const container = document.getElementById("forumsContainer");
+    if (container) {
+      container.innerHTML = `<div class="alert alert-danger">${e.message}</div>`;
+    }
   }
 }
 
