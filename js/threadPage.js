@@ -7,8 +7,7 @@ import {
 } from "./firebase.js";
 
 function getTopicId() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("topicId");
+  return new URLSearchParams(window.location.search).get("topicId");
 }
 
 async function renderThread() {
@@ -22,12 +21,10 @@ async function renderThread() {
 
   try {
     const thread = await loadThread(topicId);
-
     document.getElementById("threadTitle").textContent = thread.title;
     document.getElementById("threadBody").textContent = thread.body;
     document.getElementById("threadMeta").textContent =
       `by ${thread.createdBy || "anonymous"} • ${new Date(thread.createdAt.toDate()).toLocaleString()}`;
-
     return true;
   } catch (e) {
     console.error("Error loading thread:", e);
@@ -61,11 +58,12 @@ async function renderComments() {
     comments = await loadComments(topicId);
   } catch (e) {
     console.error("Error loading comments:", e);
-    container.innerHTML = `<div class="alert alert-danger">Could not load comments.</div>`;
+    container.innerHTML = `<div class="alert alert-danger">Could not load comments. You may need to create a composite index:<br>
+    Collection: comments<br>
+    Fields: topicId Asc, createdAt Asc.</div>`;
     return;
   }
 
-  // Render each comment
   comments.forEach(c => {
     const temp = document.createElement("template");
     temp.innerHTML = tplText.trim();
@@ -89,7 +87,7 @@ async function setupCommentForm() {
   // Load the form template
   let tplText;
   try {
-    const res = await fetch("./components/newCommentForm.html");
+    const res = await fetch("./components/newcommentForm.html");
     if (!res.ok) throw new Error("Comment form template not found");
     tplText = await res.text();
   } catch (e) {
@@ -122,7 +120,6 @@ async function setupCommentForm() {
   });
 }
 
-// Bootstrap/modal scripts should be loaded after this module
 document.addEventListener("DOMContentLoaded", async () => {
   const ok = await renderThread();
   if (!ok) return;
