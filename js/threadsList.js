@@ -2,35 +2,26 @@
 import {
   loadForums,
   loadForumTopics,
+  // you’ll need createTopic in firebase.js (see note below)
   createTopic,
   auth
 } from "../js/firebase.js";
 
-/** Simple helper to read ?forumId= from the URL */
-function getForumId() {
-  return new URLSearchParams(window.location.search).get("forumId");
+function getQueryParam(key) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(key);
 }
 
-async function init() {
-  const forumId = getForumId();
+async function renderThreads() {
+  const forumId = getQueryParam("forumId");
   const titleEl = document.getElementById("forumTitle");
   const descEl  = document.getElementById("forumDesc");
-  const list    = document.getElementById("threadsContainer");
+  const list     = document.getElementById("threadsContainer");
+  list.innerHTML = "";
 
-  // Sanity check
-  if (!list) {
-    console.error("threadsContainer element not found on this page.");
-    return;
-  }
-
-  // 1. Show forum metadata
-  let forum;
-  try {
-    const forums = await loadForums();
-    forum = forums.find(f => f.id === forumId);
-  } catch (e) {
-    console.error("Error loading forums:", e);
-  }
+  // 1. Load forum metadata
+  const forums = await loadForums();
+  const forum  = forums.find(f => f.id === forumId);
   if (!forum) {
     titleEl.textContent = "Forum not found";
     descEl.textContent  = "";
@@ -40,29 +31,12 @@ async function init() {
   descEl.textContent  = forum.description;
 
   // 2. Load & render threads
-  list.innerHTML = "";  // clear
-  let topics = [];
-  try {
-    topics = await loadForumTopics(forumId);
-  } catch (e) {
-    console.error("Error loading topics:", e);
-    list.innerHTML = `<div class="alert alert-danger">Could not load threads.</div>`;
-    return;
-  }
+  const topics = await loadForumTopics(forumId);
+  const tplText = await fetch("./components/threadCard.html").then(r => {
+    if (!r.ok) throw new Error("Template not found");
+    return r.text();
+  });
 
-  // 3. Fetch thread‐card template
-  let tplText = "";
-  try {
-    const res = await fetch("./components/threadCard.html");
-    if (!res.ok) throw new Error("Thread card template not found");
-    tplText = await res.text();
-  } catch (e) {
-    console.error(e);
-    list.innerHTML = `<div class="alert alert-danger">${e.message}</div>`;
-    return;
-  }
-
-  // 4. Render each topic
   topics.forEach(topic => {
     const temp = document.createElement("template");
     temp.innerHTML = tplText.trim();
@@ -72,43 +46,40 @@ async function init() {
     item.querySelector(".thread-title").textContent = topic.title;
     item.querySelector(".thread-body-snippet").textContent =
       topic.body.slice(0, 100) + (topic.body.length > 100 ? "…" : "");
-    item.querySelector(".thread-author").textContent =
-      `by ${topic.createdBy || "anonymous"}`;
+    item.querySelector(".thread-author").textContent = `by ${topic.createdBy || "anon"}`;
     item.querySelector(".thread-updated").textContent =
-      new Date(topic.lastUpdated.toDate()).toLocaleString();
+      new Date(topic.lastUpdated?.toDate()).toLocaleString();
 
     list.appendChild(item);
   });
+}
 
-  // 5. Wire up “New Thread” form (if present)
+document.addEventListener("DOMContentLoaded", () => {
+  renderThreads();
+
+  // Handle New Thread
   const form = document.getElementById("formNewThread");
-  if (form) {
-    form.addEventListener("submit", async ev => {
-      ev.preventDefault();
-      const title = document.getElementById("threadTitle").value.trim();
-      const body  = document.getElementById("threadBody").value.trim();
-      if (!title || !body) return;
+  form.addEventListener("submit", async ev => {
+    ev.preventDefault();
+    const title = document.getElementById("threadTitle").value.trim();
+    const body  = document.getElementById("threadBody").value.trim();
+    if (!title || !body) return;
 
-      try {
-        const user = auth.currentUser;
-        await createTopic({
-          forumId,
-          title,
-          body,
-          createdBy: user ? user.uid : "anonymous"
-        });
-        // Close modal & reset
-        const modalEl = document.getElementById("newThreadModal");
-        bootstrap.Modal.getInstance(modalEl).hide();
-        form.reset();
-        // Reload threads
-        init();
-      } catch (e) {
-        console.error("Error creating thread:", e);
-        alert("Could not post thread. See console for details.");
-      }
-    });
-  }
+    const forumId = getQueryParam("forumId");
+    const user    = auth.currentUser;
+    const createdBy = user ? user.uid : "anonymous";
+
+    await createTopic({ forumId, title, body, createdBy });
+
+    // close modal + reset
+    const modalEl = document.getElementById("newThreadModal");
+    bootstrap.Modal.getInstance(modalEl).hide();
+    form.reset();
+
+    // re-render
+    renderThreads();
+  });
+});
 }
 
 // Kick off once the DOM is ready
