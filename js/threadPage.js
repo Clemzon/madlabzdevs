@@ -1,102 +1,99 @@
 // js/threadPage.js
 import {
-  loadThread,
-  loadComments,
+  loadThread,    // used once to populate header if you prefer, but we’ll use onSnapshot
   addComment,
-  auth
+  auth,
+  db
 } from "./firebase.js";
+import {
+  doc,
+  onSnapshot,
+  collection,
+  query,
+  where,
+  orderBy
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
+let unsubscribeThread = null;
+let unsubscribeComments = null;
+let commentTpl = "";
+let formTpl    = "";
+
+/** Get topicId from URL */
 function getTopicId() {
   return new URLSearchParams(window.location.search).get("topicId");
 }
 
-async function renderThread() {
-  const topicId = getTopicId();
-  const contentEl = document.getElementById("threadContent");
-
-  if (!topicId) {
-    contentEl.innerHTML = `<div class="alert alert-warning">No thread specified in the URL.</div>`;
-    return false;
-  }
-
-  try {
-    const thread = await loadThread(topicId);
-    document.getElementById("threadTitle").textContent = thread.title;
-    document.getElementById("threadBody").textContent = thread.body;
-    document.getElementById("threadMeta").textContent =
-      `by ${thread.createdBy || "anonymous"} • ${new Date(thread.createdAt.toDate()).toLocaleString()}`;
-    return true;
-  } catch (e) {
-    console.error("Error loading thread:", e);
-    contentEl.innerHTML = `<div class="alert alert-danger">${e.message}</div>`;
-    return false;
-  }
+/** Load both the comment item and form templates */
+async function loadTemplates() {
+  const [cRes, fRes] = await Promise.all([
+    fetch("./components/commentItem.html"),
+    fetch("./components/newcommentForm.html")
+  ]);
+  if (!cRes.ok) throw new Error("Comment template not found");
+  if (!fRes.ok) throw new Error("Comment form template not found");
+  commentTpl = await cRes.text();
+  formTpl    = await fRes.text();
 }
 
-async function renderComments() {
+/** Subscribe to the thread document for real-time updates */
+function subscribeThread() {
   const topicId = getTopicId();
   if (!topicId) return;
 
-  const container = document.getElementById("commentsContainer");
-  container.innerHTML = "";
-
-  // Load comment template
-  let tplText;
-  try {
-    const res = await fetch("./components/commentItem.html");
-    if (!res.ok) throw new Error("Comment template not found");
-    tplText = await res.text();
-  } catch (e) {
-    console.error(e);
-    container.innerHTML = `<div class="alert alert-danger">${e.message}</div>`;
-    return;
-  }
-
-  // Load comments from Firestore
-  let comments;
-  try {
-    comments = await loadComments(topicId);
-  } catch (e) {
-    console.error("Error loading comments:", e);
-    container.innerHTML = `<div class="alert alert-danger">Could not load comments. You may need to create a composite index:<br>
-    Collection: comments<br>
-    Fields: topicId Asc, createdAt Asc.</div>`;
-    return;
-  }
-
-  comments.forEach(c => {
-    const temp = document.createElement("template");
-    temp.innerHTML = tplText.trim();
-    const card = temp.content.firstElementChild;
-
-    card.querySelector(".comment-author").textContent = c.createdBy;
-    card.querySelector(".comment-timestamp").textContent =
-      new Date(c.createdAt.toDate()).toLocaleString();
-    card.querySelector(".comment-text").textContent = c.text;
-
-    container.appendChild(card);
+  const threadRef = doc(db, "topics", topicId);
+  unsubscribeThread = onSnapshot(threadRef, snap => {
+    if (!snap.exists()) {
+      document.getElementById("threadContent").innerHTML =
+        `<div class="alert alert-danger">Thread not found</div>`;
+      return;
+    }
+    const data = snap.data();
+    document.getElementById("threadTitle").textContent = data.title;
+    document.getElementById("threadBody").textContent  = data.body;
+    document.getElementById("threadMeta").textContent  =
+      `by ${data.createdBy || "anonymous"} • ${new Date(data.createdAt.toDate()).toLocaleString()}`;
+  }, err => {
+    console.error("Thread subscription error:", err);
   });
 }
 
-async function setupCommentForm() {
+/** Subscribe to comments under this topic in real time */
+function subscribeComments() {
+  const topicId = getTopicId();
+  if (!topicId) return;
+
+  const q = query(
+    collection(db, "comments"),
+    where("topicId", "==", topicId),
+    orderBy("createdAt", "asc")
+  );
+  unsubscribeComments = onSnapshot(q, snap => {
+    const container = document.getElementById("commentsContainer");
+    container.innerHTML = "";
+    snap.docs.forEach(docSnap => {
+      const data = docSnap.data();
+      const tmp = document.createElement("template");
+      tmp.innerHTML = commentTpl.trim();
+      const card = tmp.content.firstElementChild;
+      card.querySelector(".comment-author").textContent    = data.createdBy;
+      card.querySelector(".comment-timestamp").textContent =
+        new Date(data.createdAt.toDate()).toLocaleString();
+      card.querySelector(".comment-text").textContent      = data.text;
+      container.appendChild(card);
+    });
+  }, err => {
+    console.error("Comments subscription error:", err);
+  });
+}
+
+/** Render & wire up the new-comment form */
+function setupCommentForm() {
   const topicId = getTopicId();
   if (!topicId) return;
 
   const container = document.getElementById("commentFormContainer");
-
-  // Load the form template
-  let tplText;
-  try {
-    const res = await fetch("./components/newcommentForm.html");
-    if (!res.ok) throw new Error("Comment form template not found");
-    tplText = await res.text();
-  } catch (e) {
-    console.error(e);
-    container.innerHTML = `<div class="alert alert-danger">${e.message}</div>`;
-    return;
-  }
-
-  container.innerHTML = tplText;
+  container.innerHTML = formTpl.trim();
   const form = document.getElementById("formNewComment");
 
   form.addEventListener("submit", async ev => {
@@ -112,7 +109,6 @@ async function setupCommentForm() {
         createdBy: user ? user.uid : "anonymous"
       });
       form.reset();
-      renderComments();
     } catch (e) {
       console.error("Error posting comment:", e);
       alert("Could not post comment. See console for details.");
@@ -120,9 +116,22 @@ async function setupCommentForm() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const ok = await renderThread();
-  if (!ok) return;
-  await setupCommentForm();
-  await renderComments();
+/** Initialize everything */
+async function init() {
+  try {
+    await loadTemplates();
+    subscribeThread();
+    subscribeComments();
+    setupCommentForm();
+  } catch (e) {
+    console.error("threadPage init error:", e);
+    document.getElementById("threadContent").innerHTML =
+      `<div class="alert alert-danger">${e.message}</div>`;
+  }
+}
+
+window.addEventListener("DOMContentLoaded", init);
+window.addEventListener("beforeunload", () => {
+  unsubscribeThread?.();
+  unsubscribeComments?.();
 });

@@ -55,19 +55,27 @@ export async function createForum(data) {
   });
 }
 
-// Topics in a forum
+// Topics in a forum (with pagination)
 export async function loadForumTopics(forumId, options = {}) {
   const { pageSize = 20, startAfterDoc } = options;
+
   let q = query(
     collection(db, "topics"),
     where("forumId", "==", forumId),
     orderBy("lastUpdated", "desc"),
     limit(pageSize)
   );
-  if (startAfterDoc) q = query(q, startAfter(startAfterDoc));
+  if (startAfterDoc) {
+    q = query(q, startAfter(startAfterDoc));
+  }
+
   const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const lastVisible = snap.docs[snap.docs.length - 1] || null;
+
+  return { docs, lastVisible };
 }
+
 export async function createTopic(data) {
   return addDoc(collection(db, "topics"), {
     ...data,
@@ -83,16 +91,27 @@ export async function loadThread(topicId) {
   return { id: d.id, ...d.data() };
 }
 
-// Comments
-export async function loadComments(topicId) {
-  const q = query(
+// Comments (now with pagination support)
+export async function loadComments(topicId, options = {}) {
+  const { pageSize = 20, startAfterDoc } = options;
+
+  let q = query(
     collection(db, "comments"),
     where("topicId", "==", topicId),
-    orderBy("createdAt", "asc")
+    orderBy("createdAt", "asc"),
+    limit(pageSize)
   );
+  if (startAfterDoc) {
+    q = query(q, startAfter(startAfterDoc));
+  }
+
   const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const lastVisible = snap.docs[snap.docs.length - 1] || null;
+
+  return { docs, lastVisible };
 }
+
 export async function addComment(data) {
   return addDoc(collection(db, "comments"), {
     ...data,

@@ -1,40 +1,35 @@
 // js/threadsList.js
 import {
-  db,
   loadForums,
+  loadForumTopics,  // returns { docs, lastVisible }
   createTopic,
   auth
 } from "../js/firebase.js";
-import {
-  collection,
-  query,
-  where,
-  orderBy,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-let unsubscribeTopics = null;
 let threadTpl = "";
+let lastVisible = null;
+const pageSize = 10;  // adjust as desired
 
-/** Helper to get forumId from URL */
+/** Get forumId from URL */
 function getForumId() {
   return new URLSearchParams(window.location.search).get("forumId");
 }
 
-/** Load the threadCard template */
+/** Load the threadCard template once */
 async function loadTemplate() {
+  if (threadTpl) return;
   const res = await fetch("./components/threadCard.html");
   if (!res.ok) throw new Error("Thread card template not found");
   threadTpl = await res.text();
 }
 
-/** Render the list of topic docs */
-function displayThreads(topics) {
+/** Render an array of threads; append if second argument is true */
+function displayThreads(threads, append = false) {
   const list = document.getElementById("threadsContainer");
   if (!list) return;
-  list.innerHTML = "";
+  if (!append) list.innerHTML = "";
 
-  topics.forEach(topic => {
+  threads.forEach(topic => {
     const tmp = document.createElement("template");
     tmp.innerHTML = threadTpl.trim();
     const item = tmp.content.firstElementChild;
@@ -51,23 +46,35 @@ function displayThreads(topics) {
   });
 }
 
-/** Subscribe to real-time updates for this forum’s topics */
-async function subscribeTopics() {
+/** Load and render the next page of threads */
+async function loadPage(append = false) {
   const forumId = getForumId();
-  if (unsubscribeTopics) unsubscribeTopics();
+  try {
+    const { docs, lastVisible: lv } = await loadForumTopics(forumId, {
+      pageSize,
+      startAfterDoc: append ? lastVisible : undefined
+    });
+    await loadTemplate();
+    displayThreads(docs, append);
+    lastVisible = lv;
 
-  const q = query(
-    collection(db, "topics"),
-    where("forumId", "==", forumId),
-    orderBy("lastUpdated", "desc")
-  );
-
-  unsubscribeTopics = onSnapshot(q, snapshot => {
-    const topics = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    displayThreads(topics);
-  }, err => {
-    console.error("Topics subscription error:", err);
-  });
+    // Hide the button if no more pages
+    const btn = document.getElementById("btnLoadMoreThreads");
+    if (!lv || docs.length < pageSize) {
+      btn.style.display = "none";
+    } else {
+      btn.style.display = "";
+    }
+  } catch (e) {
+    console.error("Error loading threads page:", e);
+    const list = document.getElementById("threadsContainer");
+    if (list) {
+      list.insertAdjacentHTML(
+        "beforeend",
+        `<div class="alert alert-danger">${e.message}</div>`
+      );
+    }
+  }
 }
 
 /** Load forum metadata once */
@@ -86,7 +93,7 @@ async function loadForumHeader() {
   descEl.textContent  = forum.description;
 }
 
-/** Handle “New Thread” form submission */
+/** Handle “New Thread” form */
 function setupForm() {
   const form = document.getElementById("formNewThread");
   if (!form) return;
@@ -100,26 +107,29 @@ function setupForm() {
     const user    = auth.currentUser;
     await createTopic({ forumId, title, body, createdBy: user?.uid || "anonymous" });
 
-    // Close modal & reset
-    const modalEl = document.getElementById("newThreadModal");
-    bootstrap.Modal.getInstance(modalEl).hide();
     form.reset();
+    // reload first page
+    lastVisible = null;
+    await loadPage(false);
   });
 }
 
-/** Initialize page: load header, template, subscribe, form */
+/** Initialize */
 async function init() {
   try {
     await loadForumHeader();
-    await loadTemplate();
-    await subscribeTopics();
+    await loadPage(false);
+
+    // Hook up Load More button
+    const btn = document.getElementById("btnLoadMoreThreads");
+    if (btn) {
+      btn.addEventListener("click", () => loadPage(true));
+    }
+
     setupForm();
   } catch (e) {
     console.error("threadsList init error:", e);
-    const list = document.getElementById("threadsContainer");
-    if (list) list.innerHTML = `<div class="alert alert-danger">${e.message}</div>`;
   }
 }
 
-window.addEventListener("DOMContentLoaded", init);
-window.addEventListener("beforeunload", () => unsubscribeTopics?.());
+document.addEventListener("DOMContentLoaded", init);

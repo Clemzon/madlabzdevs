@@ -93,6 +93,13 @@
 
         <!-- Threads List -->
         <div id="threadsContainer" class="list-group"></div>
+
+        <!-- Load More Threads -->
+        <div class="text-center mt-3">
+          <button id="btnLoadMoreThreads" class="btn btn-outline-primary">
+            Load more threads
+          </button>
+        </div>
       </main>
     </div>
   </div>
@@ -141,7 +148,7 @@
 
   <!-- Sidebar/Search handler -->
   <script type="module" src="../js/forumsList.js"></script>
-  <!-- Threads logic -->
+  <!-- Threads logic (with pagination) -->
   <script type="module" src="../js/threadsList.js"></script>
   <!-- Bootstrap Bundle -->
   <script
