@@ -1,6 +1,6 @@
 // js/threadPage.js
 import {
-  loadForumTopics,
+  loadThread,
   loadComments,
   addComment,
   auth
@@ -12,15 +12,11 @@ function getQueryParam(key) {
 
 async function renderThread() {
   const topicId = getQueryParam("topicId");
-
-  // Fetch all threads (or fetch single doc directly)
-  const allThreads = await loadForumTopics(/* forumId not needed */);
-  const thread = allThreads.find(t => t.id === topicId);
-  if (!thread) {
-    document.getElementById("threadTitle").textContent = "Thread not found";
-    return;
+  if (!topicId) {
+    throw new Error("No topicId in URL");
   }
 
+  const thread = await loadThread(topicId);
   document.getElementById("threadTitle").textContent = thread.title;
   document.getElementById("threadBody").textContent = thread.body;
   document.getElementById("threadMeta").textContent =
@@ -32,7 +28,6 @@ async function renderComments() {
   const container = document.getElementById("commentsContainer");
   container.innerHTML = "";
 
-  // correct relative path from forums/thread.html
   const tplText = await fetch("./components/commentItem.html").then(r => {
     if (!r.ok) throw new Error("Comment template not found");
     return r.text();
@@ -54,9 +49,8 @@ async function renderComments() {
 }
 
 async function setupCommentForm() {
+  const topicId = getQueryParam("topicId");
   const container = document.getElementById("commentFormContainer");
-
-  // correct relative path from forums/thread.html
   const tplText = await fetch("./components/newCommentForm.html").then(r => {
     if (!r.ok) throw new Error("Comment form template not found");
     return r.text();
@@ -69,7 +63,6 @@ async function setupCommentForm() {
     const text = document.getElementById("commentText").value.trim();
     if (!text) return;
 
-    const topicId = getQueryParam("topicId");
     const user = auth.currentUser;
     await addComment({ topicId, text, createdBy: user ? user.uid : "anonymous" });
 
@@ -79,7 +72,12 @@ async function setupCommentForm() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  await renderThread();
-  await setupCommentForm();
-  await renderComments();
+  try {
+    await renderThread();
+    await setupCommentForm();
+    await renderComments();
+  } catch (e) {
+    console.error(e);
+    document.getElementById("threadContent").innerHTML = `<div class="alert alert-danger">${e.message}</div>`;
+  }
 });
