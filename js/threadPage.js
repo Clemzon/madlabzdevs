@@ -4,36 +4,68 @@ import {
   loadComments,
   addComment,
   auth
-} from "../js/firebase.js";
+} from "./firebase.js";
 
-function getQueryParam(key) {
-  return new URLSearchParams(window.location.search).get(key);
+function getTopicId() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("topicId");
 }
 
 async function renderThread() {
-  const topicId = getQueryParam("topicId");
+  const topicId = getTopicId();
+  const contentEl = document.getElementById("threadContent");
+
   if (!topicId) {
-    throw new Error("No topicId in URL");
+    contentEl.innerHTML = `<div class="alert alert-warning">No thread specified in the URL.</div>`;
+    return false;
   }
 
-  const thread = await loadThread(topicId);
-  document.getElementById("threadTitle").textContent = thread.title;
-  document.getElementById("threadBody").textContent = thread.body;
-  document.getElementById("threadMeta").textContent =
-    `by ${thread.createdBy || "anon"} • ${new Date(thread.createdAt.toDate()).toLocaleString()}`;
+  try {
+    const thread = await loadThread(topicId);
+
+    document.getElementById("threadTitle").textContent = thread.title;
+    document.getElementById("threadBody").textContent = thread.body;
+    document.getElementById("threadMeta").textContent =
+      `by ${thread.createdBy || "anonymous"} • ${new Date(thread.createdAt.toDate()).toLocaleString()}`;
+
+    return true;
+  } catch (e) {
+    console.error("Error loading thread:", e);
+    contentEl.innerHTML = `<div class="alert alert-danger">${e.message}</div>`;
+    return false;
+  }
 }
 
 async function renderComments() {
-  const topicId = getQueryParam("topicId");
+  const topicId = getTopicId();
+  if (!topicId) return;
+
   const container = document.getElementById("commentsContainer");
   container.innerHTML = "";
 
-  const tplText = await fetch("./components/commentItem.html").then(r => {
-    if (!r.ok) throw new Error("Comment template not found");
-    return r.text();
-  });
+  // Load comment template
+  let tplText;
+  try {
+    const res = await fetch("./components/commentItem.html");
+    if (!res.ok) throw new Error("Comment template not found");
+    tplText = await res.text();
+  } catch (e) {
+    console.error(e);
+    container.innerHTML = `<div class="alert alert-danger">${e.message}</div>`;
+    return;
+  }
 
-  const comments = await loadComments(topicId);
+  // Load comments from Firestore
+  let comments;
+  try {
+    comments = await loadComments(topicId);
+  } catch (e) {
+    console.error("Error loading comments:", e);
+    container.innerHTML = `<div class="alert alert-danger">Could not load comments.</div>`;
+    return;
+  }
+
+  // Render each comment
   comments.forEach(c => {
     const temp = document.createElement("template");
     temp.innerHTML = tplText.trim();
@@ -49,35 +81,51 @@ async function renderComments() {
 }
 
 async function setupCommentForm() {
-  const topicId = getQueryParam("topicId");
-  const container = document.getElementById("commentFormContainer");
-  const tplText = await fetch("./components/newCommentForm.html").then(r => {
-    if (!r.ok) throw new Error("Comment form template not found");
-    return r.text();
-  });
-  container.innerHTML = tplText;
+  const topicId = getTopicId();
+  if (!topicId) return;
 
+  const container = document.getElementById("commentFormContainer");
+
+  // Load the form template
+  let tplText;
+  try {
+    const res = await fetch("./components/newCommentForm.html");
+    if (!res.ok) throw new Error("Comment form template not found");
+    tplText = await res.text();
+  } catch (e) {
+    console.error(e);
+    container.innerHTML = `<div class="alert alert-danger">${e.message}</div>`;
+    return;
+  }
+
+  container.innerHTML = tplText;
   const form = document.getElementById("formNewComment");
+
   form.addEventListener("submit", async ev => {
     ev.preventDefault();
     const text = document.getElementById("commentText").value.trim();
     if (!text) return;
 
-    const user = auth.currentUser;
-    await addComment({ topicId, text, createdBy: user ? user.uid : "anonymous" });
-
-    form.reset();
-    renderComments();
+    try {
+      const user = auth.currentUser;
+      await addComment({
+        topicId,
+        text,
+        createdBy: user ? user.uid : "anonymous"
+      });
+      form.reset();
+      renderComments();
+    } catch (e) {
+      console.error("Error posting comment:", e);
+      alert("Could not post comment. See console for details.");
+    }
   });
 }
 
+// Bootstrap/modal scripts should be loaded after this module
 document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    await renderThread();
-    await setupCommentForm();
-    await renderComments();
-  } catch (e) {
-    console.error(e);
-    document.getElementById("threadContent").innerHTML = `<div class="alert alert-danger">${e.message}</div>`;
-  }
+  const ok = await renderThread();
+  if (!ok) return;
+  await setupCommentForm();
+  await renderComments();
 });
