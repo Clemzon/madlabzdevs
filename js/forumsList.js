@@ -1,8 +1,12 @@
 // js/forumsList.js
-import { loadForums, createForum, auth } from "./firebase.js";
+import { db, createForum, auth } from "./firebase.js";
+import {
+  collection,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-let allForums = [];
 let forumCardTpl = "";
+let unsubscribeForums = null;
 
 /** Load the forumCard template from the correct path */
 async function loadTemplate() {
@@ -26,17 +30,14 @@ function displayForums(forums) {
     card.querySelector(".forum-desc").textContent  = forum.description;
     card.querySelector("a.forum-link").href        = `threads.html?forumId=${forum.id}`;
 
-    const col = document.createElement("div");
-    col.className = "col-md-4";
-    col.appendChild(card);
-    container.appendChild(col);
+    container.appendChild(card);
   });
 }
 
 /** Populate the sidebar navigation links */
 function populateSidebar(forums) {
   const sidebar = document.getElementById("forumsSidebar");
-  if (!sidebar) return;  // guard missing sidebar
+  if (!sidebar) return;
   sidebar.innerHTML = "";
 
   forums.forEach(forum => {
@@ -52,7 +53,7 @@ function populateSidebar(forums) {
 }
 
 /** Wire up the live search filter */
-function setupSearch() {
+function setupSearch(allForums) {
   const input = document.getElementById("forumSearch");
   if (!input) return;
   input.addEventListener("input", () => {
@@ -88,13 +89,23 @@ function setupNewForumForm() {
     const modal = bootstrap.Modal.getInstance(document.getElementById("newForumModal"));
     modal?.hide();
     form.reset();
+  });
+}
 
-    // Reload data & UI
-    allForums = await loadForums();
-    const searchInput = document.getElementById("forumSearch");
-    if (searchInput) searchInput.value = "";
-    displayForums(allForums);
-    populateSidebar(allForums);
+/** Subscribe to forums collection in real–time */
+async function subscribeForums() {
+  const forumsRef = collection(db, "forums");
+  // If already subscribed, unsubscribe first
+  unsubscribeForums?.();
+
+  unsubscribeForums = onSnapshot(forumsRef, snapshot => {
+    const all = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    // Render grid, sidebar, and wire-up search against the full list
+    displayForums(all);
+    populateSidebar(all);
+    setupSearch(all);
+  }, error => {
+    console.error("Forums subscription error:", error);
   });
 }
 
@@ -102,11 +113,7 @@ function setupNewForumForm() {
 async function init() {
   try {
     await loadTemplate();
-    allForums = await loadForums();
-
-    displayForums(allForums);
-    populateSidebar(allForums);
-    setupSearch();
+    await subscribeForums();
     setupNewForumForm();
   } catch (e) {
     console.error("forumsList init error:", e);
@@ -117,4 +124,6 @@ async function init() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", init);
+window.addEventListener("DOMContentLoaded", init);
+// Clean up on unload
+window.addEventListener("beforeunload", () => unsubscribeForums?.());
