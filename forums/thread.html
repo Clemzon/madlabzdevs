@@ -17,41 +17,59 @@
   <link href="../css/styles.css" rel="stylesheet" />
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
+  <!-- Top Navbar -->
+  <nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
       <a class="navbar-brand" href="../index.html">MadlabzDevs</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navMenu">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="forums.html">Forums</a></li>
-          <li class="nav-item"><a class="nav-link" href="threads.html">Threads</a></li>
-        </ul>
-      </div>
+      <ul class="navbar-nav ms-auto d-flex flex-row">
+        <li class="nav-item px-2"><a class="nav-link" href="../index.html">Home</a></li>
+        <li class="nav-item px-2"><a class="nav-link" href="forums.html">Forums</a></li>
+        <li class="nav-item px-2"><a class="nav-link" href="threads.html">Threads</a></li>
+      </ul>
     </div>
   </nav>
 
-  <!-- Thread Content -->
-  <div class="container my-4">
-    <!-- Loading state is replaced by JS -->
-    <div id="threadContent">
-      <h2 id="threadTitle">Loading thread…</h2>
-      <p id="threadBody" class="lead">Please wait.</p>
-      <p><small id="threadMeta" class="text-muted"></small></p>
-      <hr />
+  <!-- Page Layout: Sidebar + Main -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <aside class="col-md-3 bg-light vh-100 p-3 border-end">
+        <h6 class="text-muted">Forums Navigation</h6>
+        <ul id="forumsSidebar" class="nav flex-column mb-3">
+          <li class="nav-item">
+            <span class="text-muted ps-2">Loading…</span>
+          </li>
+        </ul>
+        <input
+          id="forumSearch"
+          type="text"
+          class="form-control"
+          placeholder="🔍 Search forums…"
+        />
+      </aside>
+
+      <!-- Main Content -->
+      <main class="col-md-9 p-4">
+        <!-- Thread Detail -->
+        <div id="threadContent" class="mb-4">
+          <h2 id="threadTitle">Loading…</h2>
+          <p id="threadBody" class="lead">Please wait.</p>
+          <p><small id="threadMeta" class="text-muted"></small></p>
+          <hr />
+        </div>
+
+        <!-- New Comment Form -->
+        <div id="commentFormContainer" class="mb-4"></div>
+
+        <!-- Comments List -->
+        <div id="commentsContainer"></div>
+      </main>
     </div>
-
-    <!-- New Comment Form -->
-    <div id="commentFormContainer" class="mb-4"></div>
-
-    <!-- Comments List -->
-    <div id="commentsContainer"></div>
   </div>
 
-  <!-- Module entrypoint -->
+  <!-- Sidebar/Search handler -->
+  <script type="module" src="../js/forumsList.js"></script>
+  <!-- Thread detail logic -->
   <script type="module" src="../js/threadPage.js"></script>
   <!-- Bootstrap Bundle -->
   <script
