@@ -1,103 +1,81 @@
-// js/forumsList.js
-import { loadForums, createForum, auth } from "./firebase.js";
+// js/threadsList.js
+import {
+  loadForums,
+  loadForumTopics,
+  createTopic,
+  auth
+} from "../js/firebase.js";
 
-let allForums = [];    // Store the full list of forums
-let forumCardTpl = ""; // Raw HTML template for a forum card
+function getQueryParam(key) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(key);
+}
 
-/**
- * Render a given list of forums into the main grid.
- */
-function displayForums(forums) {
-  const container = document.getElementById("forumsContainer");
-  container.innerHTML = "";
-  
-  forums.forEach(forum => {
-    const tpl = document.createElement("template");
-    tpl.innerHTML = forumCardTpl.trim();
-    const card = tpl.content.firstElementChild;
+async function renderThreads() {
+  const forumId = getQueryParam("forumId");
+  const titleEl = document.getElementById("forumTitle");
+  const descEl  = document.getElementById("forumDesc");
+  const list    = document.getElementById("threadsContainer");
+  list.innerHTML = "";
 
-    card.querySelector(".forum-title").textContent       = forum.title;
-    card.querySelector(".forum-desc").textContent        = forum.description;
-    card.querySelector("a.forum-link").href              = `threads.html?forumId=${forum.id}`;
+  // 1. Load forum metadata
+  const forums = await loadForums();
+  const forum  = forums.find(f => f.id === forumId);
+  if (!forum) {
+    titleEl.textContent = "Forum not found";
+    descEl.textContent  = "";
+    return;
+  }
+  titleEl.textContent = forum.title;
+  descEl.textContent  = forum.description;
 
-    const col = document.createElement("div");
-    col.className = "col-md-4";
-    col.appendChild(card);
-    container.appendChild(col);
+  // 2. Load & render threads
+  const topics = await loadForumTopics(forumId);
+  const tplRes = await fetch("./components/threadCard.html");
+  if (!tplRes.ok) throw new Error("Thread card template not found");
+  const tplText = await tplRes.text();
+
+  topics.forEach(topic => {
+    const temp = document.createElement("template");
+    temp.innerHTML = tplText.trim();
+    const item = temp.content.firstElementChild;
+
+    item.href = `thread.html?topicId=${topic.id}`;
+    item.querySelector(".thread-title").textContent = topic.title;
+    item.querySelector(".thread-body-snippet").textContent =
+      topic.body.slice(0, 100) + (topic.body.length > 100 ? "…" : "");
+    item.querySelector(".thread-author").textContent =
+      `by ${topic.createdBy || "anonymous"}`;
+    item.querySelector(".thread-updated").textContent =
+      new Date(topic.lastUpdated.toDate()).toLocaleString();
+
+    list.appendChild(item);
   });
 }
 
-/**
- * Populate the sidebar navigation with links to each forum.
- */
-function populateSidebar(forums) {
-  const sidebar = document.getElementById("forumsSidebar");
-  sidebar.innerHTML = "";
+document.addEventListener("DOMContentLoaded", () => {
+  renderThreads();
 
-  forums.forEach(forum => {
-    const li = document.createElement("li");
-    li.className = "nav-item";
-    li.innerHTML = `
-      <a class="nav-link" href="threads.html?forumId=${forum.id}">
-        ${forum.title}
-      </a>
-    `;
-    sidebar.appendChild(li);
-  });
-}
-
-async function init() {
-  const searchInput   = document.getElementById("forumSearch");
-  const newForumForm  = document.getElementById("formNewForum");
-
-  // 1. Load the forumCard template
-  const tplRes = await fetch("./components/forumCard.html");
-  if (!tplRes.ok) throw new Error("Forum card template not found");
-  forumCardTpl = await tplRes.text();
-
-  // 2. Load all forums once
-  allForums = await loadForums();
-
-  // 3. Render initial UI
-  displayForums(allForums);
-  populateSidebar(allForums);
-
-  // 4. Wire up live search
-  searchInput.addEventListener("input", () => {
-    const term = searchInput.value.trim().toLowerCase();
-    const filtered = term
-      ? allForums.filter(f =>
-          f.title.toLowerCase().includes(term) ||
-          f.description.toLowerCase().includes(term)
-        )
-      : allForums;
-    displayForums(filtered);
-  });
-
-  // 5. Handle “New Forum” form submission
-  newForumForm.addEventListener("submit", async ev => {
+  // Handle New Thread creation
+  const form = document.getElementById("formNewThread");
+  form.addEventListener("submit", async ev => {
     ev.preventDefault();
-    const title = document.getElementById("forumTitle").value.trim();
-    const desc  = document.getElementById("forumDesc").value.trim();
-    if (!title || !desc) return;
+    const title = document.getElementById("threadTitle").value.trim();
+    const body  = document.getElementById("threadBody").value.trim();
+    if (!title || !body) return;
 
-    const user = auth.currentUser;
-    await createForum({
-      title,
-      description: desc,
-      createdBy: user ? user.uid : "anonymous"
-    });
+    const forumId  = getQueryParam("forumId");
+    const user     = auth.currentUser;
+    const createdBy = user ? user.uid : "anonymous";
+
+    await createTopic({ forumId, title, body, createdBy });
 
     // Close modal & reset
-    new bootstrap.Modal(document.getElementById("newForumModal")).hide();
-    newForumForm.reset();
+    const modalEl = document.getElementById("newThreadModal");
+    bootstrap.Modal.getInstance(modalEl).hide();
+    form.reset();
 
-    // Reload forums & UI, clear search
-    allForums = await loadForums();
-    searchInput.value = "";
-    displayForums(allForums);
-    populateSidebar(allForums);
+    // Re-render threads list
+    renderThreads();
   });
-}
-
-document.addEventListener("DOMContentLoaded", init);
+});
