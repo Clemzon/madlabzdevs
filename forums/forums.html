@@ -1,18 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+  />
+  <title>Forums • MadlabzDevs</title>
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <!-- Your CSS -->
+  <link href="../css/styles.css" rel="stylesheet" />
 </head>
 <body id="page-top">
-
-  <!-- Static Header Bar (unchanged) -->
+  <!-- Static Header Bar -->
   <header class="bg-dark text-white py-2 fixed-top">
     <div class="container px-4 px-lg-5">
       <span class="h5 mb-0">MadLabzDevs</span>
     </div>
   </header>
 
-  <!-- Horizontal scrolling top nav bar -->
-  <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom overflow-auto fixed-top"
-       style="top:32px; z-index:1030;">
+  <!-- Horizontal Top Nav -->
+  <nav
+    class="navbar navbar-expand-sm navbar-light bg-light border-bottom overflow-auto fixed-top"
+    style="top: 32px; z-index:1030;"
+  >
     <div class="container px-4 px-lg-5">
       <ul class="navbar-nav flex-row flex-nowrap">
         <li class="nav-item">
@@ -32,47 +48,26 @@
         </li>
       </ul>
     </div>
-  </nav>  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, shrink-to-fit=no"
-  />
-  <title>Forums • MadlabzDevs</title>
-
-  <!-- Bootstrap CSS -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
-
-  <!-- Your CSS -->
-  <link href="../css/styles.css" rel="stylesheet" />
-</head>
-<body>
-  <!-- Top Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="../index.html">MadlabzDevs</a>
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
-        <li class="nav-item"><a class="nav-link active" href="forums.html">Forums</a></li>
-        <li class="nav-item"><a class="nav-link" href="../profile.html">Profile</a></li>
-      </ul>
-    </div>
   </nav>
 
-  <!-- Page Layout: Sidebar + Main -->
+  <!-- Page Layout: Sidebar + Main (push down for fixed nav) -->
+  <div class="pt-5 mt-5"></div>
   <div class="container-fluid">
     <div class="row">
       <!-- Sidebar -->
       <aside class="col-md-3 bg-light vh-100 p-3 border-end">
         <h6 class="text-muted">Forums Navigation</h6>
-        <ul id="forumsSidebar" class="nav flex-column">
-          <!-- Populated by js/forumsList.js -->
+        <ul id="forumsSidebar" class="nav flex-column mb-3">
           <li class="nav-item">
             <span class="text-muted ps-2">Loading…</span>
           </li>
         </ul>
+        <input
+          id="forumSearch"
+          type="text"
+          class="form-control"
+          placeholder="🔍 Search forums…"
+        />
       </aside>
 
       <!-- Main Content -->
@@ -83,12 +78,7 @@
             <h1 class="h3">Forums</h1>
           </div>
           <div class="col-md-5">
-            <input
-              id="forumSearch"
-              type="text"
-              class="form-control"
-              placeholder="🔍 Search forums…"
-            />
+            <!-- duplicated search removed -->
           </div>
           <div class="col-md-3 text-end">
             <button
