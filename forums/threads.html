@@ -17,15 +17,35 @@
   <!-- Your CSS -->
   <link href="../css/styles.css" rel="stylesheet" />
 </head>
-<body>
-  <!-- Top Navbar -->
-  <nav class="navbar navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="../index.html">MadlabzDevs</a>
-      <ul class="navbar-nav ms-auto d-flex flex-row">
-        <li class="nav-item px-2"><a class="nav-link" href="../index.html">Home</a></li>
-        <li class="nav-item px-2"><a class="nav-link" href="forums.html">Forums</a></li>
-        <li class="nav-item px-2"><a class="nav-link active" href="#">Threads</a></li>
+<body id="page-top">
+
+  <!-- Static Header Bar (unchanged) -->
+  <header class="bg-dark text-white py-2 fixed-top">
+    <div class="container px-4 px-lg-5">
+      <span class="h5 mb-0">MadLabzDevs</span>
+    </div>
+  </header>
+
+  <!-- Horizontal scrolling top nav bar -->
+  <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom overflow-auto fixed-top"
+       style="top:32px; z-index:1030;">
+    <div class="container px-4 px-lg-5">
+      <ul class="navbar-nav flex-row flex-nowrap">
+        <li class="nav-item">
+          <a class="nav-link px-3" href="../projects.html">Projects</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3" href="forums.html">Forums</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3" href="../events.html">Events</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3" href="../portfolio.html">Portfolio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 active" href="../profile.html">Profile</a>
+        </li>
       </ul>
     </div>
   </nav>
