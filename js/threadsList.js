@@ -16,6 +16,8 @@ async function renderThreads() {
   const descEl  = document.getElementById("forumDesc");
   const list    = document.getElementById("threadsContainer");
 
+  if (!list || !titleEl || !descEl) return;
+
   list.innerHTML = ""; // clear existing
 
   // Load forum info
@@ -32,7 +34,7 @@ async function renderThreads() {
   // Load threads
   const topics = await loadForumTopics(forumId);
 
-  // Fetch threadCard template (relative to threads.html)
+  // Fetch threadCard template
   const res = await fetch("./components/threadCard.html");
   if (!res.ok) {
     list.innerHTML = `<div class="alert alert-danger">Template not found</div>`;
@@ -48,10 +50,10 @@ async function renderThreads() {
 
     item.href = `thread.html?topicId=${topic.id}`;
     item.querySelector(".thread-title").textContent        = topic.title;
-    item.querySelector(".thread-body-snippet").textContent = 
-      topic.body.slice(0,100) + (topic.body.length>100 ? "…" : "");
-    item.querySelector(".thread-author").textContent       = `by ${topic.createdBy||"anon"}`;
-    item.querySelector(".thread-updated").textContent      = 
+    item.querySelector(".thread-body-snippet").textContent =
+      topic.body.slice(0,100) + (topic.body.length > 100 ? "…" : "");
+    item.querySelector(".thread-author").textContent       = `by ${topic.createdBy || "anon"}`;
+    item.querySelector(".thread-updated").textContent      =
       new Date(topic.lastUpdated.toDate()).toLocaleString();
 
     list.appendChild(item);
