@@ -8,39 +8,27 @@
   <!-- Core theme CSS (includes Bootstrap)-->
   <link href="css/styles.css" rel="stylesheet" />
   <style>
-    body { padding-top: calc(32px /* header */ + 48px /* nav */); }
+    /* Offset for fixed header (32px) + nav (48px) */
+    body { padding-top: calc(32px + 48px) !important; }
   </style>
+
+  <!-- Load shared header/nav -->
+  <script type="module" src="/js/header.js"></script>
 </head>
 <body>
 
-  <!-- Static Header Bar -->
-  <header class="bg-dark text-white py-2 fixed-top w-100" role="banner">
-    <div class="container px-4 px-lg-5">
-      <span class="h5 mb-0">MadLabzDevs</span>
-    </div>
-  </header>
+  <!-- Injected shared header/nav -->
+  <div id="shared-header"></div>
 
-  <!-- Horizontal scrolling top nav bar -->
-  <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom overflow-auto fixed-top"
-       style="top:32px; z-index:1030;"
-       role="navigation" aria-label="Primary">
-    <div class="container px-4 px-lg-5">
-      <ul class="navbar-nav flex-row flex-nowrap">
-        <li class="nav-item"><a class="nav-link px-3" href="projects.html">Projects</a></li>
-        <li class="nav-item"><a class="nav-link px-3" href="forums/forums.html">Forums</a></li>
-        <li class="nav-item"><a class="nav-link px-3" href="events.html">Events</a></li>
-        <li class="nav-item"><a class="nav-link px-3" href="portfolio.html">Portfolio</a></li>
-        <li class="nav-item"><a class="nav-link px-3" href="profile.html">Profile</a></li>
-      </ul>
-    </div>
-  </nav>
+  <!-- Spacer to push content below fixed header/nav -->
+  <div class="pt-5 mt-5"></div>
 
   <div class="container-fluid py-4">
     <!-- Hero / Introduction -->
     <section id="about-me" class="mb-5 text-center">
       <img src="assets/img/profile.jpg" class="rounded-circle mb-3" alt="Profile Photo" width="150" height="150">
       <h1 class="display-4">Your Name</h1>
-      <p class="lead">Passionate Developer & Designer</p>
+      <p class="lead">Passionate Developer &amp; Designer</p>
       <p>I build engaging digital experiences across web and mobile platforms.</p>
     </section>
 
@@ -110,7 +98,7 @@
     </section>
   </div>
 
-  <!-- MadLabzDevs core JS -->
+  <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

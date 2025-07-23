@@ -8,28 +8,20 @@
   <!-- Core theme CSS (includes Bootstrap)-->
   <link href="css/styles.css" rel="stylesheet" />
   <style>
-    body { padding-top: calc(32px /* header */ + 48px /* nav */); }
+    /* Offset for fixed header (32px) + nav (48px) */
+    body { padding-top: calc(32px + 48px) !important; }
   </style>
+
+  <!-- Load shared header/nav -->
+  <script type="module" src="/js/header.js"></script>
 </head>
 <body>
-  <!-- Static Header Bar -->
-  <header class="bg-dark text-white py-2 fixed-top">
-    <div class="container px-4 px-lg-5">
-      <span class="h5 mb-0">MadLabzDevs</span>
-    </div>
-  </header>
-  <!-- Horizontal scrolling top nav bar -->
-  <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom overflow-auto fixed-top" style="top:32px; z-index:1030;">
-    <div class="container px-4 px-lg-5">
-      <ul class="navbar-nav flex-row flex-nowrap">
-        <li class="nav-item"><a class="nav-link px-3" href="projects.html">Projects</a></li>
-        <li class="nav-item"><a class="nav-link px-3" href="messageboard/message_board.html">Message Board</a></li>
-        <li class="nav-item"><a class="nav-link px-3" href="events.html">Events</a></li>
-        <li class="nav-item"><a class="nav-link px-3" href="portfolio.html">Portfolio</a></li>
-        <li class="nav-item"><a class="nav-link px-3" href="profile.html">Profile</a></li>
-      </ul>
-    </div>
-  </nav>
+
+  <!-- Injected shared header/nav -->
+  <div id="shared-header"></div>
+
+  <!-- Spacer to push content below fixed header/nav -->
+  <div class="pt-5 mt-5"></div>
 
   <div class="container-fluid py-4">
     <h1 class="mb-4">Upcoming Events</h1>
@@ -41,8 +33,8 @@
           <div class="card-body">
             <h5 class="card-title">BEPBuddy Web App Live Demo</h5>
             <p class="card-text">
-              <strong>Disclaimer:</strong> This is a test demonstration—data must be backed up externally.  
-              The web demo is in testing mode and will undergo frequent updates.  
+              <strong>Disclaimer:</strong> This is a test demonstration—data must be backed up externally.<br>
+              The web demo is in testing mode and will undergo frequent updates.<br>
               Access it at 
               <a href="https://www.madlabzdevs.net/projects" target="_blank" rel="noopener noreferrer">
                 www.madlabzdevs.net/projects
@@ -54,15 +46,15 @@
       <!-- BEPBuddy Android Test Group -->
       <div class="col-lg-4 col-sm-6 mb-4">
         <div class="card h-100">
-          <div class="card-header text-center"><strong>July 19, 2025</strong></div>
+          <div class="card-header text-center"><strong>July 19, 2025</strong></div>
           <div class="card-body">
             <h5 class="card-title">BEPBuddy for Android Mobile Devices</h5>
             <p class="card-text">
-              Join the BEPBuddy Test Group on Google Groups and add your email to gain access:  
+              Join the BEPBuddy Test Group on Google Groups and add your email to gain access:<br>
               <a href="https://groups.google.com/g/bepbuddy_test_group" target="_blank" rel="noopener noreferrer">
                 https://groups.google.com/g/bepbuddy_test_group
-              </a>.  
-              Once added, you can download the early-access Android app from the Google Play Store link provided in the group.  
+              </a>.<br>
+              Once added, you can download the early-access Android app from the Google Play Store link provided in the group.<br>
               Google requires at least 12 users to sign up with the developer group before the app becomes visible for testing.
             </p>
           </div>

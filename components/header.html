@@ -1,0 +1,53 @@
+<!-- components/header.html -->
+<style>
+  /* preserve your spacing */
+  body {
+    padding-top: calc(32px + 48px) !important;
+  }
+  /* dropdown toggle styling */
+  #btnAccount {
+    color: var(--bs-light);
+    background: transparent;
+    border: none;
+  }
+  /* hide/show bootstrap dropdown toggler arrow */
+  #btnAccount::after {
+    margin-left: .25rem;
+  }
+</style>
+
+<header class="bg-dark text-white py-2 fixed-top w-100" role="banner">
+  <div class="container d-flex justify-content-between align-items-center">
+    <span class="h5 mb-0">MadLabzDevs</span>
+    <div class="dropdown">
+      <button
+        id="btnAccount"
+        class="btn btn-sm dropdown-toggle"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        Account
+      </button>
+      <ul id="accountMenu" class="dropdown-menu dropdown-menu-end">
+        <!-- populated by js -->
+      </ul>
+    </div>
+  </div>
+</header>
+
+<nav
+  class="navbar navbar-light bg-light border-bottom overflow-auto fixed-top"
+  style="top:32px; z-index:1030;"
+  role="navigation"
+  aria-label="Primary"
+>
+  <div class="container">
+    <ul class="navbar-nav flex-row flex-nowrap">
+      <li class="nav-item"><a class="nav-link px-3" href="/projects.html">Projects</a></li>
+      <li class="nav-item"><a class="nav-link px-3" href="/forums/forums.html">Forums</a></li>
+      <li class="nav-item"><a class="nav-link px-3" href="/events.html">Events</a></li>
+      <li class="nav-item"><a class="nav-link px-3" href="/portfolio.html">Portfolio</a></li>
+      <li class="nav-item"><a class="nav-link px-3" href="/profile.html">Profile</a></li>
+    </ul>
+  </div>
+</nav>

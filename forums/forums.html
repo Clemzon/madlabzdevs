@@ -6,7 +6,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1, shrink-to-fit=no"
   />
-  <title>Forums • MadlabzDevs</title>
+  <title>Forums • MadLabzDevs</title>
 
   <!-- Bootstrap CSS -->
   <link
@@ -15,43 +15,28 @@
   />
   <!-- Your CSS -->
   <link href="../css/styles.css" rel="stylesheet" />
+
+  <style>
+    /* Offset for fixed header (32px) + nav (48px) */
+    body { padding-top: calc(32px /* header */ + 48px /* nav */); }
+
+    /* Hide “+ New Forum” until signed in */
+    #btnNewForum { display: none; }
+    body.signed-in #btnNewForum { display: inline-block; }
+  </style>
+
+  <!-- Load shared header/nav (absolute path) -->
+  <script type="module" src="/js/header.js"></script>
 </head>
 <body id="page-top">
-  <!-- Static Header Bar -->
-  <header class="bg-dark text-white py-2 fixed-top">
-    <div class="container px-4 px-lg-5">
-      <span class="h5 mb-0">MadLabzDevs</span>
-    </div>
-  </header>
 
-  <!-- Horizontal Top Nav -->
-  <nav
-    class="navbar navbar-expand-sm navbar-light bg-light border-bottom overflow-auto fixed-top"
-    style="top: 32px; z-index:1030;"
-  >
-    <div class="container px-4 px-lg-5">
-      <ul class="navbar-nav flex-row flex-nowrap">
-        <li class="nav-item">
-          <a class="nav-link px-3" href="../projects.html">Projects</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link px-3" href="forums.html">Forums</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link px-3" href="../events.html">Events</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link px-3" href="../portfolio.html">Portfolio</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link px-3 active" href="../profile.html">Profile</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+  <!-- Injected header/nav -->
+  <div id="shared-header"></div>
 
-  <!-- Page Layout: Sidebar + Main (push down for fixed nav) -->
+  <!-- Spacer to push content below fixed header/nav -->
   <div class="pt-5 mt-5"></div>
+
+  <!-- Page Layout: Sidebar + Main -->
   <div class="container-fluid">
     <div class="row">
       <!-- Sidebar -->
@@ -72,14 +57,12 @@
 
       <!-- Main Content -->
       <main class="col-md-9 p-4">
-        <!-- Header: Title, Search, New Forum -->
+        <!-- Header: Title, New Forum -->
         <div class="row align-items-center mb-3">
           <div class="col-md-4">
             <h1 class="h3">Forums</h1>
           </div>
-          <div class="col-md-5">
-            <!-- duplicated search removed -->
-          </div>
+          <div class="col-md-5"><!-- no duplicated search here --></div>
           <div class="col-md-3 text-end">
             <button
               id="btnNewForum"
