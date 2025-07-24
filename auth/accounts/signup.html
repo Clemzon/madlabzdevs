@@ -21,23 +21,62 @@
           <!-- Username -->
           <div class="mb-3">
             <label for="username" class="form-label">Username</label>
-            <input id="username" type="text" class="form-control" placeholder="Choose a username" required />
+            <input
+              id="username"
+              name="username"
+              type="text"
+              class="form-control"
+              placeholder="Choose a username"
+              required
+            />
           </div>
 
           <!-- Email -->
           <div class="mb-3">
             <label for="email" class="form-label">Email address</label>
-            <input id="email" type="email" class="form-control" placeholder="you@example.com" required />
+            <input
+              id="email"
+              name="email"
+              type="email"
+              class="form-control"
+              placeholder="you@example.com"
+              required
+            />
           </div>
 
-          <!-- Password -->
           <div class="mb-3">
             <label for="password" class="form-label">Password</label>
-            <input id="password" type="password" class="form-control" placeholder="••••••••" required minlength="6" />
+            <input
+              id="password"
+              name="password"
+              type="password"
+              class="form-control"
+              placeholder="••••••••"
+              required
+              minlength="6"
+            />
+            <!-- Confirm Password -->
+            <label for="confirmPassword" class="form-label mt-3">Confirm Password</label>
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              class="form-control"
+              placeholder="••••••••"
+              required
+              minlength="6"
+            />
+            <!-- Show Password Checkbox -->
+            <div class="form-check mt-2">
+              <input class="form-check-input" type="checkbox" id="showPasswordCheckbox" />
+              <label class="form-check-label" for="showPasswordCheckbox">
+                Show Passwords
+              </label>
+            </div>
           </div>
 
           <!-- Error / Success Message -->
-          <div id="signupFeedback" class="mb-3 text-center"></div>
+          <div id="signupFeedback" class="mb-3 text-center" role="alert" aria-live="polite"></div>
 
           <!-- Submit -->
           <button type="submit" class="btn btn-primary w-100">Sign Up</button>
@@ -55,10 +94,13 @@
 
   <!-- Firebase & Auth Scripts -->
   <script type="module">
-    import { signUp, onAuthChange } from "../../js/firebase.js";
+    import { signUp, onAuthChange } from "/js/firebase.js";
 
     const form     = document.getElementById("signupForm");
     const feedback = document.getElementById("signupFeedback");
+    const confirmPwdInput = form.confirmPassword;
+    const showPwdCheckbox = document.getElementById('showPasswordCheckbox');
+    const submitBtn       = form.querySelector('button[type="submit"]');
 
     // Helper to read ?redirect=...
     function getRedirect() {
@@ -68,36 +110,49 @@
     const redirect = getRedirect();
 
     // Update Sign In link to preserve redirect
-    document.getElementById('showSignIn').href = `signin.html?redirect=${encodeURIComponent(redirect)}`;
+    document.getElementById('showSignIn').href =
+      `signin.html?redirect=${encodeURIComponent(redirect)}`;
 
     // Listen for form submit
     form.addEventListener("submit", async e => {
       e.preventDefault();
-      feedback.textContent = ""; // clear
 
       const username = form.username.value.trim();
       const email    = form.email.value.trim();
       const pass     = form.password.value;
 
+      // Validate matching passwords
+      if (pass !== confirmPwdInput.value) {
+        feedback.className = "text-danger";
+        feedback.textContent = "Passwords do not match.";
+        return;
+      }
+      // Disable submit
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Creating account…";
+      feedback.textContent = ""; // clear
+
       try {
-        feedback.textContent = "Creating account…";
-        const userCred = await signUp(email, pass, username);
+        // ← Correct argument order: (username, email, password)
+        const userCred = await signUp(username, email, pass);
         feedback.className = "text-success";
         feedback.textContent = `Success! Welcome, ${userCred.user.displayName}. Redirecting…`;
 
         // Auto-redirect back to original page
         setTimeout(() => window.location.href = redirect, 1000);
       } catch (err) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Sign Up";
         feedback.className = "text-danger";
         feedback.textContent = `Error: ${err.message}`;
       }
     });
 
-    // If already signed in, redirect away immediately
-    onAuthChange(user => {
-      if (user) {
-        window.location.href = redirect;
-      }
+    // Toggle visibility of both password fields
+    showPwdCheckbox.addEventListener('change', () => {
+      const type = showPwdCheckbox.checked ? 'text' : 'password';
+      form.password.type = type;
+      form.confirmPassword.type = type;
     });
   </script>
 </body>

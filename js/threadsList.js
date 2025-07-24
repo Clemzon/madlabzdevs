@@ -38,7 +38,15 @@ function displayThreads(threads, append = false) {
     item.querySelector(".thread-title").textContent        = topic.title;
     item.querySelector(".thread-body-snippet").textContent =
       topic.body.slice(0,100) + (topic.body.length > 100 ? "…" : "");
-    item.querySelector(".thread-author").textContent       = `by ${topic.createdBy || "anon"}`;
+    // Populate author link
+    const authorDiv = item.querySelector(".thread-author");
+    if (authorDiv) {
+      authorDiv.innerHTML = `
+        <a href="/profile.html?uid=${topic.createdBy}" class="text-decoration-none">
+          ${topic.username || "Anonymous"}
+        </a>
+      `;
+    }
     item.querySelector(".thread-updated").textContent      =
       new Date(topic.lastUpdated.toDate()).toLocaleString();
 
@@ -105,7 +113,13 @@ function setupForm() {
 
     const forumId = getForumId();
     const user    = auth.currentUser;
-    await createTopic({ forumId, title, body, createdBy: user?.uid || "anonymous" });
+    await createTopic({
+      forumId,
+      title,
+      body,
+      createdBy: user?.uid || "anonymous",
+      username: user?.displayName || "Anonymous"
+    });
 
     form.reset();
     // reload first page

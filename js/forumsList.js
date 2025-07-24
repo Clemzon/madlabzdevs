@@ -29,7 +29,15 @@ function displayForums(forums) {
     card.querySelector(".forum-title").textContent = forum.title;
     card.querySelector(".forum-desc").textContent  = forum.description;
     card.querySelector("a.forum-link").href        = `threads.html?forumId=${forum.id}`;
-
+    // Populate author
+    const authorEl = card.querySelector(".forum-author");
+    if (authorEl) {
+      authorEl.innerHTML = `
+        <a href="/profile.html?uid=${forum.createdBy}" class="text-decoration-none">
+          ${forum.username || "Anonymous"}
+        </a>
+      `;
+    }
     container.appendChild(card);
   });
 }
@@ -82,7 +90,8 @@ function setupNewForumForm() {
     await createForum({
       title,
       description: desc,
-      createdBy: user ? user.uid : "anonymous"
+      createdBy: user ? user.uid : "anonymous",
+      username: user ? user.displayName : "Anonymous"
     });
 
     // Close modal & reset

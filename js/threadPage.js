@@ -52,7 +52,7 @@ function subscribeThread() {
     document.getElementById("threadTitle").textContent = data.title;
     document.getElementById("threadBody").textContent  = data.body;
     document.getElementById("threadMeta").textContent  =
-      `by ${data.createdBy || "anonymous"} • ${new Date(data.createdAt.toDate()).toLocaleString()}`;
+      `by ${data.username || data.createdBy || "Anonymous"} • ${new Date(data.createdAt.toDate()).toLocaleString()}`;
   }, err => {
     console.error("Thread subscription error:", err);
   });
@@ -76,7 +76,7 @@ function subscribeComments() {
       const tmp = document.createElement("template");
       tmp.innerHTML = commentTpl.trim();
       const card = tmp.content.firstElementChild;
-      card.querySelector(".comment-author").textContent    = data.createdBy;
+      card.querySelector(".comment-author").textContent    = data.username || data.createdBy || "Anonymous";
       card.querySelector(".comment-timestamp").textContent =
         new Date(data.createdAt.toDate()).toLocaleString();
       card.querySelector(".comment-text").textContent      = data.text;
@@ -106,7 +106,8 @@ function setupCommentForm() {
       await addComment({
         topicId,
         text,
-        createdBy: user ? user.uid : "anonymous"
+        createdBy: user ? user.uid : "anonymous",
+        username:   user ? user.displayName : "Anonymous"
       });
       form.reset();
     } catch (e) {

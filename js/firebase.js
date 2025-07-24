@@ -51,15 +51,15 @@ setPersistence(auth, browserLocalPersistence).catch(err => {
 
 /**
  * Create a new user, then set their displayName.
- * @param {string} email
+ * @param {string} username    — the public username to show
+ * @param {string} email       — the user’s email (hidden in UI)
  * @param {string} password
- * @param {string} username
  * @returns {Promise<import("firebase/auth").UserCredential>}
  */
-export async function signUp(email, password, username) {
-  // this will actually return a UserCredential
+export async function signUp(username, email, password) {
+  // create the user with email+password
   const cred = await createUserWithEmailAndPassword(auth, email, password);
-  // attach the chosen username
+  // then attach the chosen username
   await updateProfile(cred.user, { displayName: username });
   return cred;
 }
@@ -88,7 +88,7 @@ export function onAuthChange(callback) {
 }
 
 // ————————————————————————————————————————————————
-// FIRESTORE APIs (unchanged from your original)
+// FIRESTORE APIs (unchanged)
 // ————————————————————————————————————————————————
 
 export async function loadForums() {
