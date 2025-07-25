@@ -1,8 +1,26 @@
-<div class="card h-100">
-  <div class="card-body d-flex flex-column">
-    <h5 class="card-title forum-title"></h5>
-    <p class="card-text forum-desc flex-grow-1"></p>
-    <div class="forum-author mb-2"></div>
-    <a class="btn btn-outline-primary mt-3 forum-link">View Topics</a>
+<!-- forums/components/forumCard.html -->
+<article class="card h-100 card-forum shadow-sm border-light position-relative hover-shadow">
+  <div class="card-body">
+    <h5 class="card-title forum-title mb-2">
+      <a 
+        href="#" 
+        class="forum-link text-decoration-none stretched-link"
+      >
+        <!-- Forum title injected here -->
+        Forum Title
+      </a>
+    </h5>
+    <p class="card-text forum-desc mb-2 text-muted small">
+      <!-- Forum description injected here -->
+      A brief description of this forum goes here.
+    </p>
+    <div class="forum-author text-muted small">
+      Started by 
+      <a href="#" class="text-decoration-none forum-author-link">
+        <!-- Author name injected here -->
+        Alice
+      </a>
+      on <time datetime="2025-07-24">Jul 24, 2025</time>
+    </div>
   </div>
-</div>
+</article>

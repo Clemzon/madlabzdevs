@@ -26,19 +26,30 @@ function displayForums(forums) {
     tpl.innerHTML = forumCardTpl.trim();
     const card = tpl.content.firstElementChild;
 
-    card.querySelector(".forum-title").textContent = forum.title;
-    card.querySelector(".forum-desc").textContent  = forum.description;
-    card.querySelector("a.forum-link").href        = `threads.html?forumId=${forum.id}`;
-    // Populate author
+    // Populate title link
+    const linkEl = card.querySelector("a.forum-link");
+    if (linkEl) {
+      linkEl.href = `threads.html?forumId=${forum.id}`;
+      linkEl.textContent = forum.title;
+    }
+
+    // Populate description
+    const descEl = card.querySelector(".forum-desc");
+    if (descEl) {
+      descEl.textContent = forum.description;
+    }
+
+    // Populate author name
     const authorEl = card.querySelector(".forum-author");
     if (authorEl) {
-      authorEl.innerHTML = `
-        <a href="/profile.html?uid=${forum.createdBy}" class="text-decoration-none">
-          ${forum.username || "Anonymous"}
-        </a>
-      `;
+      authorEl.textContent = forum.username || "Anonymous";
     }
-    container.appendChild(card);
+
+    // Wrap in column and append
+    const col = document.createElement("div");
+    col.className = "col-md-4 mb-4";
+    col.appendChild(card);
+    container.appendChild(col);
   });
 }
 
@@ -104,12 +115,9 @@ function setupNewForumForm() {
 /** Subscribe to forums collection in real–time */
 async function subscribeForums() {
   const forumsRef = collection(db, "forums");
-  // If already subscribed, unsubscribe first
   unsubscribeForums?.();
-
   unsubscribeForums = onSnapshot(forumsRef, snapshot => {
     const all = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    // Render grid, sidebar, and wire-up search against the full list
     displayForums(all);
     populateSidebar(all);
     setupSearch(all);
@@ -134,5 +142,4 @@ async function init() {
 }
 
 window.addEventListener("DOMContentLoaded", init);
-// Clean up on unload
 window.addEventListener("beforeunload", () => unsubscribeForums?.());

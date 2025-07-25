@@ -17,47 +17,61 @@ async function renderForums() {
       temp.innerHTML = templateText.trim();
       const card = temp.content.firstElementChild;
 
-      card.querySelector(".forum-title").textContent = forum.title;
-      card.querySelector(".forum-desc").textContent = forum.description;
-      card.querySelector("a.forum-link").href = `threads.html?forumId=${forum.id}`;
+      // Populate title link (forum title is now the link)
+      const linkEl = card.querySelector("a.forum-link");
+      linkEl.href = `threads.html?forumId=${forum.id}`;
+      linkEl.textContent = forum.title;
 
+      // Populate description
+      const descEl = card.querySelector(".forum-desc");
+      descEl.textContent = forum.description;
+
+      // Populate author link
+      const authorLink = card.querySelector(".forum-author-link");
+      if (authorLink) {
+        authorLink.href = `/profile.html?uid=${forum.createdBy}`;
+        authorLink.textContent = forum.username || "Anonymous";
+      }
+
+      // Wrap in column and append
       const col = document.createElement("div");
-      col.className = "col-md-4";
+      col.className = "col-md-4 mb-4";
       col.appendChild(card);
       container.appendChild(col);
     });
 
   } catch (e) {
     console.error("Error rendering forums:", e);
-    container.innerHTML = `<div class="alert alert-danger">Failed to load forums.</div>`;
+    container.innerHTML = `<div class="alert alert-danger">Failed to load discussions.</div>`;
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   renderForums();
 
-  const newForumForm = document.getElementById("formNewForum");
-  newForumForm.addEventListener("submit", async ev => {
+  const form = document.getElementById("formNewForum");
+  form?.addEventListener("submit", async ev => {
     ev.preventDefault();
-    const title = document.getElementById("forumTitle").value.trim();
-    const desc  = document.getElementById("forumDesc").value.trim();
+    const title = document.getElementById("forumTitle")?.value.trim();
+    const desc  = document.getElementById("forumDesc")?.value.trim();
     if (!title || !desc) return;
 
     try {
       const user = auth.currentUser;
-      const createdBy = user ? user.uid : "anonymous";
-
-      await createForum({ title, description: desc, createdBy });
-
-      const modalEl = document.getElementById("newForumModal");
-      const modal = bootstrap.Modal.getInstance(modalEl);
-      modal.hide();
-      newForumForm.reset();
-
+      await createForum({
+        title,
+        description: desc,
+        createdBy: user ? user.uid : "anonymous",
+        username: user ? user.displayName : "Anonymous"
+      });
+      // Close modal & reset
+      const modal = bootstrap.Modal.getInstance(document.getElementById("newForumModal"));
+      modal?.hide();
+      form.reset();
       renderForums();
-    } catch (e) {
-      console.error("Error creating forum:", e);
-      alert("Could not create forum. See console for details.");
+    } catch (err) {
+      console.error("Error creating discussion:", err);
+      alert("Could not create discussion. Please try again.");
     }
   });
 });
