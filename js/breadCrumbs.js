@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<!-- Backup of original file begins
+[Original content retained in version control]
+Backup ends -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+  />
+  <title>Thread • MadlabzDevs</title>
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <!-- Your custom styles -->
+  <link href="../css/styles.css" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+  />
+
+  <style>
+    /* Only show comment form & “Load more” when signed in */
+    #commentFormContainer,
+    #btnLoadMoreComments {
+      display: none;
+    }
+    body.signed-in #commentFormContainer,
+    body.signed-in #btnLoadMoreComments {
+      display: block;
+    }
+
+    /* Offset for fixed header (32px) + nav (48px) */
+    body { padding-top: calc(32px + 48px) !important; }
+
+    /* Sticky sidebar */
+    .sidebar { position: sticky; top: calc(32px + 48px); }
+
+    /* Sidebar nav links */
+    #forumsSidebar .nav-link {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+
+  <!-- Load shared header/nav -->
+  <script type="module" src="/js/header.js"></script>
+</head>
+<body id="page-top">
+
+  <!-- Injected shared header/nav -->
+  <div id="shared-header"></div>
+
+  <!-- Spacer to offset fixed header/nav -->
+  <div class="pt-5 mt-5"></div>
+
+  <!-- Page Layout: Main only -->
+  <div class="container-fluid">
+    <div class="row">
+      <main class="col-12 p-4">
+        <!-- Breadcrumb placeholder -->
+        <div id="breadcrumb-container"></div>
+
+        <!-- Thread Detail -->
+        <div id="threadContent" class="mb-4">
+          <div class="d-flex align-items-start justify-content-between mb-4">
+            <div>
+              <h2 id="threadTitle" class="h3 mb-1">Loading…</h2>
+              <p id="threadBody" class="lead mb-1">Please wait.</p>
+              <p><small id="threadMeta" class="text-muted small"></small></p>
+            </div>
+            <button
+              id="btnNewThread"
+              class="btn btn-primary btn-sm ms-3"
+              data-bs-toggle="modal"
+              data-bs-target="#newThreadModal"
+            >
+              <i class="bi bi-plus-lg"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Comments List -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-body p-0">
+            <div id="commentsContainer" class="list-group list-group-flush">
+              <!-- comments injected here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Comment Form (hidden unless signed in) -->
+        <div id="commentFormContainer" class="mb-4"></div>
+
+        <!-- Load More Comments (hidden unless signed in) -->
+        <div class="text-center mt-3">
+          <button id="btnLoadMoreComments" class="btn btn-outline-secondary btn-sm">
+            Load more comments
+          </button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- New Thread Modal -->
+  <div
+    class="modal fade"
+    id="newThreadModal"
+    tabindex="-1"
+    aria-labelledby="newThreadLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newThreadLabel">Create New Thread</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formNewThread">
+            <div class="mb-3">
+              <label for="threadTitle" class="form-label">Thread Title</label>
+              <input type="text" id="threadTitle" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label for="threadBody" class="form-label">Body</label>
+              <textarea id="threadBody" class="form-control" rows="6" required></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button type="submit" form="formNewThread" class="btn btn-primary">
+            Post Thread
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase Auth listener -->
+  <script type="module">
+    import { onAuthChange } from '../js/firebase.js';
+    onAuthChange(user => {
+      document.body.classList.toggle('signed-in', !!user);
+    });
+  </script>
+
+  <!-- Sidebar/Search handler -->
+  <script type="module" src="../js/forumsList.js"></script>
+  <!-- Thread detail & comments logic -->
+  <script type="module" src="../js/threadPage.js"></script>
+  <!-- Breadcrumb injector -->
+  <script type="module">
+    import { injectBreadcrumbs } from '../js/breadCrumbs.js';
+    injectBreadcrumbs();
+  </script>
+  <!-- Bootstrap Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -64,8 +64,8 @@
     /* MOBILE-ONLY: hide desktop sidebar and show toggle */
     .mobile-forum-toggle { display: none; margin: 1rem; }
     @media (max-width: 767px) {
-      aside.sidebar { display: none; }
-      .mobile-forum-toggle { display: inline-block; }
+      aside.sidebar { display: none !important; }      /* hide sidebar */
+      .mobile-forum-toggle { display: inline-block; }  /* show toggle */
     }
     /* DESKTOP-ONLY: hide mobile toggle */
     @media (min-width: 768px) {
