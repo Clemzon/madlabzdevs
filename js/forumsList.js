@@ -1,4 +1,6 @@
 // js/forumsList.js
+// Updated populateSidebar to fill both desktop (#forumsSidebar) and mobile (#forumsSidebarMobile) containers
+
 import { db, createForum, auth } from "./firebase.js";
 import {
   collection,
@@ -55,19 +57,26 @@ function displayForums(forums) {
 
 /** Populate the sidebar navigation links */
 function populateSidebar(forums) {
-  const sidebar = document.getElementById("forumsSidebar");
-  if (!sidebar) return;
-  sidebar.innerHTML = "";
+  // Select both desktop and mobile sidebar lists
+  const sidebars = [
+    document.getElementById("forumsSidebar"),
+    document.getElementById("forumsSidebarMobile")
+  ];
 
-  forums.forEach(forum => {
-    const li = document.createElement("li");
-    li.className = "nav-item";
-    li.innerHTML = `
-      <a class="nav-link" href="threads.html?forumId=${forum.id}">
-        ${forum.title}
-      </a>
-    `;
-    sidebar.appendChild(li);
+  sidebars.forEach(sidebar => {
+    if (!sidebar) return;
+    sidebar.innerHTML = "";
+
+    forums.forEach(forum => {
+      const li = document.createElement("li");
+      li.className = "nav-item";
+      li.innerHTML = `
+        <a class="nav-link" href="threads.html?forumId=${forum.id}">
+          ${forum.title}
+        </a>
+      `;
+      sidebar.appendChild(li);
+    });
   });
 }
 
@@ -84,6 +93,7 @@ function setupSearch(allForums) {
         )
       : allForums;
     displayForums(filtered);
+    populateSidebar(filtered);
   });
 }
 
