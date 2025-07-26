@@ -60,6 +60,17 @@
     .list-group-flush .list-group-item:hover {
       background-color: rgba(var(--bs-primary-rgb), 0.05);
     }
+
+    /* MOBILE-ONLY: hide desktop sidebar and show toggle */
+    .mobile-forum-toggle { display: none; margin: 1rem; }
+    @media (max-width: 767px) {
+      aside.sidebar { display: none; }
+      .mobile-forum-toggle { display: inline-block; }
+    }
+    /* DESKTOP-ONLY: hide mobile toggle */
+    @media (min-width: 768px) {
+      .mobile-forum-toggle { display: none; }
+    }
   </style>
 
   <!-- Load shared header/nav -->
@@ -73,10 +84,52 @@
   <!-- Spacer to push content below fixed header/nav -->
   <div class="pt-5 mt-5"></div>
 
+  <!-- Mobile “Forums” offcanvas toggle -->
+  <button
+    class="btn btn-outline-primary mobile-forum-toggle"
+    type="button"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#forumsDrawer"
+    aria-controls="forumsDrawer"
+  >
+    <i class="bi bi-list"></i> Forums
+  </button>
+
+  <!-- Offcanvas drawer for mobile forum nav -->
+  <div
+    class="offcanvas offcanvas-start"
+    tabindex="-1"
+    id="forumsDrawer"
+    aria-labelledby="forumsDrawerLabel"
+  >
+    <div class="offcanvas-header">
+      <h5 id="forumsDrawerLabel">Discussions</h5>
+      <button
+        type="button"
+        class="btn-close text-reset"
+        data-bs-dismiss="offcanvas"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="offcanvas-body">
+      <ul id="forumsSidebarMobile" class="nav flex-column mb-3">
+        <li class="nav-item">
+          <span class="text-muted ps-2">Loading…</span>
+        </li>
+      </ul>
+      <input
+        id="forumSearchMobile"
+        type="text"
+        class="form-control"
+        placeholder="🔍 Search discussions…"
+      />
+    </div>
+  </div>
+
   <!-- Page Layout: Sidebar + Main -->
   <div class="container-fluid">
     <div class="row">
-      <!-- Sidebar -->
+      <!-- Sidebar (desktop only) -->
       <aside class="col-md-3 bg-light vh-100 p-3 border-end sidebar">
         <h6 class="text-muted">Discussions Navigation</h6>
         <ul id="forumsSidebar" class="nav flex-column mb-3">
