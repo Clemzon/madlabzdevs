@@ -31,15 +31,32 @@
     body.signed-in #btnNewThread { display: inline-block; }
 
     /* Offset for fixed header (32px) + nav (48px) */
-    body { padding-top: calc(32px + 48px) !important; }
+    body.dark-mode {
+      padding-top: calc(32px + 48px) !important;
+      background-color: var(--bs-body-bg);
+      color: var(--bs-body-color);
+    }
 
     /* Sticky sidebar */
-    .sidebar { position: sticky; top: calc(32px + 48px); }
+    .sidebar {
+      position: sticky;
+      top: calc(32px + 48px);
+      background-color: var(--bs-bg-color);
+      color: var(--bs-body-color);
+      border-color: var(--bs-border-color);
+    }
 
     /* Sidebar nav links */
     #forumsSidebar .nav-link {
       padding: 0.5rem 1rem;
       font-size: 0.9rem;
+      color: var(--bs-body-color);
+    }
+    #forumsSidebar .nav-link:hover,
+    #forumsSidebar .nav-link:focus {
+      color: var(--bs-link-hover-color);
+      background-color: rgba(var(--bs-primary-rgb), 0.15);
+      border-radius: var(--bs-border-radius);
     }
 
     /* Mobile toggle button */
@@ -56,7 +73,7 @@
   <!-- Load shared header/nav -->
   <script type="module" src="/js/header.js"></script>
 </head>
-<body id="page-top">
+<body id="page-top" class="dark-mode">
 
   <!-- Injected shared header/nav -->
   <div id="shared-header"></div>
@@ -77,16 +94,16 @@
 
   <!-- Offcanvas drawer for mobile forum nav -->
   <div
-    class="offcanvas offcanvas-start"
+    class="offcanvas offcanvas-start bg-dark text-light"
     tabindex="-1"
     id="forumsDrawer"
     aria-labelledby="forumsDrawerLabel"
   >
     <div class="offcanvas-header">
-      <h5 id="forumsDrawerLabel">Forums</h5>
+      <h5 id="forumsDrawerLabel" class="text-light">Forums</h5>
       <button
         type="button"
-        class="btn-close text-reset"
+        class="btn-close btn-close-white"
         data-bs-dismiss="offcanvas"
         aria-label="Close"
       ></button>
@@ -100,7 +117,7 @@
       <input
         id="forumSearchMobile"
         type="text"
-        class="form-control"
+        class="form-control bg-secondary text-light border-secondary"
         placeholder="🔍 Search threads…"
       />
     </div>
@@ -110,7 +127,7 @@
   <div class="container-fluid">
     <div class="row">
       <!-- Sidebar (desktop only) -->
-      <aside class="col-md-3 bg-light vh-100 p-3 border-end sidebar">
+      <aside class="col-md-3 bg-dark vh-100 p-3 border-end sidebar">
         <h6 class="text-muted">Threads Navigation</h6>
         <ul id="forumsSidebar" class="nav flex-column mb-3">
           <li class="nav-item">
@@ -120,7 +137,7 @@
         <input
           id="forumSearch"
           type="text"
-          class="form-control"
+          class="form-control bg-secondary text-light border-secondary"
           placeholder="🔍 Search threads…"
         />
       </aside>
@@ -133,7 +150,7 @@
         <!-- Header: Title & New Thread -->
         <div class="d-flex align-items-center justify-content-between mb-4">
           <div>
-            <h1 id="forumTitle" class="h3 mb-1">Loading…</h1>
+            <h1 id="forumTitle" class="h3 mb-1 text-light">Loading…</h1>
             <p id="forumDesc" class="text-muted mb-0 small">Please wait.</p>
           </div>
           <button
@@ -147,7 +164,7 @@
         </div>
 
         <!-- Threads List -->
-        <div class="card shadow-sm mb-4">
+        <div class="card shadow-sm mb-4 bg-dark text-light">
           <div class="card-body">
             <div id="threadsContainer" class="list-group list-group-flush">
               <!-- thread items injected here -->
@@ -177,20 +194,20 @@
     aria-hidden="true"
   >
     <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content">
+      <div class="modal-content bg-dark text-light">
         <div class="modal-header">
           <h5 class="modal-title" id="newThreadLabel">Create New Thread</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <form id="formNewThread">
             <div class="mb-3">
               <label for="threadTitle" class="form-label">Thread Title</label>
-              <input type="text" id="threadTitle" class="form-control" required />
+              <input type="text" id="threadTitle" class="form-control bg-secondary text-light border-secondary" required />
             </div>
             <div class="mb-3">
               <label for="threadBody" class="form-label">Body</label>
-              <textarea id="threadBody" class="form-control" rows="6" required></textarea>
+              <textarea id="threadBody" class="form-control bg-secondary text-light border-secondary" rows="6" required></textarea>
             </div>
           </form>
         </div>
