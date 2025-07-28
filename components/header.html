@@ -1,7 +1,52 @@
 <style>
-  body { padding-top: calc(32px + 48px) !important; }
-  #btnAccount { color: var(--bs-light); background: transparent; border: none; }
-  #btnAccount::after { margin-left: .25rem; }
+  body {
+    padding-top: calc(32px + 48px) !important;
+  }
+  #btnAccount {
+    color: var(--bs-light);
+    background: transparent;
+    border: none;
+  }
+  #btnAccount::after {
+    margin-left: 0.25rem;
+  }
+
+  /* Dark theme navbar */
+  nav.navbar {
+    background-color: #212529 !important; /* dark bg */
+    border-color: #343a40 !important; /* darker border */
+  }
+  nav.navbar .nav-link {
+    color: #adb5bd !important; /* lighter text */
+  }
+  nav.navbar .nav-link:hover,
+  nav.navbar .nav-link:focus {
+    color: #f8f9fa !important; /* bright on hover/focus */
+  }
+
+  /* Dropdown menu dark styles */
+  .dropdown-menu {
+    background-color: #343a40 !important; /* dark background */
+    color: #f8f9fa !important; /* light text */
+    border-color: #454d55 !important;
+  }
+  .dropdown-menu .dropdown-item {
+    color: #adb5bd !important;
+  }
+  .dropdown-menu .dropdown-item:hover,
+  .dropdown-menu .dropdown-item:focus {
+    background-color: #495057 !important;
+    color: #f8f9fa !important;
+  }
+
+  /* Dropdown toggle button */
+  #btnAccount.btn {
+    color: #f8f9fa !important;
+  }
+  #btnAccount.btn:hover,
+  #btnAccount.btn:focus {
+    color: #fff !important;
+  }
 </style>
 
 <header class="bg-dark text-white py-2 fixed-top w-100" role="banner">
@@ -25,13 +70,21 @@
   </div>
 </header>
 
-<nav class="navbar navbar-light bg-light border-bottom fixed-top" style="top:32px; z-index:1030;">
+<nav class="navbar navbar-dark border-bottom fixed-top" style="top:32px; z-index:1030;">
   <div class="container px-4">
     <ul class="navbar-nav flex-row flex-nowrap mx-auto">
-      <li class="nav-item"><a class="nav-link px-3" href="/projects.html">Projects</a></li>
-      <li class="nav-item"><a class="nav-link px-3" href="/forums/forums.html">Forums</a></li>
-      <li class="nav-item"><a class="nav-link px-3" href="/events.html">Events</a></li>
-      <li class="nav-item"><a class="nav-link px-3" href="/portfolio.html">Portfolio</a></li>
+      <li class="nav-item">
+        <a class="nav-link px-3" href="/projects.html">Projects</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link px-3" href="/forums/forums.html">Forums</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link px-3" href="/events.html">Events</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link px-3" href="/portfolio.html">Portfolio</a>
+      </li>
       <!-- Profile removed -->
     </ul>
   </div>
