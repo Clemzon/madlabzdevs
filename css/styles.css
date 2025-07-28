@@ -1,34 +1,18 @@
-/* Forums: lighten title link by default, full color on hover */
+/* Forum card link default and hover colors */
 .card-forum .forum-link {
-  color: rgba(var(--bs-gray-600-rgb), 0.75) !important;
-  transition: color 0.2s ease-in-out;
+  /* Lighter gray default for subtler appearance */
+  color: var(--bs-gray-500) !important;
+  background-color: transparent !important;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
 }
+
 .card-forum .forum-link:hover,
 .card-forum .forum-link:focus {
+  /* Bold primary color with subtle background on hover/focus */
   color: var(--bs-primary) !important;
-}
-
-/* Threads: lighten thread title link by default, full color on hover */
-.card-thread .thread-link {
-  color: rgba(var(--bs-gray-600-rgb), 0.75) !important;
-  transition: color 0.2s ease-in-out;
-}
-.card-thread .thread-link:hover,
-.card-thread .thread-link:focus {
-  color: var(--bs-primary) !important;
-}
-
-/* Light‐to‐full secondary on hover */
-.text-secondary,
-.btn-outline-secondary {
-  color: rgba(var(--bs-secondary-rgb), 0.75) !important;
-  transition: color 0.2s ease-in-out;
-}
-.text-secondary:hover,
-.text-secondary:focus,
-.btn-outline-secondary:hover,
-.btn-outline-secondary:focus {
-  color: var(--bs-secondary) !important;
+  background-color: rgba(var(--bs-primary-rgb), 0.15) !important;
+  border-radius: 0.25rem;
+  text-decoration: none;
 }
 @charset "UTF-8";
 /*!
