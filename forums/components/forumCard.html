@@ -1,22 +1,23 @@
 <!-- forums/components/forumCard.html -->
-<article class="card h-100 card-forum shadow-sm border-light position-relative hover-shadow">
+<article class="card h-100 card-forum shadow-sm border-secondary bg-dark text-light position-relative"
+  style="transition: background-color 0.3s, box-shadow 0.3s;">
   <div class="card-body">
     <h5 class="card-title forum-title mb-2">
       <a 
         href="#" 
-        class="forum-link text-decoration-none stretched-link"
+        class="forum-link text-decoration-none stretched-link text-light"
       >
         <!-- Forum title injected here -->
         Forum Title
       </a>
     </h5>
-    <p class="card-text forum-desc mb-2 text-muted small">
+    <p class="card-text forum-desc mb-2 text-secondary small">
       <!-- Forum description injected here -->
       A brief description of this forum goes here.
     </p>
-    <div class="forum-author text-muted small">
+    <div class="forum-author text-secondary small">
       Started by 
-      <a href="#" class="text-decoration-none forum-author-link">
+      <a href="#" class="text-decoration-none forum-author-link text-secondary">
         <!-- Author name injected here -->
         Alice
       </a>
@@ -24,3 +25,10 @@
     </div>
   </div>
 </article>
+
+<style>
+  article.card-forum:hover {
+    background-color: #2c2f33; /* Slightly lighter dark background on hover */
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* subtle blue glow */
+  }
+</style>

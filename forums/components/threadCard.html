@@ -1,10 +1,19 @@
-<a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+<a href="#" class="list-group-item list-group-item-action flex-column align-items-start bg-dark text-light border-secondary"
+   style="transition: background-color 0.3s;">
   <div class="d-flex w-100 justify-content-between">
-    <h5 class="mb-1 thread-title"></h5>
-    <small class="thread-updated"></small>
+    <h5 class="mb-1 thread-title text-light"></h5>
+    <small class="thread-updated text-secondary"></small>
   </div>
-  <p class="mb-1 thread-body-snippet"></p>
-  <div class="thread-author mb-1">
+  <p class="mb-1 thread-body-snippet text-secondary"></p>
+  <div class="thread-author mb-1 text-secondary">
     <!-- Author link will be injected here -->
   </div>
 </a>
+
+<style>
+  a.list-group-item:hover, a.list-group-item:focus {
+    background-color: #2c2f33; /* Slightly lighter dark background on hover */
+    color: #fff;
+    text-decoration: none;
+  }
+</style>
