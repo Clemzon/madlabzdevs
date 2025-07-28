@@ -15,16 +15,16 @@
   />
   <script type="module" src="/js/header.js"></script>
 </head>
-<body id="page-profile">
+<body id="page-profile" class="dark-mode">
   <div id="shared-header"></div>
   <div class="pt-5 mt-5"></div>
 
   <main class="container py-5">
     <div class="d-flex justify-content-center mb-4">
-      <h1 class="display-4 me-2">Your Profile</h1>
+      <h1 class="display-4 me-2 text-light">Your Profile</h1>
       <button
         id="btnProfileSettings"
-        class="btn btn-link text-secondary fs-4 d-none d-md-inline-block"
+        class="btn btn-link fs-4 d-none d-md-inline-block text-secondary"
         title="Profile Settings"
         aria-label="Profile Settings"
       >
@@ -34,8 +34,8 @@
 
     <div class="row justify-content-center">
       <div class="col-md-6 text-center">
-        <h2 id="profileName"></h2>
-        <p id="profileEmail"></p>
+        <h2 id="profileName" class="text-light"></h2>
+        <p id="profileEmail" class="text-light"></p>
       </div>
     </div>
   </main>

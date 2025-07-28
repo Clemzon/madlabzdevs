@@ -9,13 +9,46 @@
   <link href="css/styles.css" rel="stylesheet" />
   <style>
     /* Offset for fixed header (32px) + nav (48px) */
-    body { padding-top: calc(32px + 48px) !important; }
+    body.dark-mode { padding-top: calc(32px + 48px) !important; background-color: var(--bs-body-bg); color: var(--bs-body-color); }
+
+    /* Ensure progress bars are visible on dark bg */
+    .progress-bar {
+      color: #fff !important;
+    }
+
+    /* Dark mode form controls */
+    .form-control {
+      background-color: var(--bs-body-bg);
+      color: var(--bs-body-color);
+      border-color: var(--bs-border-color);
+    }
+    .form-control::placeholder {
+      color: var(--bs-secondary-color);
+    }
+    .form-control:focus {
+      background-color: var(--bs-body-bg);
+      color: var(--bs-body-color);
+      border-color: var(--bs-primary);
+      box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+    }
+
+    /* Dark mode button */
+    .btn-primary {
+      background-color: var(--bs-primary);
+      border-color: var(--bs-primary);
+      color: #fff;
+    }
+    .btn-primary:hover, .btn-primary:focus {
+      background-color: var(--bs-primary-dark);
+      border-color: var(--bs-primary-dark);
+      color: #fff;
+    }
   </style>
 
   <!-- Load shared header/nav -->
   <script type="module" src="/js/header.js"></script>
 </head>
-<body>
+<body class="dark-mode">
 
   <!-- Injected shared header/nav -->
   <div id="shared-header"></div>
@@ -27,29 +60,29 @@
     <!-- Hero / Introduction -->
     <section id="about-me" class="mb-5 text-center">
       <img src="assets/img/profile.jpg" class="rounded-circle mb-3" alt="Profile Photo" width="150" height="150">
-      <h1 class="display-4">Your Name</h1>
-      <p class="lead">Passionate Developer &amp; Designer</p>
-      <p>I build engaging digital experiences across web and mobile platforms.</p>
+      <h1 class="display-4 text-light">Your Name</h1>
+      <p class="lead text-light">Passionate Developer &amp; Designer</p>
+      <p class="text-light">I build engaging digital experiences across web and mobile platforms.</p>
     </section>
 
     <!-- Skills Section -->
     <section id="skills" class="mb-5">
-      <h2>Skills</h2>
+      <h2 class="text-light">Skills</h2>
       <!-- Example skill: copy block to add more -->
       <div class="mb-3">
-        <label>HTML &amp; CSS</label>
+        <label class="text-light">HTML &amp; CSS</label>
         <div class="progress">
-          <div class="progress-bar" role="progressbar" style="width: 90%;" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">90%</div>
+          <div class="progress-bar bg-primary" role="progressbar" style="width: 90%;" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">90%</div>
         </div>
       </div>
       <div class="mb-3">
-        <label>JavaScript</label>
+        <label class="text-light">JavaScript</label>
         <div class="progress">
           <div class="progress-bar bg-success" role="progressbar" style="width: 80%;" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">80%</div>
         </div>
       </div>
       <div class="mb-3">
-        <label>Python</label>
+        <label class="text-light">Python</label>
         <div class="progress">
           <div class="progress-bar bg-info" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
         </div>
@@ -59,37 +92,37 @@
 
     <!-- Experience Section -->
     <section id="experience" class="mb-5">
-      <h2>Experience</h2>
-      <ul class="timeline list-unstyled">
+      <h2 class="text-light">Experience</h2>
+      <ul class="timeline list-unstyled text-light">
         <!-- Experience details will go here -->
       </ul>
     </section>
 
     <!-- Education Section -->
     <section id="education" class="mb-5">
-      <h2>Education</h2>
-      <ul class="list-unstyled">
+      <h2 class="text-light">Education</h2>
+      <ul class="list-unstyled text-light">
         <!-- Education details will go here -->
       </ul>
     </section>
 
     <!-- Contact Section -->
     <section id="contact" class="mb-5">
-      <h2>Contact Me</h2>
+      <h2 class="text-light">Contact Me</h2>
       <form id="contactForm">
         <!-- Name input-->
         <div class="mb-3">
-          <label for="name" class="form-label">Name</label>
+          <label for="name" class="form-label text-light">Name</label>
           <input class="form-control" id="name" type="text" placeholder="Your name..." required />
         </div>
         <!-- Email input-->
         <div class="mb-3">
-          <label for="email" class="form-label">Email address</label>
+          <label for="email" class="form-label text-light">Email address</label>
           <input class="form-control" id="email" type="email" placeholder="name@example.com" required />
         </div>
         <!-- Message input-->
         <div class="mb-3">
-          <label for="message" class="form-label">Message</label>
+          <label for="message" class="form-label text-light">Message</label>
           <textarea class="form-control" id="message" rows="4" placeholder="Your message..." required></textarea>
         </div>
         <!-- Submit button-->

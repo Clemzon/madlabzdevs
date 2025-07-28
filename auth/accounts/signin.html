@@ -7,17 +7,63 @@
   <link rel="icon" href="../../assets/favicon.ico" />
   <!-- Bootstrap & Core CSS -->
   <link href="../../css/styles.css" rel="stylesheet" />
+  <style>
+    body.dark-mode {
+      background-color: var(--bs-body-bg);
+      color: var(--bs-body-color);
+      padding-top: calc(32px + 48px) !important;
+    }
+    /* Dark mode form controls */
+    form#signinForm label,
+    form#signinForm p,
+    form#signinForm a,
+    form#signinForm .form-check-label,
+    form#signinForm .form-check-input {
+      color: var(--bs-body-color);
+    }
+    form#signinForm .form-control {
+      background-color: var(--bs-body-bg);
+      color: var(--bs-body-color);
+      border-color: var(--bs-border-color);
+    }
+    form#signinForm .form-control::placeholder {
+      color: var(--bs-secondary-color);
+    }
+    form#signinForm .form-control:focus {
+      background-color: var(--bs-body-bg);
+      color: var(--bs-body-color);
+      border-color: var(--bs-primary);
+      box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+    }
+    form#signinForm .btn-primary {
+      background-color: var(--bs-primary);
+      border-color: var(--bs-primary);
+      color: #fff;
+    }
+    form#signinForm .btn-primary:hover,
+    form#signinForm .btn-primary:focus {
+      background-color: var(--bs-primary-dark);
+      border-color: var(--bs-primary-dark);
+      color: #fff;
+    }
+    #signinFeedback.text-success {
+      color: #198754; /* Bootstrap success green */
+    }
+    #signinFeedback.text-danger {
+      color: #dc3545; /* Bootstrap danger red */
+    }
+  </style>
 </head>
-<body class="bg-light">
+<body class="dark-mode">
 
   <main class="container py-5">
     <div class="row justify-content-center">
       <div class="col-md-6">
 
-        <h2 class="mb-4 text-center">Welcome Back</h2>
+        <h2 class="mb-4 text-center text-light">Welcome Back</h2>
 
         <!-- Sign-In Form -->
-        <form id="signinForm" class="card p-4 shadow-sm bg-white">
+        <form id="signinForm" class="card p-4 shadow-sm bg-dark text-light border-secondary">
           <!-- Email -->
           <div class="mb-3">
             <label for="email" class="form-label">Email address</label>
@@ -54,9 +100,9 @@
           <button type="submit" class="btn btn-primary w-100" id="signinSubmit">Sign In</button>
 
           <!-- Link to Sign-Up -->
-          <p class="mt-3 text-center">
+          <p class="mt-3 text-center text-light">
             Don’t have an account?
-            <a href="signup.html" id="showSignUp">Create one</a>
+            <a href="signup.html" id="showSignUp" class="link-primary">Create one</a>
           </p>
         </form>
 

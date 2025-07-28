@@ -9,13 +9,13 @@
   <link href="css/styles.css" rel="stylesheet" />
   <style>
     /* Offset for fixed header (32px) + nav (48px) */
-    body { padding-top: calc(32px + 48px) !important; }
+    body.dark-mode { padding-top: calc(32px + 48px) !important; }
   </style>
 
   <!-- Load shared header/nav -->
   <script type="module" src="/js/header.js"></script>
 </head>
-<body>
+<body class="dark-mode">
 
   <!-- Injected shared header/nav -->
   <div id="shared-header"></div>
@@ -24,19 +24,19 @@
   <div class="pt-5 mt-5"></div>
 
   <div class="container-fluid py-4">
-    <h1 class="mb-4">Upcoming Events</h1>
+    <h1 class="mb-4 text-light">Upcoming Events</h1>
     <div class="row">
       <!-- BEPBuddy Web App Live Demo -->
       <div class="col-lg-4 col-sm-6 mb-4">
-        <div class="card h-100">
-          <div class="card-header text-center"><strong>ACTIVE</strong></div>
+        <div class="card h-100 bg-dark text-light border-secondary">
+          <div class="card-header text-center bg-secondary text-light"><strong>ACTIVE</strong></div>
           <div class="card-body">
             <h5 class="card-title">BEPBuddy Web App Live Demo</h5>
             <p class="card-text">
               <strong>Disclaimer:</strong> This is a test demonstration—data must be backed up externally.<br>
               The web demo is in testing mode and will undergo frequent updates.<br>
               Access it at 
-              <a href="https://www.madlabzdevs.net/projects" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.madlabzdevs.net/projects" target="_blank" rel="noopener noreferrer" class="link-primary">
                 www.madlabzdevs.net/projects
               </a>.
             </p>
@@ -45,13 +45,13 @@
       </div>
       <!-- BEPBuddy Android Test Group -->
       <div class="col-lg-4 col-sm-6 mb-4">
-        <div class="card h-100">
-          <div class="card-header text-center"><strong>July 19, 2025</strong></div>
+        <div class="card h-100 bg-dark text-light border-secondary">
+          <div class="card-header text-center bg-secondary text-light"><strong>July 19, 2025</strong></div>
           <div class="card-body">
             <h5 class="card-title">BEPBuddy for Android Mobile Devices</h5>
             <p class="card-text">
               Join the BEPBuddy Test Group on Google Groups and add your email to gain access:<br>
-              <a href="https://groups.google.com/g/bepbuddy_test_group" target="_blank" rel="noopener noreferrer">
+              <a href="https://groups.google.com/g/bepbuddy_test_group" target="_blank" rel="noopener noreferrer" class="link-primary">
                 https://groups.google.com/g/bepbuddy_test_group
               </a>.<br>
               Once added, you can download the early-access Android app from the Google Play Store link provided in the group.<br>
