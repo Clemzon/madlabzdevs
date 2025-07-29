@@ -14,7 +14,7 @@ async function loadHeader() {
 
     const accountButton = document.getElementById("btnAccount");
     const menuList = document.getElementById("accountMenu");
-    const navList = document.querySelector('nav .navbar-nav');
+    const navList = document.querySelector('nav.nav-links-scroll');
     if (!accountButton || !menuList || !navList) throw new Error("Header elements not found");
 
     onAuthChange(user => {
@@ -30,12 +30,14 @@ async function loadHeader() {
           "click",
           signOutUser
         );
+
+        // Add Profile link in nav if not present
         if (!document.getElementById("navProfileTab")) {
-          const profileTab = document.createElement("li");
+          const profileTab = document.createElement("a");
           profileTab.id = "navProfileTab";
-          profileTab.className = "nav-item";
-          profileTab.innerHTML =
-            '<a class="nav-link px-3" href="/profile.html">Profile</a>';
+          profileTab.className = "nav-link px-3";
+          profileTab.href = "/profile.html";
+          profileTab.textContent = "Profile";
           navList.appendChild(profileTab);
         }
       } else {
@@ -45,6 +47,7 @@ async function loadHeader() {
           <li><a class="dropdown-item" href="/auth/accounts/signin.html">Sign In</a></li>
           <li><a class="dropdown-item" href="/auth/accounts/signup.html">Sign Up</a></li>
         `;
+        // Remove Profile link from nav if present
         const existingTab = document.getElementById("navProfileTab");
         if (existingTab) existingTab.remove();
       }

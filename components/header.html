@@ -11,17 +11,40 @@
     margin-left: 0.25rem;
   }
 
-  /* Dark theme navbar */
-  nav.navbar {
+  /* Dark theme header */
+  header.bg-dark {
     background-color: #212529 !important; /* dark background */
-    border-color: #343a40 !important; /* dark border */
+    border-bottom: 1px solid #343a40; /* subtle border bottom */
   }
-  nav.navbar .nav-link {
-    color: #adb5bd !important; /* light gray text */
+
+  /* Nav links container: horizontal scroll */
+  .nav-links-scroll {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #495057 transparent;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    flex-grow: 1; /* fill space between title and dropdown */
   }
-  nav.navbar .nav-link:hover,
-  nav.navbar .nav-link:focus {
-    color: #f8f9fa !important; /* bright text on hover/focus */
+  .nav-links-scroll::-webkit-scrollbar {
+    height: 6px;
+  }
+  .nav-links-scroll::-webkit-scrollbar-thumb {
+    background-color: #495057;
+    border-radius: 3px;
+  }
+
+  .nav-links-scroll a.nav-link {
+    flex: 0 0 auto;
+    color: #adb5bd !important; /* light gray */
+    padding: 0.375rem 0.75rem;
+    white-space: nowrap;
+  }
+  .nav-links-scroll a.nav-link:hover,
+  .nav-links-scroll a.nav-link:focus {
+    color: #f8f9fa !important; /* bright on hover/focus */
   }
 
   /* Dropdown menu dark styles */
@@ -29,6 +52,8 @@
     background-color: #343a40 !important;
     color: #f8f9fa !important;
     border-color: #454d55 !important;
+    min-width: 12rem; /* prevent tiny width */
+    z-index: 1050; /* ensure above other elements */
   }
   .dropdown-menu .dropdown-item {
     color: #adb5bd !important;
@@ -47,11 +72,25 @@
   #btnAccount.btn:focus {
     color: #fff !important;
   }
+
+  /* Prevent flex container from clipping dropdown */
+  header > .container-fluid {
+    overflow: visible !important;
+  }
 </style>
 
 <header class="bg-dark text-white py-2 fixed-top w-100" role="banner">
-  <div class="container-fluid d-flex justify-content-between align-items-center px-4">
+  <div class="container-fluid d-flex align-items-center px-4">
     <span class="h5 mb-0">MadLabzDevs</span>
+
+    <nav class="nav-links-scroll" aria-label="Primary navigation">
+      <a class="nav-link px-3" href="/projects.html">Projects</a>
+      <a class="nav-link px-3" href="/forums/forums.html">Forums</a>
+      <a class="nav-link px-3" href="/events.html">Events</a>
+      <a class="nav-link px-3" href="/portfolio.html">Portfolio</a>
+      <!-- Profile tab will be dynamically inserted here by JS -->
+    </nav>
+
     <div class="dropdown">
       <button
         id="btnAccount"
@@ -59,34 +98,14 @@
         data-bs-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
+        type="button"
       >
         <span class="visually-hidden">User menu</span>
         Account
       </button>
       <ul id="accountMenu" class="dropdown-menu dropdown-menu-end" role="menu">
-        <!-- JS will populate -->
+        <!-- JS will populate sign up / login options here -->
       </ul>
     </div>
   </div>
 </header>
-
-<!-- Changed navbar-light bg-light to navbar-dark and custom dark bg -->
-<nav class="navbar navbar-dark border-bottom fixed-top" style="top:32px; z-index:1030; background-color: #212529;">
-  <div class="container px-4">
-    <ul class="navbar-nav flex-row flex-nowrap mx-auto">
-      <li class="nav-item">
-        <a class="nav-link px-3" href="/projects.html">Projects</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link px-3" href="/forums/forums.html">Forums</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link px-3" href="/events.html">Events</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link px-3" href="/portfolio.html">Portfolio</a>
-      </li>
-      <!-- Profile removed -->
-    </ul>
-  </div>
-</nav>
