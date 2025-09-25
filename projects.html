@@ -10,6 +10,47 @@
   <style>
     /* Offset for fixed header (32px) + nav (48px) */
     body { padding-top: calc(32px /* header */ + 48px /* nav */) !important; }
+
+    /* ===== App Card Layout ===== */
+    .app-card.card {
+      border: 1px solid rgba(255,255,255,.08);
+      background: #2a2a2a; /* works with dark-mode */
+    }
+    .app-card .card-body { padding: 1rem 1rem 1.25rem; }
+
+    /* Header row: tiny thumbnail + app name as a link (acts like the download link) */
+    .app-header {
+      display: flex; align-items: center; gap: .5rem; margin-bottom: .75rem;
+    }
+    .app-thumb {
+      width: 28px; height: 28px; border-radius: .5rem;
+      object-fit: cover; background: #111; border: 1px solid rgba(255,255,255,.12);
+    }
+    .app-title-link {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .15rem .5rem; border-radius: .5rem; font-weight: 600;
+      text-decoration: none; border: 1px solid rgba(255,255,255,.18);
+      color: #e9eef6;
+    }
+    .app-title-link:hover { background: rgba(255,255,255,.06); text-decoration: none; }
+
+    /* Centerpiece framed icon (no lift, just a clean frame) */
+    .app-hero {
+      display: grid; place-items: center;
+      padding: .9rem; margin: .25rem 0 .75rem 0;
+      border-radius: 1rem;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .app-hero img {
+      width: 75%; height: auto; object-fit: contain;
+    }
+
+    /* Soft badge */
+    .badge-soft {
+      background: rgba(255,255,255,.08);
+      color: #fff; border: 1px solid rgba(255,255,255,.12);
+    }
   </style>
 
   <!-- Load shared header/nav -->
@@ -21,35 +62,6 @@
   <!-- Injected shared header/nav -->
   <div id="shared-header"></div>
 
-  <!-- Donation Button Module inserted here -->
-  <div class="container mt-3 mb-3">
-    <!-- Donation Button -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#donateModal">
-      Buy me a beer! 🍺
-    </button>
-
-    <!-- Donation Modal -->
-    <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-light">
-          <div class="modal-header">
-            <h5 class="modal-title" id="donateModalLabel">Support Me on Cash App</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body text-center">
-            <p>Choose an amount to donate to <strong>$Clemzon</strong> — thank you! 🙏</p>
-            <div class="d-flex justify-content-around mt-4">
-              <a href="https://cash.app/$Clemzon/5" target="_blank" rel="noopener" class="btn btn-outline-primary">Donate $5</a>
-              <a href="https://cash.app/$Clemzon/10" target="_blank" rel="noopener" class="btn btn-outline-primary">Donate $10</a>
-              <a href="https://cash.app/$Clemzon/25" target="_blank" rel="noopener" class="btn btn-outline-primary">Donate $25</a>
-            </div>
-            <small class="d-block mt-3 text-muted">Your support helps keep things brewing! ☕</small>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Spacer to push content below fixed header/nav -->
   <div class="pt-5 mt-5"></div>
 
@@ -60,32 +72,93 @@
     <section id="android-apps" class="mb-5">
       <h2 class="text-light">Android Apps</h2>
       <div class="row">
+        <!-- Example Android Project (placeholder) -->
         <div class="col-lg-4 col-sm-6 mb-4">
-          <div class="card h-100 bg-secondary text-light">
-            <img src="assets/img/placeholder.png" class="card-img-top" alt="Project Name">
+          <div class="card app-card h-100 text-light">
             <div class="card-body d-flex flex-column">
-              <h5 class="card-title">Project Android 1</h5>
-              <p class="card-text">Short description of Android app.</p>
-              <a href="#" class="btn btn-primary mt-auto">View Details</a>
+              <!-- header: tiny thumb + linked app name (acts as download) -->
+              <div class="app-header">
+                <img src="assets/img/placeholder.png" alt="Android Project icon" class="app-thumb" loading="lazy" width="28" height="28">
+                <a href="#" class="app-title-link" title="Download (placeholder)">Android Project 1</a>
+                <span class="ms-auto badge badge-soft">Android</span>
+              </div>
+
+              <!-- framed hero icon -->
+              <div class="app-hero">
+                <img src="assets/img/placeholder.png" alt="Android Project large icon" loading="lazy" width="600" height="600">
+              </div>
+
+              <!-- description -->
+              <p class="card-text">
+                Short description of Android app. This section explains what the app does in a sentence or two.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ScutumVPN (Coming Soon) -->
+        <div class="col-lg-4 col-sm-6 mb-4">
+          <div class="card app-card h-100 text-light">
+            <div class="card-body d-flex flex-column">
+              <div class="app-header">
+                <img src="assets/img/placeholder.png" alt="ScutumVPN icon" class="app-thumb" loading="lazy" width="28" height="28">
+                <a href="#" class="app-title-link disabled" aria-disabled="true" title="Coming soon">ScutumVPN</a>
+                <span class="ms-auto badge badge-soft">Coming soon</span>
+              </div>
+
+              <div class="app-hero">
+                <img src="assets/img/placeholder.png" alt="ScutumVPN large icon" loading="lazy" width="600" height="600">
+              </div>
+
+              <p class="card-text">
+                WireGuard-based VPN client focused on privacy and simplicity. Launching soon.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- BlindCrayonIME -->
+        <div class="col-lg-4 col-sm-6 mb-4">
+          <div class="card app-card h-100 text-light">
+            <div class="card-body d-flex flex-column">
+              <div class="app-header">
+                <img src="assets/img/project-blindcrayonime.png" alt="BlindCrayonIME icon" class="app-thumb" loading="lazy" width="28" height="28">
+                <!-- App name links to the dedicated page -->
+                <a href="blindcrayonime.html" class="app-title-link" title="Open BlindCrayonIME page">BlindCrayonIME</a>
+                <span class="ms-auto badge badge-soft">Accessibility</span>
+              </div>
+
+              <div class="app-hero">
+                <img
+                  src="assets/img/project-blindcrayonime.png"
+                  alt="BlindCrayonIME large icon"
+                  loading="lazy"
+                  width="600" height="600"
+                >
+              </div>
+
+              <p class="card-text">
+                A high-contrast Android keyboard designed for low-vision/blind users (inspired by Adam).
+              </p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- iOS Apps Section -->
-    <section id="ios-apps" class="mb-5">
-      <h2 class="text-light">iOS Apps</h2>
+    <!-- Apple Apps (iOS + macOS merged) -->
+    <section id="apple-apps" class="mb-5">
+      <h2 class="text-light">Apple Apps</h2>
+      <p class="text-light">
+        Apple development and distribution requires an annual fee. I have provided a link to my Cash App account for ANYONE willing to donate to the cause.
+        Thank you to anyone for any form of generosity!
+      </p>
+      <!-- Single, modest donate button under Apple Apps -->
+      <button type="button" class="btn btn-outline-light mb-3" data-bs-toggle="modal" data-bs-target="#donateModal">
+        Support development
+      </button>
       <div class="row">
-        <!-- Add iOS projects here -->
-      </div>
-    </section>
-
-    <!-- macOS Apps Section -->
-    <section id="macos-apps" class="mb-5">
-      <h2 class="text-light">macOS Apps</h2>
-      <div class="row">
-        <!-- Add macOS projects here -->
+        <!-- Add Apple projects here -->
       </div>
     </section>
 
@@ -102,24 +175,49 @@
       <h2 class="text-light">Web Projects</h2>
       <div class="row">
         <div class="col-lg-4 col-sm-6 mb-4">
-          <div class="card h-100 bg-secondary text-light">
-            <img src="assets/img/portfolio/bepbuddy-thumbnail.png" class="card-img-top" alt="BEPBuddy (Web)">
+          <div class="card app-card h-100 text-light">
             <div class="card-body d-flex flex-column">
-              <h5 class="card-title">BEPBuddy (Web)</h5>
+              <div class="app-header">
+                <img src="assets/img/portfolio/bepbuddy-thumbnail.png" alt="BEPBuddy Web icon" class="app-thumb" loading="lazy" width="28" height="28">
+                <a href="https://www.bepbuddy.com" target="_blank" rel="noopener" class="app-title-link" title="Open BEPBuddy website">
+                  BEPBuddy (Web)
+                </a>
+                <span class="ms-auto badge badge-soft">Web</span>
+              </div>
+
+              <div class="app-hero">
+                <img src="assets/img/portfolio/bepbuddy-thumbnail.png" alt="BEPBuddy large icon" loading="lazy" width="600" height="600">
+              </div>
+
               <p class="card-text">
                 BEPBuddy is a concept project intended to assist Blind Vendors in the B.E.P. Program...
               </p>
-              <a href="https://www.bepbuddy.com"
-                 class="btn btn-primary mt-auto"
-                 target="_blank"
-                 rel="noopener noreferrer">
-                Visit Site
-              </a>
             </div>
           </div>
         </div>
       </div>
     </section>
+  </div>
+
+  <!-- Donation Modal (kept; at end) -->
+  <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header">
+          <h5 class="modal-title" id="donateModalLabel">Support MadLabzDevs</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <p>Your contribution helps cover development costs, including the Apple Developer Program fee, hosting, and test devices.</p>
+          <div class="d-flex justify-content-around mt-4">
+            <a href="https://cash.app/$Clemzon/5" target="_blank" rel="noopener" class="btn btn-outline-primary">Donate $5</a>
+            <a href="https://cash.app/$Clemzon/10" target="_blank" rel="noopener" class="btn btn-outline-primary">Donate $10</a>
+            <a href="https://cash.app/$Clemzon/25" target="_blank" rel="noopener" class="btn btn-outline-primary">Donate $25</a>
+          </div>
+          <a class="d-block mt-3 link-light" href="https://cash.app/$Clemzon" target="_blank" rel="noopener">Or choose any amount</a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- MadLabzDevs core JS-->

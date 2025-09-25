@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>BlindCrayonIME — MadLabzDevs</title>
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <!-- Core theme CSS (includes Bootstrap) -->
+  <link href="css/styles.css" rel="stylesheet" />
+  <style>
+    /* Offset for fixed header (32px) + nav (48px) */
+    body { padding-top: calc(32px /* header */ + 48px /* nav */) !important; }
+
+    /* Framed icon box (flat, no lift) */
+    .hero-box {
+      display: grid; place-items: center;
+      padding: 1rem; border-radius: 1rem;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .hero-box img { width: 85%; height: auto; object-fit: contain; }
+
+    .badge-soft {
+      background: rgba(255,255,255,.08);
+      color: #fff; border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .section-title { color: #fff; margin-top: 2rem; margin-bottom: 1rem; }
+
+    /* Screenshot thumbnails */
+    .shot {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: .75rem;
+      padding: .35rem;
+      transition: transform .08s ease-in-out;
+    }
+    .shot:hover { transform: translateY(-2px); }
+    .shot img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: .5rem;
+    }
+
+    /* Card-like info blocks */
+    .info-card {
+      background: #2a2a2a;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: .75rem;
+      padding: 1rem 1.25rem;
+    }
+
+    /* Small helper badges in privacy section */
+    .pill {
+      display:inline-block; padding:.15rem .5rem; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06);
+      font-size:.85rem;
+    }
+  </style>
+
+  <!-- Load shared header/nav -->
+  <script type="module" src="/js/header.js"></script>
+</head>
+
+<body id="page-top" class="dark-mode">
+
+  <!-- Injected shared header/nav -->
+  <div id="shared-header"></div>
+
+  <!-- Spacer to push content below fixed header/nav -->
+  <div class="pt-5 mt-5"></div>
+
+  <main class="container-fluid">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item"><a href="projects.html">Projects</a></li>
+        <li class="breadcrumb-item active" aria-current="page">BlindCrayonIME</li>
+      </ol>
+    </nav>
+
+    <!-- Hero -->
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-4">
+        <div class="hero-box">
+          <img src="assets/img/project-blindcrayonime.png"
+               alt="BlindCrayonIME app icon — high-contrast keyboard for low-vision and blind users">
+        </div>
+      </div>
+
+      <div class="col-lg-8 text-light">
+        <h1 class="mb-2">BlindCrayonIME</h1>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          <span class="badge badge-soft">Android</span>
+          <span class="badge badge-soft">Accessibility</span>
+          <span class="badge badge-soft">High Contrast</span>
+        </div>
+
+        <p class="lead">
+          BlindCrayonIME is a high-contrast Android keyboard designed for low-vision and blind users.
+          It focuses on clarity, large targets, haptics, audio cues, and efficient text entry.
+        </p>
+
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <!-- Download / Landing (placeholder) -->
+          <a href="#" class="btn btn-primary" aria-disabled="true" title="Download (placeholder)">Download (coming soon)</a>
+          <!-- Optional: GitHub repo placeholder
+          <a href="#" class="btn btn-outline-light">View on GitHub</a>
+          -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Screenshots -->
+    <h2 class="section-title">Screenshots</h2>
+    <div class="row g-3">
+      <div class="col-6 col-md-3">
+        <a class="shot d-block" href="assets/img/blindcrayon/image_1.png" target="_blank" rel="noopener">
+          <img src="assets/img/blindcrayon/image_1.png" alt="Screenshot 1: BlindCrayonIME keyboard in use" loading="lazy">
+        </a>
+      </div>
+      <div class="col-6 col-md-3">
+        <a class="shot d-block" href="assets/img/blindcrayon/image_2.png" target="_blank" rel="noopener">
+          <img src="assets/img/blindcrayon/image_2.png" alt="Screenshot 2: Suggestion strip and STT button" loading="lazy">
+        </a>
+      </div>
+      <div class="col-6 col-md-3">
+        <a class="shot d-block" href="assets/img/blindcrayon/image_3.png" target="_blank" rel="noopener">
+          <img src="assets/img/blindcrayon/image_3.png" alt="Screenshot 3: Number pad layout" loading="lazy">
+        </a>
+      </div>
+      <div class="col-6 col-md-3">
+        <a class="shot d-block" href="assets/img/blindcrayon/image_4.png" target="_blank" rel="noopener">
+          <img src="assets/img/blindcrayon/image_4.png" alt="Screenshot 4: Settings and accessibility options" loading="lazy">
+        </a>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="row g-4 mt-2">
+      <div class="col-lg-6">
+        <div class="info-card h-100 text-light">
+          <h3 class="h5 mb-3">Key Features</h3>
+          <ul class="mb-0">
+            <li>High-contrast, accessible keycaps with clear labels</li>
+            <li>Large touch targets and consistent spacing</li>
+            <li>Optional haptic feedback and simple audio cues</li>
+            <li>Suggestion strip for fast next-word entry</li>
+            <li>Dedicated STT (speech-to-text) button</li>
+            <li>Number pad & quick punctuation access</li>
+            <li>Dark / light aware where supported</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="info-card h-100 text-light">
+          <h3 class="h5 mb-3">Accessibility & Design</h3>
+          <ul class="mb-0">
+            <li>High-contrast color palette optimized for low-vision</li>
+            <li>Readable type and reduced visual clutter</li>
+            <li>Clear affordances for Shift, Enter, Space, and Delete</li>
+            <li>Consistent, predictable layout for muscle memory</li>
+            <li>Works with TalkBack and device accessibility features</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technical -->
+    <div class="row g-4 mt-2">
+      <div class="col-lg-6">
+        <div class="info-card h-100 text-light">
+          <h3 class="h5 mb-3">Technical Details</h3>
+          <ul class="mb-0">
+            <li>Target: Android 9 (Pie) and up (placeholder)</li>
+            <li>Form factor: Phone / Tablet</li>
+            <li>Required permissions: None for typing; microphone optional for STT</li>
+            <li>Languages: English (initial), extensible</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="info-card h-100 text-light">
+          <h3 class="h5 mb-3">Status & Roadmap</h3>
+          <ul class="mb-0">
+            <li>Current status: Active development</li>
+            <li>Planned: refinement of predictions, theme options, layout packs</li>
+            <li>Beta sign-up: coming soon</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privacy & Data Safety -->
+    <h2 class="section-title">Privacy &amp; Data Safety</h2>
+    <div class="row g-4 mt-2">
+      <div class="col-lg-6">
+        <div class="info-card h-100 text-light">
+          <h3 class="h5 mb-3">What BlindCrayonIME <em>does not</em> do</h3>
+          <ul class="mb-0">
+            <li><strong>We do not collect or store what you type.</strong> Keystrokes and text never leave your device through this app.</li>
+            <li><strong>No ads, no data selling.</strong> We don’t share personal data with advertisers or third parties.</li>
+            <li><strong>No analytics SDKs.</strong> We do not embed third-party analytics libraries in the app.</li>
+            <li><strong>No background recording.</strong> Microphone is not used unless you explicitly enable and press the mic button.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="info-card h-100 text-light">
+          <h3 class="h5 mb-3">What may be accessed (optional)</h3>
+          <ul class="mb-0">
+            <li><span class="pill">Permission</span> <code>RECORD_AUDIO</code> — requested <em>only</em> when you enable Speech-to-Text (STT) and tap the mic.</li>
+            <li><span class="pill">How STT works</span> Your device’s speech service (e.g., Google’s speech recognizer) processes audio to return text. BlindCrayonIME receives the transcribed text to insert into the current field; we do not store the audio.</li>
+            <li><span class="pill">Diagnostics</span> Aggregated crash data may be provided by Google Play (if enabled) to improve reliability. We don’t use it to identify you.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4 mt-2">
+      <div class="col-lg-6">
+        <div class="info-card h-100 text-light">
+          <h3 class="h5 mb-3">Your controls</h3>
+          <ul class="mb-0">
+            <li>Use the keyboard without STT (default), or enable STT and grant mic permission.</li>
+            <li>Revoke microphone access anytime in Android Settings.</li>
+            <li>Turn STT off inside the app if you no longer need it.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="info-card h-100 text-light">
+          <h3 class="h5 mb-3">Data safety summary</h3>
+          <ul class="mb-0">
+            <li><strong>Data collected by app:</strong> None (no keystrokes, no personal info).</li>
+            <li><strong>Data shared:</strong> None.</li>
+            <li><strong>Processing:</strong> Audio for STT is handled by the device speech service when you use the mic; BlindCrayonIME does not retain audio.</li>
+            <li><strong>Retention & deletion:</strong> We do not retain your typed content or speech audio.</li>
+            <li><strong>Children:</strong> General-audience app; no specific features for children.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4 mt-2">
+      <div class="col-12">
+        <div class="info-card text-light">
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <div>
+              <strong>Full Privacy Policy</strong>
+              <div class="text-muted">Read details about permissions, data handling, and your choices.</div>
+            </div>
+            <!-- Replace the href below with the actual hosted policy URL when ready -->
+            <a class="btn btn-outline-light" href="privacy/blindcrayon.html">Open Privacy Policy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer CTA -->
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-5">
+      <a href="projects.html" class="btn btn-outline-light">← Back to Projects</a>
+      <!-- Keep a single source of truth for downloads: update the hero button above when ready -->
+    </div>
+  </main>
+
+  <!-- MadLabzDevs core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -3,26 +3,66 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="description" content="MadLabzDevs central dashboard for projects, forums, events, and profiles." />
+  <meta name="description" content="MadLabzDevs: ideas and apps that put accessibility first — building tools that create independence for people with disabilities." />
   <meta name="author" content="" />
-  <title>MadLabzDevs Dashboard</title>
-  <!-- Favicon-->
+  <title>MadLabzDevs — Accessible Ideas & Apps</title>
+
+  <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-  <!-- Bootstrap Icons-->
+
+  <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-  <!-- Core theme CSS (includes MadLabzDevs)-->
+
+  <!-- Core theme CSS -->
   <link href="/css/styles.css" rel="stylesheet" />
+
   <style>
     /* Offset for fixed header (32px) + nav (48px) */
-    body {
-      padding-top: calc(32px + 48px) !important;
+    body { padding-top: calc(32px + 48px) !important; }
+
+    /* Landing hero */
+    .hero {
+      position: relative;
+      border-radius: 1rem;
+      padding: clamp(2rem, 4vw, 4rem);
+      overflow: hidden;
     }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(80% 60% at 20% 20%, rgba(255,255,255,0.06), transparent 60%),
+                  radial-gradient(80% 60% at 80% 40%, rgba(255,255,255,0.04), transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Section spacing */
+    section { margin-top: 2.5rem; margin-bottom: 2.5rem; }
+
+    /* Feature icon circle */
+    .feature-icon {
+      width: 3rem; height: 3rem;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* Project card image frame (framed, not lifted) */
+    .framed {
+      border-radius: .75rem;
+      border: 2px solid rgba(255,255,255,0.18);
+      padding: .5rem;
+      background: rgba(255,255,255,0.03);
+    }
+
+    /* Footer donate link subtle */
+    .donate-link { opacity: .85; }
+    .donate-link:hover { opacity: 1; }
+
     /* Keep nav items on one line and scrollable */
-    .navbar-nav {
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
+    .navbar-nav { white-space: nowrap; flex-shrink: 0; }
   </style>
+
   <!-- Load shared header/nav -->
   <script type="module" src="/js/header.js"></script>
 </head>
@@ -31,88 +71,221 @@
   <!-- Injected header/nav -->
   <div id="shared-header"></div>
 
-  <div class="container mt-3 mb-3">
-    <!-- Donation Button -->
-    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#donateModal">
-      Buy me a beer! 🍺
-    </button>
+  <main class="container py-4" id="mainContent" aria-label="MadLabzDevs Landing">
 
-    <!-- Donation Modal -->
-    <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="donateModalLabel">Support Me on Cash App</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Hero -->
+    <section class="hero bg-dark text-light">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <h1 class="display-5 fw-bold mb-3">Building Accessible Ideas into Real Apps</h1>
+          <p class="lead mb-4">
+            MadLabzDevs is a space for developers and makers focused on accessibility-first
+            design — crafting tools that give people with disabilities more independence.
+          </p>
+          <div class="d-flex gap-2 flex-wrap">
+            <a class="btn btn-primary" href="/projects.html">
+              <i class="bi bi-grid-1x2 me-2" aria-hidden="true"></i>Explore Projects
+            </a>
+            <a class="btn btn-outline-light" href="#mission">
+              <i class="bi bi-bullseye me-2" aria-hidden="true"></i>Our Mission
+            </a>
+            <a class="btn btn-outline-light" href="#get-involved">
+              <i class="bi bi-people me-2" aria-hidden="true"></i>Get Involved
+            </a>
           </div>
-          <div class="modal-body text-center">
-            <p>Choose an amount to donate to <strong>$Clemzon</strong> — thank you! 🙏</p>
-            <div class="d-flex justify-content-around mt-4">
-              <a href="https://cash.app/$Clemzon/5" target="_blank" rel="noopener" class="btn btn-outline-primary">Donate $5</a>
-              <a href="https://cash.app/$Clemzon/10" target="_blank" rel="noopener" class="btn btn-outline-primary">Donate $10</a>
-              <a href="https://cash.app/$Clemzon/25" target="_blank" rel="noopener" class="btn btn-outline-primary">Donate $25</a>
+        </div>
+        <div class="col-lg-5">
+          <div class="p-3 framed">
+            <div class="ratio ratio-16x9 rounded" aria-hidden="true" style="background:
+              linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+              display:flex;align-items:center;justify-content:center;">
+              <div class="text-center">
+                <div class="feature-icon mb-3"><i class="bi bi-universal-access-circle fs-4" aria-hidden="true"></i></div>
+                <p class="mb-0">Accessibility • Community • Independence</p>
+              </div>
             </div>
-            <small class="d-block mt-3 text-muted">Your support helps keep things brewing! ☕</small>
           </div>
+          <p class="text-muted small mt-2 mb-0">Our work spans keyboards, reporting tools, wearables, and more.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission / What we do -->
+    <section id="mission" class="text-light">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="d-flex align-items-start gap-3">
+            <span class="feature-icon"><i class="bi bi-eye" aria-hidden="true"></i></span>
+            <div>
+              <h3 class="h5 mb-1">Accessibility-First</h3>
+              <p class="mb-0 text-muted">High-contrast UIs, screen-reader support, and input methods designed with real users in mind.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="d-flex align-items-start gap-3">
+            <span class="feature-icon"><i class="bi bi-cpu" aria-hidden="true"></i></span>
+            <div>
+              <h3 class="h5 mb-1">Practical AI</h3>
+              <p class="mb-0 text-muted">OCR, voice, and on-device smarts that remove friction and boost independence.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="d-flex align-items-start gap-3">
+            <span class="feature-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
+            <div>
+              <h3 class="h5 mb-1">Built with Community</h3>
+              <p class="mb-0 text-muted">Open collaboration with people who use assistive tech daily — feedback drives features.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Projects -->
+    <section id="featured" aria-label="Featured Projects">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="h4 mb-0">Featured Projects</h2>
+        <a class="link-light" href="/projects.html">View all <i class="bi bi-arrow-right-short" aria-hidden="true"></i></a>
+      </div>
+
+      <div class="row g-4">
+        <!-- BlindCrayon IME -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="card h-100 bg-dark text-light border-0">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-2">
+                <img src="assets/img/project-blindcrayonime.png" alt="BlindCrayon IME icon" class="me-2" style="width: 28px; height: 28px; border-radius: 6px;">
+                <a href="#" class="stretched-link text-decoration-none">
+                  <h3 class="h5 mb-0 text-light">BlindCrayon IME</h3>
+                </a>
+              </div>
+              <div class="framed mb-3">
+                <img src="assets/img/project-blindcrayonime.png" class="img-fluid rounded" alt="Framed icon preview for BlindCrayon IME">
+              </div>
+              <p class="text-muted mb-0">
+                High-contrast Android keyboard with large targets, accessible layouts, and speech tools to type faster.
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <!-- BEP Buddy -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="card h-100 bg-dark text-light border-0">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-2">
+                <div class="me-2 feature-icon" aria-hidden="true"><i class="bi bi-receipt"></i></div>
+                <a href="#" class="stretched-link text-decoration-none">
+                  <h3 class="h5 mb-0 text-light">BEP Buddy</h3>
+                </a>
+              </div>
+              <div class="framed mb-3 ratio ratio-1x1">
+                <div class="rounded" style="background: rgba(255,255,255,0.04);"></div>
+              </div>
+              <p class="text-muted mb-0">
+                AI-assisted invoices and monthly reports to simplify business tasks for blind vendors.
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <!-- Phound (Wearables) -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="card h-100 bg-dark text-light border-0">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-2">
+                <div class="me-2 feature-icon" aria-hidden="true"><i class="bi bi-smartwatch"></i></div>
+                <a href="#" class="stretched-link text-decoration-none">
+                  <h3 class="h5 mb-0 text-light">Phound</h3>
+                </a>
+              </div>
+              <div class="framed mb-3 ratio ratio-1x1">
+                <div class="rounded" style="background: rgba(255,255,255,0.04);"></div>
+              </div>
+              <p class="text-muted mb-0">
+                Wearable-assisted location cues to help blind users find each other with haptics and simple signals.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Get Involved -->
+    <section id="get-involved" class="text-light">
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-7">
+          <h2 class="h4 mb-2">Get Involved</h2>
+          <p class="text-muted mb-3">
+            Whether you’re a developer, tester, or someone who relies on assistive tech, your perspective matters.
+          </p>
+          <ul class="mb-4">
+            <li>Try early builds and share feedback</li>
+            <li>Contribute code, design, docs, or testing</li>
+            <li>Share ideas for tools that would make a difference</li>
+          </ul>
+          <div class="d-flex gap-2 flex-wrap">
+            <a class="btn btn-primary" href="/projects.html"><i class="bi bi-rocket-takeoff me-2" aria-hidden="true"></i>Start exploring</a>
+            <a class="btn btn-outline-light" href="/contact_page.html"><i class="bi bi-envelope me-2" aria-hidden="true"></i>Contact</a>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="p-3 framed">
+            <div class="small text-muted">
+              <strong>Accessibility Pillars</strong>
+              <ul class="mb-0 mt-2">
+                <li>Readable at a glance</li>
+                <li>Keyboard & screen reader friendly</li>
+                <li>Works in light & dark modes</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="container border-top border-secondary pt-3 pb-5">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+      <p class="mb-0 text-muted">© <span id="year"></span> MadLabzDevs — Accessibility • Community • Independence</p>
+      <div class="d-flex align-items-center gap-3">
+        <a class="donate-link small text-muted" href="#" data-bs-toggle="modal" data-bs-target="#donateModal" aria-label="Open donation options">
+          <i class="bi bi-heart-fill me-1" aria-hidden="true"></i>Support the mission
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Donation Modal (kept, but only opened from footer link) -->
+  <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header">
+          <h5 class="modal-title" id="donateModalLabel">Support via Cash App</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <p class="mb-4">If you’d like to help, contributions to <strong>$Clemzon</strong> keep the lights on — thank you!</p>
+          <div class="d-flex justify-content-center gap-2 flex-wrap">
+            <a href="https://cash.app/$Clemzon/5"  target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">Donate $5</a>
+            <a href="https://cash.app/$Clemzon/10" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">Donate $10</a>
+            <a href="https://cash.app/$Clemzon/25" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">Donate $25</a>
+          </div>
+          <small class="d-block mt-3 text-muted">Your support directly fuels accessibility work.</small>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Spacer to push content below fixed header/nav -->
-  <div class="pt-5 mt-5"></div>
-
-  <!-- Dashboard Content -->
-  <main id="mainContent" class="container-fluid py-4">
-    <!-- Under Construction Banner -->
-    <div class="alert alert-warning text-center mb-4" role="alert">
-      <strong>Under Construction!</strong> This dashboard is currently being built.
-    </div>
-
-    <!-- Welcome Banner -->
-    <div class="text-center mb-5">
-      <h1 class="display-4">Welcome to MadLabzDevs</h1>
-      <p class="lead">Your central hub for all activities and updates.</p>
-    </div>
-
-    <!-- Basic Dashboard Cards -->
-    <div class="row g-4">
-      <div class="col-6 col-md-3">
-        <div class="card h-100 border-primary">
-          <div class="card-body text-center">
-            <h5 class="card-title">Projects</h5>
-            <p class="display-6 mb-0">--</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="card h-100 border-success">
-          <div class="card-body text-center">
-            <h5 class="card-title">Messages</h5>
-            <p class="display-6 mb-0">--</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="card h-100 border-warning">
-          <div class="card-body text-center">
-            <h5 class="card-title">Events</h5>
-            <p class="display-6 mb-0">--</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="card h-100 border-info">
-          <div class="card-body text-center">
-            <h5 class="card-title">Profile Completeness</h5>
-            <p class="display-6 mb-0">--</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- Bootstrap core JS-->
+  <!-- Bootstrap core JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Current year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
