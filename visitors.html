@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="MadLabzDevs Visitors Book — sign your name and leave a note." />
+  <title>Visitors Book • MadLabzDevs</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <!-- Core theme CSS -->
+  <link href="/css/styles.css" rel="stylesheet" />
+
+  <style>
+    /* Match index.html: fixed header(32px)+nav(48px) offset */
+    body { padding-top: calc(32px + 48px) !important; }
+
+    /* Match index.html: prevent nav wrapping */
+    .navbar-nav { white-space: nowrap; flex-shrink: 0; }
+
+    /* Page-only niceties */
+    .visitor-row:hover { background: rgba(255,255,255,0.03); }
+    .truncate-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+    .pagination-controls .btn { min-width: 90px; }
+  </style>
+
+  <!-- Shared header/nav (same as index.html) -->
+  <script type="module" src="/js/header.js"></script>
+</head>
+<body id="page-top" class="dark-mode">
+
+  <!-- Injected header/nav goes here -->
+  <div id="shared-header"></div>
+
+  <main class="container my-4">
+    <header class="d-flex flex-wrap align-items-center justify-content-between mb-3">
+      <div>
+        <h1 class="h3 mb-1">Visitors Book</h1>
+        <div class="text-muted small">Sign your name and (optionally) leave a short note.</div>
+      </div>
+      <div class="d-flex gap-2">
+        <button id="openSignModal" class="btn btn-primary">
+          <i class="bi bi-journal-plus me-1"></i> Sign the Book
+        </button>
+      </div>
+    </header>
+
+    <!-- Stats + pager -->
+    <section class="d-flex flex-wrap align-items-center justify-content-between mb-2">
+      <div class="small text-muted">
+        <span id="entryCount">0</span> signatures
+      </div>
+      <div class="pagination-controls d-flex align-items-center gap-2">
+        <button id="prevPage" class="btn btn-outline-light btn-sm" disabled><i class="bi bi-arrow-left"></i> Prev</button>
+        <div class="small text-muted">Page <span id="pageNum">1</span> of <span id="pageTotal">1</span></div>
+        <button id="nextPage" class="btn btn-outline-light btn-sm">Next <i class="bi bi-arrow-right"></i></button>
+      </div>
+    </section>
+
+    <!-- Signatures list -->
+    <section class="card border-0 shadow-sm">
+      <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle mb-0">
+          <thead>
+            <tr>
+              <th style="width:40%">Name</th>
+              <th style="width:40%">Signed</th>
+              <th class="text-center" style="width:20%">Note</th>
+            </tr>
+          </thead>
+          <tbody id="entriesTableBody">
+            <!-- rows injected -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Empty state -->
+    <div id="emptyState" class="text-center text-muted py-5 d-none">
+      <i class="bi bi-people display-6 d-block mb-2"></i>
+      <p class="mb-2">No signatures yet.</p>
+      <button id="emptySignBtn" class="btn btn-primary btn-sm">
+        <i class="bi bi-journal-plus me-1"></i> Be the first to sign
+      </button>
+    </div>
+  </main>
+
+  <!-- Sign the Book Modal -->
+  <div class="modal fade" id="signModal" tabindex="-1" aria-labelledby="signModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" id="signForm" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="signModalLabel"><i class="bi bi-journal-plus me-2"></i>Sign the Book</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <!-- Honeypot -->
+          <div class="visually-hidden" aria-hidden="true">
+            <label for="hp_field">Leave empty</label>
+            <input id="hp_field" name="hp_field" type="text" autocomplete="off" />
+          </div>
+
+          <div class="mb-3">
+            <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+            <input id="name" name="name" type="text" class="form-control" maxlength="80"
+                   placeholder="First name (optional last name)" required />
+            <div class="invalid-feedback">Please enter your name.</div>
+          </div>
+
+          <div class="mb-2">
+            <label for="note" class="form-label">Short note (optional)</label>
+            <textarea id="note" name="note" class="form-control" rows="3" maxlength="280"
+                      placeholder="Keep it kind and concise (max 280 chars)…"></textarea>
+            <div class="d-flex justify-content-end small text-muted mt-1">
+              <span id="charsLeft">280</span> left
+            </div>
+          </div>
+
+          <div class="form-check mt-2">
+            <input class="form-check-input" type="checkbox" id="allowDisplay" checked />
+            <label class="form-check-label" for="allowDisplay">Okay to show my name & note on this page</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="bi bi-check2-circle me-1"></i> Save signature</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Note Viewer Modal -->
+  <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="noteModalLabel"><i class="bi bi-card-text me-2"></i>Note</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="noteModalBody" class="modal-body"><!-- note text injected --></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // ====== Simple, free persistence via localStorage (no backend cost) ======
+    const LS_KEY_V2 = 'mlz_visitors_entries_v2';
+    const LS_KEY_V1 = 'mlz_visitors_entries_v1'; // migrate if present
+    const PAGE_SIZE = 12; // signatures per page
+
+    let entries = [];     // full list (visible ones)
+    let page = 1;         // current page (1-based)
+    let sortNewest = true;
+
+    // ---- utils
+    const uid = () => crypto?.randomUUID?.() || (Math.random().toString(36).slice(2) + Date.now());
+    const escapeHTML = (s='') => s.replace(/[&<>"'`=\/]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;'}[c]));
+    const nowIso = () => new Date().toISOString();
+
+    // MM/DD/YY | hh:mm (12-hour, zero-padded; per user spec)
+    function formatShortUS(iso) {
+      const d = new Date(iso);
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      const yy = String(d.getFullYear()).slice(-2);
+      let h = d.getHours() % 12; h = h ? h : 12;
+      const hh = String(h).padStart(2,'0');
+      const mi = String(d.getMinutes()).padStart(2,'0');
+      return `${mm}/${dd}/${yy} | ${hh}:${mi}`;
+    }
+
+    function load() {
+      // v2 first
+      try {
+        const raw = localStorage.getItem(LS_KEY_V2);
+        if (raw) {
+          const parsed = JSON.parse(raw) || [];
+          entries = parsed.filter(e => e.visible !== false);
+          return;
+        }
+      } catch {}
+      // migrate v1 -> v2 if you ever used an older key
+      try {
+        const v1 = localStorage.getItem(LS_KEY_V1);
+        if (v1) {
+          const parsed = JSON.parse(v1) || [];
+          entries = parsed.filter(e => e.visible !== false);
+          localStorage.setItem(LS_KEY_V2, JSON.stringify(entries));
+          localStorage.removeItem(LS_KEY_V1);
+        }
+      } catch {}
+    }
+
+    function save() {
+      try { localStorage.setItem(LS_KEY_V2, JSON.stringify(entries)); } catch {}
+    }
+
+    // ---- rendering
+    const tbody = document.getElementById('entriesTableBody');
+    const emptyState = document.getElementById('emptyState');
+    const entryCount = document.getElementById('entryCount');
+    const pageNum = document.getElementById('pageNum');
+    const pageTotal = document.getElementById('pageTotal');
+    const prevBtn = document.getElementById('prevPage');
+    const nextBtn = document.getElementById('nextPage');
+
+    function render() {
+      // sort
+      const sorted = [...entries].sort((a,b) => sortNewest
+        ? (new Date(b.createdAt) - new Date(a.createdAt))
+        : (new Date(a.createdAt) - new Date(b.createdAt)));
+
+      entryCount.textContent = sorted.length;
+
+      const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
+      if (page > totalPages) page = totalPages;
+
+      pageNum.textContent = String(page);
+      pageTotal.textContent = String(totalPages);
+
+      prevBtn.disabled = page <= 1;
+      nextBtn.disabled = page >= totalPages;
+
+      // slice for current page
+      const start = (page - 1) * PAGE_SIZE;
+      const pageItems = sorted.slice(start, start + PAGE_SIZE);
+
+      // toggle empty state
+      const isEmpty = sorted.length === 0;
+      emptyState.classList.toggle('d-none', !isEmpty);
+
+      // build rows
+      tbody.innerHTML = '';
+      pageItems.forEach(e => {
+        const tr = document.createElement('tr');
+        tr.className = 'visitor-row';
+
+        // Name
+        const tdName = document.createElement('td');
+        tdName.textContent = e.name || 'Guest';
+
+        // Date
+        const tdDate = document.createElement('td');
+        tdDate.className = 'text-muted';
+        tdDate.textContent = formatShortUS(e.createdAt || nowIso());
+
+        // Note icon
+        const tdNote = document.createElement('td');
+        tdNote.className = 'text-center';
+        if (e.note && e.note.trim().length > 0) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'btn btn-link p-0';
+          btn.title = 'View note';
+          btn.setAttribute('aria-label','View note');
+          btn.innerHTML = '<i class="bi bi-card-text"></i>';
+          btn.addEventListener('click', () => openNoteModal(e.name, e.note));
+          tdNote.appendChild(btn);
+        } else {
+          tdNote.innerHTML = '<span class="text-muted">—</span>';
+        }
+
+        tr.appendChild(tdName);
+        tr.appendChild(tdDate);
+        tr.appendChild(tdNote);
+        tbody.appendChild(tr);
+      });
+    }
+
+    // ---- note modal
+    const noteModalEl = document.getElementById('noteModal');
+    const noteModal = new bootstrap.Modal(noteModalEl);
+    const noteModalBody = document.getElementById('noteModalBody');
+    const noteModalLabel = document.getElementById('noteModalLabel');
+
+    function openNoteModal(name, note) {
+      noteModalLabel.textContent = `Note from ${name || 'Guest'}`;
+      noteModalBody.textContent = note || '';
+      noteModal.show();
+    }
+
+    // ---- sign flow
+    const signModal = new bootstrap.Modal(document.getElementById('signModal'));
+    const openSignModalBtn = document.getElementById('openSignModal');
+    const emptySignBtn = document.getElementById('emptySignBtn');
+    const signForm = document.getElementById('signForm');
+    const nameInput = document.getElementById('name');
+    const noteInput = document.getElementById('note');
+    const allowDisplay = document.getElementById('allowDisplay');
+    const charsLeft = document.getElementById('charsLeft');
+
+    openSignModalBtn.addEventListener('click', () => {
+      signForm.reset();
+      nameInput.classList.remove('is-invalid');
+      noteInput.classList.remove('is-invalid');
+      charsLeft.textContent = '280';
+      signModal.show();
+      setTimeout(() => nameInput.focus(), 200);
+    });
+
+    emptySignBtn.addEventListener('click', () => openSignModalBtn.click());
+
+    noteInput.addEventListener('input', () => {
+      const remaining = 280 - (noteInput.value || '').length;
+      charsLeft.textContent = remaining;
+    });
+
+    signForm.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+
+      // honeypot
+      if (document.getElementById('hp_field').value) return;
+
+      const name = (nameInput.value || '').trim();
+      const note = (noteInput.value || '').trim();
+
+      if (!name) { nameInput.classList.add('is-invalid'); return; }
+      nameInput.classList.remove('is-invalid');
+
+      const entry = {
+        id: uid(),
+        name: escapeHTML(name),
+        note: escapeHTML(note),
+        createdAt: nowIso(),
+        visible: !!allowDisplay.checked
+      };
+
+      if (entry.visible) {
+        entries.push(entry);
+        save();
+        page = 1; // newest first lands on page 1
+        render();
+      }
+
+      signModal.hide();
+    });
+
+    // ---- pager
+    prevBtn.addEventListener('click', () => { if (page > 1) { page--; render(); } });
+    nextBtn.addEventListener('click', () => { page++; render(); });
+
+    // ---- init
+    load();
+    render();
+  </script>
+</body>
+</html>
