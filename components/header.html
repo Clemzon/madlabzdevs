@@ -17,6 +17,17 @@
     border-bottom: 1px solid #343a40; /* subtle border bottom */
   }
 
+  /* Clickable brand (Home) */
+  .brand-home {
+    color: #f8f9fa !important;
+    text-decoration: none !important;
+    margin-right: 1rem;
+  }
+  .brand-home:hover,
+  .brand-home:focus {
+    text-decoration: underline !important;
+  }
+
   /* Nav links container: horizontal scroll */
   .nav-links-scroll {
     display: flex;
@@ -45,6 +56,10 @@
   .nav-links-scroll a.nav-link:hover,
   .nav-links-scroll a.nav-link:focus {
     color: #f8f9fa !important; /* bright on hover/focus */
+  }
+  .nav-links-scroll a.nav-link.active {
+    color: #ffffff !important;
+    border-bottom: 2px solid #0d6efd; /* subtle active indicator */
   }
 
   /* Dropdown menu dark styles */
@@ -77,17 +92,29 @@
   header > .container-fluid {
     overflow: visible !important;
   }
+
+  /* Accessible focus rings */
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid #f8f9fa;
+    outline-offset: 2px;
+  }
 </style>
 
 <header class="bg-dark text-white py-2 fixed-top w-100" role="banner">
   <div class="container-fluid d-flex align-items-center px-4">
-    <span class="h5 mb-0">MadLabzDevs</span>
+    <!-- Brand now links Home -->
+    <a href="/index.html"
+       class="h5 mb-0 brand-home"
+       aria-label="MadLabzDevs Home"
+       rel="home">
+      MadLabzDevs
+    </a>
 
-    <nav class="nav-links-scroll" aria-label="Primary navigation">
+    <nav class="nav-links-scroll" aria-label="Primary navigation" role="navigation">
       <a class="nav-link px-3" href="/projects.html">Projects</a>
-      <a class="nav-link px-3" href="/visitors.html">Visitors</a>
       <a class="nav-link px-3" href="/events.html">Events</a>
-        <a class="nav-link px-3" href="/contact_page.html">Contact</a>
+      <a class="nav-link px-3" href="/contact_page.html">Contact Us</a>
       <a class="nav-link px-3" href="/portfolio.html">Portfolio</a>
       <!-- Profile tab will be dynamically inserted here by JS -->
     </nav>
@@ -104,9 +131,25 @@
         <span class="visually-hidden">User menu</span>
         Account
       </button>
-      <ul id="accountMenu" class="dropdown-menu dropdown-menu-end" role="menu">
+      <ul id="accountMenu" class="dropdown-menu dropdown-menu-end" role="menu" aria-label="Account menu">
         <!-- JS will populate sign up / login options here -->
       </ul>
     </div>
   </div>
 </header>
+
+<script>
+  // Lightweight "active" marker for current page
+  (function () {
+    const path = location.pathname.replace(/\/+$/, '').toLowerCase();
+    document
+      .querySelectorAll('nav[aria-label="Primary navigation"] a.nav-link')
+      .forEach(a => {
+        const href = (a.getAttribute('href') || '').replace(/\/+$/, '').toLowerCase();
+        if (href && (path === href)) {
+          a.classList.add('active');
+          a.setAttribute('aria-current', 'page');
+        }
+      });
+  })();
+</script>
