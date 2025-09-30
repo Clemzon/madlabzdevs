@@ -1,0 +1,1 @@
+keytool -list -v -keystore /Users/clemzonone/keystores/madlabz-upload.p12 | grep -E "Alias name:|SHA1:|SHA-256:|Valid from"
