@@ -1,26 +1,24 @@
 <style>
-  /* Keep your original spacing for the fixed header */
+  /* Fixed header spacing */
   body { padding-top: calc(32px + 48px) !important; }
 
   /* Account button */
   #btnAccount { color: var(--bs-light); background: transparent; border: none; }
   #btnAccount::after { margin-left: 0.25rem; }
 
-  /* Dark header shell */
+  /* Header shell */
   header.bg-dark {
     background-color: #212529 !important;
     border-bottom: 1px solid #343a40;
   }
 
-  /* Top bar (brand + account) */
+  /* Row 1: brand + account */
   .topbar {
     display: flex;
     align-items: center;
     gap: .75rem;
     min-height: 48px;
   }
-
-  /* Brand link */
   .brand-home {
     color: #f8f9fa !important;
     text-decoration: none !important;
@@ -29,24 +27,61 @@
   }
   .brand-home:hover, .brand-home:focus { text-decoration: underline !important; }
 
-  /* Second row: full-width nav that wraps */
+  /* Row 2: single-line, scrollable nav with edge fades */
   .nav-row {
+    position: relative;
     border-top: 1px solid #343a40;
-    background: #1b1f23;              /* slightly darker band under topbar */
+    background: #1b1f23;
   }
+
+  /* Edge fade hints to communicate scrollability */
+  .nav-row::before,
+  .nav-row::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 24px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .nav-row::before {
+    left: 0;
+    background: linear-gradient(to right, #1b1f23 55%, rgba(27,31,35,0));
+    opacity: 0;            /* hidden when at far-left */
+    transition: opacity .15s ease;
+  }
+  .nav-row::after {
+    right: 0;
+    background: linear-gradient(to left, #1b1f23 55%, rgba(27,31,35,0));
+    opacity: 1;            /* visible by default (more to the right) */
+    transition: opacity .15s ease;
+  }
+
+  /* Scroll area: force single row, enable horizontal scroll, no wrap */
+  .nav-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #495057 transparent;
+  }
+  .nav-scroll::-webkit-scrollbar { height: 6px; }
+  .nav-scroll::-webkit-scrollbar-thumb { background-color: #495057; border-radius: 3px; }
+
+  /* The inline nav itself */
   .nav-inline {
-    display: flex;
-    flex-wrap: wrap;                   /* <- allows wrapping to next line */
+    display: inline-flex;     /* inline so content defines width, not container */
+    flex-wrap: nowrap;        /* IMPORTANT: single line */
     gap: .25rem .5rem;
     padding: .25rem 0;
+    white-space: nowrap;      /* keep each link intact */
   }
+
   .nav-inline .nav-link {
-    flex: 0 0 auto;
     color: #adb5bd !important;
     padding: 0.375rem 0.75rem;
     text-decoration: none;
     border-radius: .375rem;
-    white-space: nowrap;               /* each tab stays intact */
   }
   .nav-inline .nav-link:hover,
   .nav-inline .nav-link:focus { color: #f8f9fa !important; background: #2a2f35; }
@@ -55,7 +90,7 @@
     border-bottom: 2px solid #0d6efd;
   }
 
-  /* Dropdowns (unchanged visual language) */
+  /* Dropdown */
   .dropdown-menu {
     background-color: #343a40 !important;
     color: #f8f9fa !important;
@@ -66,7 +101,6 @@
   .dropdown-menu .dropdown-item { color: #adb5bd !important; }
   .dropdown-menu .dropdown-item:hover,
   .dropdown-menu .dropdown-item:focus { background-color: #495057 !important; color: #f8f9fa !important; }
-
   #btnAccount.btn { color: #f8f9fa !important; }
   #btnAccount.btn:hover, #btnAccount.btn:focus { color: #fff !important; }
 
@@ -112,22 +146,24 @@
     </div>
   </div>
 
-  <!-- Row 2: full-width, wrapping nav under the header -->
-  <div class="nav-row">
+  <!-- Row 2: single-line, horizontally scrollable nav -->
+  <div class="nav-row" aria-hidden="false">
     <div class="container-fluid">
-      <nav id="primaryNav" class="nav-inline" aria-label="Primary navigation" role="navigation">
-        <a class="nav-link px-3" href="/projects.html">Projects</a>
-        <a class="nav-link px-3" href="/events.html">Events</a>
-        <a class="nav-link px-3" href="/contact_page.html">Contact Us</a>
-        <a class="nav-link px-3" href="/portfolio.html">Portfolio</a>
-        <!-- Profile tab will be dynamically inserted here by JS -->
-      </nav>
+      <div class="nav-scroll" id="navScroll" role="region" aria-label="Scrollable primary navigation" tabindex="0">
+        <nav id="primaryNav" class="nav-inline" aria-label="Primary navigation" role="navigation">
+          <a class="nav-link px-3" href="/projects.html">Projects</a>
+          <a class="nav-link px-3" href="/events.html">Events</a>
+          <a class="nav-link px-3" href="/contact_page.html">Contact Us</a>
+          <a class="nav-link px-3" href="/portfolio.html">Portfolio</a>
+          <!-- Profile tab will be dynamically inserted here by JS -->
+        </nav>
+      </div>
     </div>
   </div>
 </header>
 
 <script>
-  // Active-page marker (kept from your original)
+  // Active-page marker (original behavior preserved)
   (function () {
     const path = location.pathname.replace(/\/+$/, '').toLowerCase();
     document
@@ -139,5 +175,60 @@
           a.setAttribute('aria-current', 'page');
         }
       });
+  })();
+
+  // Edge fade visibility logic for scroll hints
+  (function () {
+    const scroller = document.getElementById('navScroll');
+    const navRow = document.querySelector('.nav-row');
+    if (!scroller || !navRow) return;
+
+    const updateFades = () => {
+      const { scrollLeft, scrollWidth, clientWidth } = scroller;
+      const atLeft = scrollLeft <= 0;
+      const atRight = Math.ceil(scrollLeft + clientWidth) >= scrollWidth;
+
+      // left fade hidden when at far-left
+      navRow.style.setProperty('--left-fade', atLeft ? '0' : '1');
+      // right fade hidden when at far-right
+      navRow.style.setProperty('--right-fade', atRight ? '0' : '1');
+
+      navRow.style.setProperty('opacity', '1'); // ensure visible after first calc
+      navRow.style.setProperty('--debug', scrollLeft);
+      navRow.style.setProperty('--w', scrollWidth);
+      navRow.style.setProperty('--c', clientWidth);
+
+      // toggle via direct opacity on pseudo elements
+      navRow.style.setProperty('--leftOpacity', atLeft ? '0' : '1');
+      navRow.style.setProperty('--rightOpacity', atRight ? '0' : '1');
+
+      // Apply to pseudo-elements through inline styles hack using CSS variables
+      navRow.style.setProperty('--leftOpacity', atLeft ? '0' : '1');
+      navRow.style.setProperty('--rightOpacity', atRight ? '0' : '1');
+      navRow.style.cssText += `
+        --leftOpacity:${atLeft ? 0 : 1};
+        --rightOpacity:${atRight ? 0 : 1};
+      `;
+    };
+
+    // Hook to pseudo elements via CSSOM (works by reflowing the rule)
+    const setFadesStyle = () => {
+      const s = document.createElement('style');
+      s.textContent = `
+        .nav-row::before { opacity: var(--leftOpacity, 0); }
+        .nav-row::after  { opacity: var(--rightOpacity, 1); }
+      `;
+      document.head.appendChild(s);
+    };
+
+    setFadesStyle();
+    updateFades();
+
+    scroller.addEventListener('scroll', updateFades, { passive: true });
+    window.addEventListener('resize', updateFades);
+    // In case fonts load and widths change after paint
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(updateFades).observe(scroller);
+    }
   })();
 </script>
