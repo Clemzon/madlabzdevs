@@ -11061,3 +11061,76 @@ header.masthead h1, header.masthead .h1 {
   color: var(--bs-primary) !important;
   text-decoration: none;
 }
+/* =========================================================
+   Header / Nav mobile enhancements (non-breaking, Bootstrap 5)
+   - Keeps existing Bootstrap behavior intact
+   - Adds horizontal scroll for overflowing nav links on small screens
+   - Improves toggler hit area and brand truncation
+   - Scoped to .navbar to avoid side effects
+   ========================================================= */
+@media (max-width: 767.98px) {
+  /* If many links exist, allow horizontal scroll so more than "Projects" is visible */
+  .navbar .navbar-nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    gap: 0.25rem;
+    padding-bottom: 0.25rem;   /* provides room for iOS scroll bar */
+    margin-bottom: -0.25rem;   /* visually tucks the scrollbar */
+  }
+
+  /* Slightly tighter link padding on small screens to fit more items */
+  .navbar .nav-link {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  /* Prevent brand text from pushing nav off-screen */
+  .navbar .navbar-brand {
+    max-width: 60vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Make the hamburger easier to tap without changing layout elsewhere */
+  .navbar .navbar-toggler {
+    padding: 0.55rem 0.75rem;
+    line-height: 1;
+    border-radius: 0.5rem;
+    touch-action: manipulation;
+  }
+
+  /* Ensure collapsed panel stacks items vertically and stretches full width */
+  .navbar .navbar-collapse {
+    width: 100%;
+  }
+}
+
+/* Optional: smooth scrolling feedback for horizontal nav overflow */
+.navbar .navbar-nav {
+  scrollbar-width: thin;
+}
+.navbar .navbar-nav::-webkit-scrollbar {
+  height: 6px;
+}
+.navbar .navbar-nav::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,.2);
+  border-radius: 3px;
+}
+
+/* Dark mode touch-ups for dropdown in header (respects your existing dark-mode vars) */
+body.dark-mode .navbar .dropdown-menu {
+  background-color: var(--bs-dropdown-bg, #1e1e1e);
+  border-color: var(--bs-dropdown-border-color, #444);
+}
+body.dark-mode .navbar .dropdown-item {
+  color: var(--bs-dropdown-link-color, #e0e0e0);
+}
+body.dark-mode .navbar .dropdown-item:hover,
+body.dark-mode .navbar .dropdown-item:focus {
+  background-color: var(--bs-dropdown-link-hover-bg, #333);
+  color: var(--bs-dropdown-link-hover-color, #90caf9);
+}
