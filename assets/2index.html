@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="MadLabzDevs: ideas and apps that put accessibility first — building tools that create independence for people with disabilities." />
+  <meta name="author" content="" />
+  <title>MadLabzDevs — Accessible Ideas & Apps</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Core theme CSS -->
+  <link href="/css/styles.css" rel="stylesheet" />
+
+  <style>
+    /* Offset for fixed header (32px) + nav (48px) */
+    body { padding-top: calc(32px + 48px) !important; }
+
+    /* Skip link (WCAG: keyboard + bypass blocks) */
+    .skip-link {
+      position: absolute;
+      top: 0.5rem;
+      left: 0.5rem;
+      z-index: 2000;
+      padding: .5rem .75rem;
+      border-radius: .5rem;
+      background: #ffffff;
+      color: #000000;
+      text-decoration: none;
+      transform: translateY(-200%);
+      transition: transform .15s ease-in-out;
+    }
+    .skip-link:focus,
+    .skip-link:focus-visible {
+      transform: translateY(0);
+      outline: 3px solid #0d6efd;
+      outline-offset: 2px;
+    }
+
+    /* Ensure focus isn’t hidden behind fixed header when jumping to anchors */
+    [id] { scroll-margin-top: calc(32px + 48px + 1rem); }
+
+    /* Landing hero */
+    .hero {
+      position: relative;
+      border-radius: 1rem;
+      padding: clamp(2rem, 4vw, 4rem);
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(80% 60% at 20% 20%, rgba(255,255,255,0.06), transparent 60%),
+                  radial-gradient(80% 60% at 80% 40%, rgba(255,255,255,0.04), transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Section spacing */
+    section { margin-top: 2.5rem; margin-bottom: 2.5rem; }
+
+    /* Feature icon circle */
+    .feature-icon {
+      width: 3rem; height: 3rem;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* Project card image frame (framed, not lifted) */
+    .framed {
+      border-radius: .75rem;
+      border: 2px solid rgba(255,255,255,0.18);
+      padding: .5rem;
+      background: rgba(255,255,255,0.03);
+    }
+
+    /* Footer donate link subtle */
+    .donate-link { opacity: .85; }
+    .donate-link:hover { opacity: 1; }
+
+    /* Keep nav items on one line and scrollable */
+    .navbar-nav { white-space: nowrap; flex-shrink: 0; }
+  </style>
+
+  <!-- Load shared header/nav -->
+  <script type="module" src="/js/header.js"></script>
+</head>
+
+<body id="page-top" class="dark-mode">
+  <!-- Skip links (placeholder you can expand later) -->
+  <a class="skip-link" href="#mainContent">Skip to main content</a>
+  <a class="skip-link" href="#featured" style="left: 11.5rem;">Skip to featured projects</a>
+
+  <!-- Shared header/nav container (header.js injects real landmarks) -->
+  <div id="shared-header" aria-label="Site header"></div>
+
+  <main class="container py-4" id="mainContent" tabindex="-1" aria-labelledby="pageTitle">
+    <!-- Hero -->
+    <header class="hero bg-dark text-light" aria-describedby="pageIntro">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <h1 id="pageTitle" class="display-5 fw-bold mb-3">Building Accessible Ideas into Real Apps</h1>
+          <p id="pageIntro" class="lead mb-4">
+            MadLabzDevs is a space for developers and makers focused on accessibility-first
+            design — crafting tools that give people with disabilities more independence.
+          </p>
+
+          <nav aria-label="Primary calls to action">
+            <ul class="list-unstyled d-flex gap-2 flex-wrap mb-0">
+              <li>
+                <a class="btn btn-primary" href="/projects.html">
+                  <i class="bi bi-grid-1x2 me-2" aria-hidden="true"></i>
+                  <span>Explore Projects</span>
+                </a>
+              </li>
+              <li>
+                <a class="btn btn-outline-light" href="#mission">
+                  <i class="bi bi-bullseye me-2" aria-hidden="true"></i>
+                  <span>Our Mission</span>
+                </a>
+              </li>
+              <li>
+                <a class="btn btn-outline-light" href="#get-involved">
+                  <i class="bi bi-people me-2" aria-hidden="true"></i>
+                  <span>Get Involved</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="col-lg-5">
+          <div class="p-3 framed">
+            <!-- Decorative panel; keep it hidden from AT to avoid noise -->
+            <div class="ratio ratio-16x9 rounded" aria-hidden="true" style="background:
+              linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+              display:flex;align-items:center;justify-content:center;">
+              <div class="text-center">
+                <div class="feature-icon mb-3">
+                  <i class="bi bi-universal-access-circle fs-4" aria-hidden="true"></i>
+                </div>
+                <p class="mb-0">Accessibility • Community • Independence</p>
+              </div>
+            </div>
+          </div>
+          <p class="text-muted small mt-2 mb-0">Our work spans keyboards, reporting tools, wearables, and more.</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mission / What we do -->
+    <section id="mission" class="text-light" aria-labelledby="missionTitle">
+      <h2 id="missionTitle" class="visually-hidden">Our Mission</h2>
+
+      <div class="row g-4">
+        <div class="col-md-4">
+          <article class="d-flex align-items-start gap-3" aria-labelledby="missionA11yTitle">
+            <span class="feature-icon" aria-hidden="true"><i class="bi bi-eye"></i></span>
+            <div>
+              <h3 id="missionA11yTitle" class="h5 mb-1">Accessibility-First</h3>
+              <p class="mb-0 text-muted">
+                High-contrast UIs, screen-reader support, and input methods designed with real users in mind.
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <div class="col-md-4">
+          <article class="d-flex align-items-start gap-3" aria-labelledby="missionAiTitle">
+            <span class="feature-icon" aria-hidden="true"><i class="bi bi-cpu"></i></span>
+            <div>
+              <h3 id="missionAiTitle" class="h5 mb-1">Practical AI</h3>
+              <p class="mb-0 text-muted">
+                OCR, voice, and on-device smarts that remove friction and boost independence.
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <div class="col-md-4">
+          <article class="d-flex align-items-start gap-3" aria-labelledby="missionCommunityTitle">
+            <span class="feature-icon" aria-hidden="true"><i class="bi bi-people"></i></span>
+            <div>
+              <h3 id="missionCommunityTitle" class="h5 mb-1">Built with Community</h3>
+              <p class="mb-0 text-muted">
+                Open collaboration with people who use assistive tech daily — feedback drives features.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Projects -->
+    <section id="featured" aria-labelledby="featuredTitle">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 id="featuredTitle" class="h4 mb-0">Featured Projects</h2>
+        <a class="link-light" href="/projects.html">
+          <span>View all</span>
+          <i class="bi bi-arrow-right-short" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="row g-4" role="list">
+        <!-- BlindCrayon IME -->
+        <div class="col-12 col-md-6 col-lg-4" role="listitem">
+          <article class="card h-100 bg-dark text-light border-0" aria-labelledby="projBlindCrayonTitle">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-2">
+                <img
+                  src="assets/img/project-blindcrayonime.png"
+                  alt="BlindCrayon IME icon"
+                  class="me-2"
+                  style="width: 28px; height: 28px; border-radius: 6px;"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <h3 id="projBlindCrayonTitle" class="h5 mb-0">
+                  <a href="#" class="stretched-link text-decoration-none text-light">
+                    BlindCrayon IME
+                  </a>
+                </h3>
+              </div>
+
+              <figure class="framed mb-3">
+                <img
+                  src="assets/img/project-blindcrayonime.png"
+                  class="img-fluid rounded"
+                  alt="App icon preview for BlindCrayon IME"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <figcaption class="visually-hidden">
+                  BlindCrayon IME app icon preview.
+                </figcaption>
+              </figure>
+
+              <p class="text-muted mb-0">
+                High-contrast Android keyboard with large targets, accessible layouts, and speech tools to type faster.
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <!-- BEP Buddy -->
+        <div class="col-12 col-md-6 col-lg-4" role="listitem">
+          <article class="card h-100 bg-dark text-light border-0" aria-labelledby="projBepBuddyTitle">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-2">
+                <span class="me-2 feature-icon" aria-hidden="true"><i class="bi bi-receipt"></i></span>
+                <h3 id="projBepBuddyTitle" class="h5 mb-0">
+                  <a href="#" class="stretched-link text-decoration-none text-light">
+                    BEP Buddy
+                  </a>
+                </h3>
+              </div>
+
+              <!-- Decorative placeholder; hide from AT -->
+              <div class="framed mb-3 ratio ratio-1x1" aria-hidden="true">
+                <div class="rounded" style="background: rgba(255,255,255,0.04);"></div>
+              </div>
+
+              <p class="text-muted mb-0">
+                AI-assisted invoices and monthly reports to simplify business tasks for blind vendors.
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <!-- Phound (Wearables) -->
+        <div class="col-12 col-md-6 col-lg-4" role="listitem">
+          <article class="card h-100 bg-dark text-light border-0" aria-labelledby="projPhoundTitle">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-2">
+                <span class="me-2 feature-icon" aria-hidden="true"><i class="bi bi-smartwatch"></i></span>
+                <h3 id="projPhoundTitle" class="h5 mb-0">
+                  <a href="#" class="stretched-link text-decoration-none text-light">
+                    Phound
+                  </a>
+                </h3>
+              </div>
+
+              <!-- Decorative placeholder; hide from AT -->
+              <div class="framed mb-3 ratio ratio-1x1" aria-hidden="true">
+                <div class="rounded" style="background: rgba(255,255,255,0.04);"></div>
+              </div>
+
+              <p class="text-muted mb-0">
+                Wearable-assisted location cues to help blind users find each other with haptics and simple signals.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Get Involved -->
+    <section id="get-involved" class="text-light" aria-labelledby="getInvolvedTitle">
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-7">
+          <h2 id="getInvolvedTitle" class="h4 mb-2">Get Involved</h2>
+          <p class="text-muted mb-3">
+            Whether you’re a developer, tester, or someone who relies on assistive tech, your perspective matters.
+          </p>
+
+          <ul class="mb-4">
+            <li>Try early builds and share feedback</li>
+            <li>Contribute code, design, docs, or testing</li>
+            <li>Share ideas for tools that would make a difference</li>
+          </ul>
+
+          <nav aria-label="Get involved links">
+            <ul class="list-unstyled d-flex gap-2 flex-wrap mb-0">
+              <li>
+                <a class="btn btn-primary" href="/projects.html">
+                  <i class="bi bi-rocket-takeoff me-2" aria-hidden="true"></i>
+                  <span>Start exploring</span>
+                </a>
+              </li>
+              <li>
+                <a class="btn btn-outline-light" href="/contact_page.html">
+                  <i class="bi bi-envelope me-2" aria-hidden="true"></i>
+                  <span>Contact</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="col-lg-5">
+          <aside class="p-3 framed" aria-labelledby="pillarsTitle">
+            <h3 id="pillarsTitle" class="h6 mb-2">Accessibility Pillars</h3>
+            <ul class="mb-0 text-muted">
+              <li>Readable at a glance</li>
+              <li>Keyboard & screen reader friendly</li>
+              <li>Works in light & dark modes</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="container border-top border-secondary pt-3 pb-5" aria-label="Site footer">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+      <p class="mb-0 text-muted">
+        © <span id="year"></span> MadLabzDevs — Accessibility • Community • Independence
+      </p>
+      <div class="d-flex align-items-center gap-3">
+        <a class="donate-link small text-muted"
+           href="#"
+           data-bs-toggle="modal"
+           data-bs-target="#donateModal"
+           aria-haspopup="dialog"
+           aria-controls="donateModal"
+           aria-label="Open donation options">
+          <i class="bi bi-heart-fill me-1" aria-hidden="true"></i>
+          <span>Support the mission</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Donation Modal -->
+  <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="donateModalLabel">Support via Cash App</h2>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <p class="mb-4">
+            If you’d like to help, contributions to <strong>$Clemzon</strong> keep the lights on — thank you!
+          </p>
+          <div class="d-flex justify-content-center gap-2 flex-wrap" aria-label="Donation amounts">
+            <a href="https://cash.app/$Clemzon/5"  target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">Donate $5</a>
+            <a href="https://cash.app/$Clemzon/10" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">Donate $10</a>
+            <a href="https://cash.app/$Clemzon/25" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">Donate $25</a>
+          </div>
+          <small class="d-block mt-3 text-muted">Your support directly fuels accessibility work.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Current year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Ensure skip-to-main puts keyboard focus into the main landmark
+    // (helps screen reader + keyboard users after bypassing nav)
+    const main = document.getElementById('mainContent');
+    document.querySelectorAll('a.skip-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const targetId = link.getAttribute('href')?.slice(1);
+        if (!targetId) return;
+        const target = document.getElementById(targetId);
+        if (!target) return;
+
+        // Delay focus until after the browser jumps
+        setTimeout(() => {
+          // Make sure target can receive focus
+          if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+          target.focus({ preventScroll: true });
+        }, 0);
+      });
+    });
+  </script>
+</body>
+</html>

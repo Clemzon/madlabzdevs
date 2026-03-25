@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Watcha Thinkin’? — Feedback & Reviews | MadLabzDevs</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <main id="wt-root" class="wt-container">
+    <header class="wt-hero">
+      <h1>Watcha Thinkin’?</h1>
+      <p>Share feedback and reviews for any MadLabz app. Your thoughts help us improve.</p>
+    </header>
+
+    <section id="wt-app-picker" aria-labelledby="wt-app-picker-label">
+      <h2 id="wt-app-picker-label">Choose an app</h2>
+      <!-- appPicker.js will render here -->
+      <div id="wt-app-picker-mount"></div>
+      <div id="wt-quick-stats" aria-live="polite"></div>
+    </section>
+
+    <section id="wt-review-form" aria-labelledby="wt-review-form-label">
+      <h2 id="wt-review-form-label">Write a review</h2>
+      <!-- reviewForm.js will render here -->
+      <div id="wt-review-form-mount"></div>
+    </section>
+
+    <section id="wt-reviews-browser" aria-labelledby="wt-reviews-browser-label">
+      <h2 id="wt-reviews-browser-label">Reviews</h2>
+      <!-- reviewsList.js will render here -->
+      <div id="wt-reviews-filters"></div>
+      <div id="wt-reviews-list"></div>
+      <div id="wt-pagination"></div>
+    </section>
+  </main>
+
+  <!-- JS includes (stubs for now) -->
+  <script src="/js/watcha-thinkin/feedback-api.js"></script>
+  <script src="/js/watcha-thinkin/components/appPicker.js"></script>
+  <script src="/js/watcha-thinkin/components/starRating.js"></script>
+  <script src="/js/watcha-thinkin/components/reviewForm.js"></script>
+  <script src="/js/watcha-thinkin/components/reviewsList.js"></script>
+  <script src="/js/watcha-thinkin/index.js"></script>
+</body>
+</html>
