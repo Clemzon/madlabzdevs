@@ -34,7 +34,7 @@
     background: #1b1f23;
   }
 
-  /* Edge fade hints to communicate scrollability */
+  /* Edge fade hints */
   .nav-row::before,
   .nav-row::after {
     content: "";
@@ -47,17 +47,17 @@
   .nav-row::before {
     left: 0;
     background: linear-gradient(to right, #1b1f23 55%, rgba(27,31,35,0));
-    opacity: 0;            /* hidden when at far-left */
+    opacity: 0;
     transition: opacity .15s ease;
   }
   .nav-row::after {
     right: 0;
     background: linear-gradient(to left, #1b1f23 55%, rgba(27,31,35,0));
-    opacity: 1;            /* visible by default (more to the right) */
+    opacity: 1;
     transition: opacity .15s ease;
   }
 
-  /* Scroll area: force single row, enable horizontal scroll, no wrap */
+  /* Scroll area */
   .nav-scroll {
     overflow-x: auto;
     overflow-y: hidden;
@@ -68,15 +68,14 @@
   .nav-scroll::-webkit-scrollbar { height: 6px; }
   .nav-scroll::-webkit-scrollbar-thumb { background-color: #495057; border-radius: 3px; }
 
-  /* The inline nav itself */
+  /* Inline nav */
   .nav-inline {
-    display: inline-flex;     /* inline so content defines width, not container */
-    flex-wrap: nowrap;        /* IMPORTANT: single line */
+    display: inline-flex;
+    flex-wrap: nowrap;          /* single line */
     gap: .25rem .5rem;
     padding: .25rem 0;
-    white-space: nowrap;      /* keep each link intact */
+    white-space: nowrap;
   }
-
   .nav-inline .nav-link {
     color: #adb5bd !important;
     padding: 0.375rem 0.75rem;
@@ -112,10 +111,36 @@
   /* Focus rings */
   a:focus-visible, button:focus-visible { outline: 2px solid #f8f9fa; outline-offset: 2px; }
 
-  /* Tighter on phones */
+  /* “>>” indicator (mobile-only) */
+  .nav-hint-right {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 700;
+    font-size: .9rem;
+    letter-spacing: .02em;
+    color: #adb5bd;
+    opacity: 0.35;                 /* faint */
+    user-select: none;
+    z-index: 2;
+    line-height: 1;
+    background: transparent;
+    border: 0;
+    padding: .125rem .25rem;
+    border-radius: .25rem;
+  }
+  .nav-hint-right:hover { opacity: 0.6; }
+  .nav-hint-right[hidden] { display: none !important; }
+
   @media (max-width: 576px) {
     body { padding-top: calc(28px + 48px) !important; }
     .nav-inline .nav-link { padding: 0.35rem 0.6rem; font-size: .95rem; }
+  }
+
+  /* Hide the “>>” indicator on tablet/desktop */
+  @media (min-width: 768px) {
+    .nav-hint-right { display: none !important; }
   }
 </style>
 
@@ -147,8 +172,8 @@
   </div>
 
   <!-- Row 2: single-line, horizontally scrollable nav -->
-  <div class="nav-row" aria-hidden="false">
-    <div class="container-fluid">
+  <div class="nav-row">
+    <div class="container-fluid position-relative">
       <div class="nav-scroll" id="navScroll" role="region" aria-label="Scrollable primary navigation" tabindex="0">
         <nav id="primaryNav" class="nav-inline" aria-label="Primary navigation" role="navigation">
           <a class="nav-link px-3" href="/projects.html">Projects</a>
@@ -158,6 +183,9 @@
           <!-- Profile tab will be dynamically inserted here by JS -->
         </nav>
       </div>
+
+      <!-- Mobile-only “>>” indicator -->
+      <button type="button" id="navHintRight" class="nav-hint-right" aria-hidden="true" tabindex="-1">>></button>
     </div>
   </div>
 </header>
@@ -177,58 +205,55 @@
       });
   })();
 
-  // Edge fade visibility logic for scroll hints
+  // Edge fades + mobile-only “>>” indicator visibility + optional nudge scroll
   (function () {
     const scroller = document.getElementById('navScroll');
-    const navRow = document.querySelector('.nav-row');
-    if (!scroller || !navRow) return;
+    const navRow   = document.querySelector('.nav-row');
+    const hintR    = document.getElementById('navHintRight');
+    if (!scroller || !navRow || !hintR) return;
+
+    const isDesktop = () => window.matchMedia('(min-width: 768px)').matches;
 
     const updateFades = () => {
       const { scrollLeft, scrollWidth, clientWidth } = scroller;
-      const atLeft = scrollLeft <= 0;
+      const atLeft  = scrollLeft <= 0;
       const atRight = Math.ceil(scrollLeft + clientWidth) >= scrollWidth;
 
-      // left fade hidden when at far-left
-      navRow.style.setProperty('--left-fade', atLeft ? '0' : '1');
-      // right fade hidden when at far-right
-      navRow.style.setProperty('--right-fade', atRight ? '0' : '1');
-
-      navRow.style.setProperty('opacity', '1'); // ensure visible after first calc
-      navRow.style.setProperty('--debug', scrollLeft);
-      navRow.style.setProperty('--w', scrollWidth);
-      navRow.style.setProperty('--c', clientWidth);
-
-      // toggle via direct opacity on pseudo elements
-      navRow.style.setProperty('--leftOpacity', atLeft ? '0' : '1');
-      navRow.style.setProperty('--rightOpacity', atRight ? '0' : '1');
-
-      // Apply to pseudo-elements through inline styles hack using CSS variables
-      navRow.style.setProperty('--leftOpacity', atLeft ? '0' : '1');
-      navRow.style.setProperty('--rightOpacity', atRight ? '0' : '1');
+      // Edge fades (via CSS variables)
       navRow.style.cssText += `
         --leftOpacity:${atLeft ? 0 : 1};
         --rightOpacity:${atRight ? 0 : 1};
       `;
-    };
-
-    // Hook to pseudo elements via CSSOM (works by reflowing the rule)
-    const setFadesStyle = () => {
-      const s = document.createElement('style');
+      const s = document.getElementById('navFadeVars') || (() => {
+        const el = document.createElement('style');
+        el.id = 'navFadeVars';
+        document.head.appendChild(el);
+        return el;
+      })();
       s.textContent = `
         .nav-row::before { opacity: var(--leftOpacity, 0); }
         .nav-row::after  { opacity: var(--rightOpacity, 1); }
       `;
-      document.head.appendChild(s);
+
+      // On desktop: always hide the hint
+      if (isDesktop()) {
+        hintR.hidden = true;
+        return;
+      }
+
+      // On mobile: show hint only if more content to the right
+      hintR.hidden = atRight;
     };
 
-    setFadesStyle();
-    updateFades();
+    // Optional: clicking “>>” nudges right
+    hintR.addEventListener('click', () => {
+      if (isDesktop()) return; // no-op on desktop
+      scroller.scrollBy({ left: Math.max(120, scroller.clientWidth * 0.4), behavior: 'smooth' });
+    });
 
     scroller.addEventListener('scroll', updateFades, { passive: true });
     window.addEventListener('resize', updateFades);
-    // In case fonts load and widths change after paint
-    if ('ResizeObserver' in window) {
-      new ResizeObserver(updateFades).observe(scroller);
-    }
+    if ('ResizeObserver' in window) new ResizeObserver(updateFades).observe(scroller);
+    updateFades();
   })();
 </script>
