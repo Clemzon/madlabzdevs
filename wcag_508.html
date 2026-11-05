@@ -1,0 +1,181 @@
+<!-- /wcag_508.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="Find accessibility testing resources and learn about MadLabzDevs testing work and services."
+  />
+  <title>WCAG and Section 508 | MadLabzDevs</title>
+
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <link href="/css/styles.css" rel="stylesheet" />
+
+  <style>
+    body.dark-mode {
+      padding-top: calc(32px + 48px) !important;
+    }
+
+    .skip-link {
+      position: absolute;
+      z-index: 2000;
+      top: 0.5rem;
+      left: 0.5rem;
+      padding: 0.75rem 1rem;
+      color: #111;
+      background: #fff;
+      border: 2px solid #111;
+      border-radius: 0.25rem;
+      transform: translateY(-200%);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .skip-link:focus-visible {
+      outline: 3px solid #0d6efd;
+      outline-offset: 3px;
+    }
+
+    main {
+      scroll-margin-top: 7rem;
+    }
+
+    .page-content {
+      max-width: 55rem;
+      margin-inline: auto;
+    }
+
+    .page-section {
+      margin-top: 2.5rem;
+    }
+
+    .section-shortcuts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin: 1.5rem 0 2rem;
+      padding: 0;
+      list-style: none;
+    }
+
+    .section-shortcuts a {
+      display: inline-block;
+      min-height: 2.75rem;
+      padding: 0.625rem 0.875rem;
+      border: 2px solid currentColor;
+      border-radius: 0.25rem;
+    }
+  </style>
+
+  <script type="module" src="/js/header.js"></script>
+</head>
+<body class="dark-mode">
+  <a class="skip-link" href="#mainContent">Skip to main content</a>
+
+  <div id="shared-header"></div>
+
+  <main class="container py-4" id="mainContent" tabindex="-1">
+    <div class="page-content">
+      <header>
+        <h1>Accessibility testing and resources</h1>
+        <p class="lead">
+          This page is for people looking for accessibility testing resources
+          and for organizations interested in working with an individual
+          tester. Choose a section to get started.
+        </p>
+      </header>
+
+      <nav aria-label="On this page">
+        <ul class="section-shortcuts">
+          <li>
+            <a href="#community-resources">Community resources</a>
+          </li>
+          <li>
+            <a href="#my-testing-work">My testing work</a>
+          </li>
+        </ul>
+      </nav>
+
+      <section
+        class="page-section"
+        id="community-resources"
+        aria-labelledby="community-resources-heading"
+      >
+        <h2 id="community-resources-heading">Community resources</h2>
+        <p>
+          This section will bring together resources for accessibility
+          testers and people looking for testing opportunities. Planned
+          listings may include tester communities, research panels, job
+          opportunities, training, and WCAG or Section 508 testing resources.
+        </p>
+        <p>
+          Resource listings will include a short description and the date
+          they were last checked. A listing will be informational and will
+          not necessarily mean that MadLabzDevs endorses the organization.
+        </p>
+        <p><em>Community resource listings are being prepared.</em></p>
+      </section>
+
+      <section
+        class="page-section"
+        id="my-testing-work"
+        aria-labelledby="my-testing-work-heading"
+      >
+        <h2 id="my-testing-work-heading">My testing work</h2>
+        <p>
+          I hold a DHS Trusted Tester certification. I’m building my
+          experience in accessibility testing and exploring ways to help
+          identify barriers in websites and digital content.
+        </p>
+        <p>
+          My sample evaluations will use the DHS Trusted Tester process and
+          the Section 508 Compliance Test Report (SCRT). Each report will
+          describe what was tested, when it was tested, the methods used, and
+          the limits of the evaluation.
+        </p>
+        <p>
+          These will be personal sample evaluations. They will not be DHS
+          reports, legal advice, or a guarantee that a website conforms to
+          WCAG or Section 508.
+        </p>
+      </section>
+
+      <section
+        class="page-section"
+        aria-labelledby="sample-reports-heading"
+      >
+        <h2 id="sample-reports-heading">Sample test reports</h2>
+        <p>
+          Downloadable sample reports will be added here as they are
+          completed. The reports will demonstrate my testing process and
+          document findings from publicly available websites.
+        </p>
+        <p><em>Sample reports are not available yet.</em></p>
+      </section>
+
+      <section
+        class="page-section"
+        aria-labelledby="testing-services-heading"
+      >
+        <h2 id="testing-services-heading">Discuss accessibility testing</h2>
+        <p>
+          MadLabzDevs is at an early stage, and I’m still developing this
+          service. If you’re looking for an accessibility testing perspective
+          on a website or digital content, you’re welcome to
+          <a href="/contact_page.html">contact me</a> to discuss your needs
+          and whether the work is a good fit for my current experience.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <div id="shared-footer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+</body>
+</html>

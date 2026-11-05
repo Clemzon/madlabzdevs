@@ -2,68 +2,204 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <title>MadLabzDevs Events</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="Accessibility news, legal and standards updates, assistive technology developments, events, and user-testing opportunities."
+  />
+  <title>Accessibility Events and Updates | MadLabzDevs</title>
+
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-  <!-- Core theme CSS (includes Bootstrap)-->
   <link href="css/styles.css" rel="stylesheet" />
+
   <style>
-    /* Offset for fixed header (32px) + nav (48px) */
-    body.dark-mode { padding-top: calc(32px + 48px) !important; }
+    body.dark-mode {
+      padding-top: calc(32px + 48px) !important;
+    }
+
+    .skip-link {
+      position: absolute;
+      z-index: 2000;
+      top: 0.5rem;
+      left: 0.5rem;
+      padding: 0.75rem 1rem;
+      color: #111;
+      background: #fff;
+      border: 2px solid #111;
+      border-radius: 0.25rem;
+      transform: translateY(-200%);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .skip-link:focus-visible {
+      outline: 3px solid #0d6efd;
+      outline-offset: 3px;
+    }
+
+    main {
+      scroll-margin-top: 7rem;
+    }
+
+    .content-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .content-section > h2 {
+      margin-bottom: 1rem;
+    }
+
+    .update-item + .update-item {
+      margin-top: 1.5rem;
+    }
   </style>
 
-  <!-- Load shared header/nav -->
   <script type="module" src="/js/header.js"></script>
 </head>
 <body class="dark-mode">
+  <a class="skip-link" href="#mainContent">Skip to main content</a>
 
-  <!-- Injected shared header/nav -->
   <div id="shared-header"></div>
 
-  <!-- Spacer to push content below fixed header/nav -->
-  <div class="pt-5 mt-5"></div>
+  <main class="container py-4" id="mainContent" tabindex="-1">
+    <header class="mb-4">
+      <h1>Accessibility events and updates</h1>
+      <p class="lead">
+        A roundup of accessibility standards and legal news, upcoming events,
+        assistive technology developments, and opportunities to help test
+        digital products.
+      </p>
+      <p>
+        <small>
+          Last reviewed
+          <time datetime="2026-11-03">November 3, 2026</time>
+        </small>
+      </p>
+    </header>
 
-  <div class="container-fluid py-4">
-    <h1 class="mb-4 text-light">Upcoming Events</h1>
-    <div class="row">
-      <!-- BEPBuddy Web App Live Demo -->
-      <div class="col-lg-4 col-sm-6 mb-4">
-        <div class="card h-100 bg-dark text-light border-secondary">
-          <div class="card-header text-center bg-secondary text-light"><strong>ACTIVE</strong></div>
-          <div class="card-body">
-            <h5 class="card-title">BEPBuddy Web App Live Demo</h5>
-            <p class="card-text">
-              <strong>Disclaimer:</strong> This is a test demonstration—data must be backed up externally.<br>
-              The web demo is in testing mode and will undergo frequent updates.<br>
-              Access it at 
-              <a href="https://www.madlabzdevs.net/projects" target="_blank" rel="noopener noreferrer" class="link-primary">
-                www.madlabzdevs.net/projects
-              </a>.
-            </p>
-          </div>
-        </div>
-      </div>
-      <!-- BEPBuddy Android Test Group -->
-      <div class="col-lg-4 col-sm-6 mb-4">
-        <div class="card h-100 bg-dark text-light border-secondary">
-          <div class="card-header text-center bg-secondary text-light"><strong>July 19, 2025</strong></div>
-          <div class="card-body">
-            <h5 class="card-title">BEPBuddy for Android Mobile Devices</h5>
-            <p class="card-text">
-              Join the BEPBuddy Test Group on Google Groups and add your email to gain access:<br>
-              <a href="https://groups.google.com/g/bepbuddy_test_group" target="_blank" rel="noopener noreferrer" class="link-primary">
-                https://groups.google.com/g/bepbuddy_test_group
-              </a>.<br>
-              Once added, you can download the early-access Android app from the Google Play Store link provided in the group.<br>
-              Google requires at least 12 users to sign up with the developer group before the app becomes visible for testing.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    <section class="content-section" aria-labelledby="standards-heading">
+      <h2 id="standards-heading">Standards, laws, and court updates</h2>
 
-  <!-- MadLabzDevs core JS-->
+      <article class="update-item">
+        <h3>DOJ extends ADA Title II web accessibility deadlines</h3>
+        <p>
+          A 2026 interim final rule extended the deadlines for state and local
+          governments to meet the web and mobile app requirements based on
+          WCAG 2.1 Level AA. Entities serving 50,000 or more people now have
+          until April 26, 2027. Smaller entities and special district
+          governments have until April 26, 2028.
+        </p>
+        <p>
+          This is an ADA Title II update for state and local governments.
+          Section 508 is a separate law covering information and communication
+          technology used by federal agencies.
+          <a href="https://www.ada.gov/assets/pdfs/2026-ifr.pdf">
+            Read the Department of Justice rule
+          </a>.
+        </p>
+      </article>
+
+      <article class="update-item">
+        <h3>
+          <cite>Henry v. Omoi, Inc.</cite>: court declines to approve proposed
+          consent judgment
+        </h3>
+        <p>
+          In March 2026, a federal judge denied a request to turn the parties’
+          settlement in a website accessibility case into a court-enforceable
+          consent judgment. The order focused on the proposed settlement’s
+          terms. It did not decide the broader question of how the ADA applies
+          to private websites.
+        </p>
+        <p>
+          <a href="https://cases.justia.com/federal/district-courts/illinois/ilndce/1%3A2025cv03151/475427/21/0.pdf">
+            Read the court opinion
+          </a>.
+        </p>
+      </article>
+    </section>
+
+    <section class="content-section" aria-labelledby="events-heading">
+      <h2 id="events-heading">Upcoming events</h2>
+
+      <article class="update-item">
+        <h3>Scaling Digital Accessibility through ServiceNow</h3>
+        <p>
+          The FDIC will discuss how it manages accessibility requests, document
+          remediation, Section 508 training, technology testing, and compliance
+          reporting.
+        </p>
+        <ul>
+          <li>
+            <strong>Date:</strong>
+            <time datetime="2026-11-17T13:00:00-05:00">
+              Tuesday, November 17, 2026, 1:00–2:30 p.m. Eastern Time
+            </time>
+          </li>
+          <li><strong>Format:</strong> Virtual webinar</li>
+          <li>Real-time captions and sign-language interpretation are listed.</li>
+        </ul>
+        <p>
+          <a href="https://www.section508.gov/event/best-practices-webinar-nov2026/">
+            Event details and registration
+          </a>
+        </p>
+      </article>
+    </section>
+
+    <section class="content-section" aria-labelledby="technology-heading">
+      <h2 id="technology-heading">Assistive technology and AI</h2>
+
+      <article class="update-item">
+        <h3>Harvard researchers develop AI-powered navigation app</h3>
+        <p>
+          Mobilio uses a smartphone’s sensors, AI, and personalized audio cues
+          to guide blind and low-vision users and help detect obstacles. In
+          early tests, participants using Mobilio with a cane completed an
+          outdoor route faster and had fewer obstacle contacts on an indoor
+          course than when using Google Maps with a cane. Researchers plan
+          further testing; Mobilio is not described as a released product.
+        </p>
+        <p>
+          <a href="https://seas.harvard.edu/news/smartphone-navigation-app-people-blindness-and-low-vision">
+            Read Harvard’s overview of Mobilio
+          </a>
+        </p>
+      </article>
+    </section>
+
+    <section class="content-section" aria-labelledby="opportunities-heading">
+      <h2 id="opportunities-heading">Testing and research opportunities</h2>
+      <p>
+        These programs let people share feedback on websites, apps, and other
+        digital products. Registration usually adds you to a pool; invitations
+        depend on the needs of each study.
+      </p>
+
+      <article class="update-item">
+        <h3>Join the Access Usability Project participant pool</h3>
+        <p>
+          The project matches participants with research studies on digital
+          products, prototypes, websites, and apps. It is open to U.S.
+          residents aged 18 or older who have a disability or impairment
+          related to vision, hearing, speech, mobility, or thinking and
+          learning. The project says participants are compensated for their
+          time.
+        </p>
+        <p>
+          <a href="https://accessusability.us/">
+            Review eligibility and sign-up details
+          </a>
+        </p>
+      </article>
+    </section>
+  </main>
+
+  <div id="shared-footer"></div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="/js/footer.js"></script>
 </body>
 </html>

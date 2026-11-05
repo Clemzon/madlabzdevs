@@ -2,258 +2,126 @@
   /* Fixed header spacing */
   body { padding-top: calc(32px + 48px) !important; }
 
-  /* Account button */
-  #btnAccount { color: var(--bs-light); background: transparent; border: none; }
-  #btnAccount::after { margin-left: 0.25rem; }
-
   /* Header shell */
   header.bg-dark {
     background-color: #212529 !important;
     border-bottom: 1px solid #343a40;
   }
 
-  /* Row 1: brand + account */
+  /* Row 1: brand */
   .topbar {
     display: flex;
     align-items: center;
-    gap: .75rem;
     min-height: 48px;
   }
+
   .brand-home {
     color: #f8f9fa !important;
     text-decoration: none !important;
     margin-right: 1rem;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-  .brand-home:hover, .brand-home:focus { text-decoration: underline !important; }
 
-  /* Row 2: single-line, scrollable nav with edge fades */
+  .brand-home:hover,
+  .brand-home:focus { text-decoration: underline !important; }
+
+  /* Row 2: navigation */
   .nav-row {
-    position: relative;
     border-top: 1px solid #343a40;
     background: #1b1f23;
   }
 
-  /* Edge fade hints */
-  .nav-row::before,
-  .nav-row::after {
-    content: "";
-    position: absolute;
-    top: 0; bottom: 0;
-    width: 24px;
-    pointer-events: none;
-    z-index: 1;
-  }
-  .nav-row::before {
-    left: 0;
-    background: linear-gradient(to right, #1b1f23 55%, rgba(27,31,35,0));
-    opacity: 0;
-    transition: opacity .15s ease;
-  }
-  .nav-row::after {
-    right: 0;
-    background: linear-gradient(to left, #1b1f23 55%, rgba(27,31,35,0));
-    opacity: 1;
-    transition: opacity .15s ease;
-  }
-
-  /* Scroll area */
-  .nav-scroll {
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: #495057 transparent;
-  }
-  .nav-scroll::-webkit-scrollbar { height: 6px; }
-  .nav-scroll::-webkit-scrollbar-thumb { background-color: #495057; border-radius: 3px; }
-
-  /* Inline nav */
   .nav-inline {
-    display: inline-flex;
-    flex-wrap: nowrap;          /* single line */
+    display: flex;
+    flex-wrap: wrap;
     gap: .25rem .5rem;
     padding: .25rem 0;
-    white-space: nowrap;
   }
+
   .nav-inline .nav-link {
     color: #adb5bd !important;
     padding: 0.375rem 0.75rem;
     text-decoration: none;
     border-radius: .375rem;
   }
+
   .nav-inline .nav-link:hover,
-  .nav-inline .nav-link:focus { color: #f8f9fa !important; background: #2a2f35; }
+  .nav-inline .nav-link:focus {
+    color: #f8f9fa !important;
+    background: #2a2f35;
+  }
+
   .nav-inline .nav-link.active {
     color: #ffffff !important;
     border-bottom: 2px solid #0d6efd;
   }
 
-  /* Dropdown */
-  .dropdown-menu {
-    background-color: #343a40 !important;
-    color: #f8f9fa !important;
-    border-color: #454d55 !important;
-    min-width: 12rem;
-    z-index: 1050;
-  }
-  .dropdown-menu .dropdown-item { color: #adb5bd !important; }
-  .dropdown-menu .dropdown-item:hover,
-  .dropdown-menu .dropdown-item:focus { background-color: #495057 !important; color: #f8f9fa !important; }
-  #btnAccount.btn { color: #f8f9fa !important; }
-  #btnAccount.btn:hover, #btnAccount.btn:focus { color: #fff !important; }
-
   /* Containers */
   header > .container-fluid { overflow: visible !important; }
+
   .topbar .container-fluid,
-  .nav-row .container-fluid { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .nav-row .container-fluid {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
 
   /* Focus rings */
-  a:focus-visible, button:focus-visible { outline: 2px solid #f8f9fa; outline-offset: 2px; }
-
-  /* “>>” indicator (mobile-only) */
-  .nav-hint-right {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-weight: 700;
-    font-size: .9rem;
-    letter-spacing: .02em;
-    color: #adb5bd;
-    opacity: 0.35;                 /* faint */
-    user-select: none;
-    z-index: 2;
-    line-height: 1;
-    background: transparent;
-    border: 0;
-    padding: .125rem .25rem;
-    border-radius: .25rem;
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid #f8f9fa;
+    outline-offset: 2px;
   }
-  .nav-hint-right:hover { opacity: 0.6; }
-  .nav-hint-right[hidden] { display: none !important; }
 
   @media (max-width: 576px) {
     body { padding-top: calc(28px + 48px) !important; }
-    .nav-inline .nav-link { padding: 0.35rem 0.6rem; font-size: .95rem; }
-  }
-
-  /* Hide the “>>” indicator on tablet/desktop */
-  @media (min-width: 768px) {
-    .nav-hint-right { display: none !important; }
+    .nav-inline .nav-link {
+      padding: 0.35rem 0.6rem;
+      font-size: .95rem;
+    }
   }
 </style>
 
 <header class="bg-dark text-white fixed-top w-100" role="banner">
-  <!-- Row 1: brand + account -->
+  <!-- Row 1: brand -->
   <div class="topbar">
     <div class="container-fluid d-flex align-items-center">
       <a href="/index.html" class="h5 mb-0 brand-home" aria-label="MadLabzDevs Home" rel="home">
         MadLabzDevs
       </a>
-
-      <div class="dropdown ms-auto">
-        <button
-          id="btnAccount"
-          class="btn btn-sm dropdown-toggle"
-          data-bs-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-          type="button"
-        >
-          <span class="visually-hidden">User menu</span>
-          Account
-        </button>
-        <ul id="accountMenu" class="dropdown-menu dropdown-menu-end" role="menu" aria-label="Account menu">
-          <!-- JS populates this -->
-        </ul>
-      </div>
     </div>
   </div>
 
-  <!-- Row 2: single-line, horizontally scrollable nav -->
+  <!-- Row 2: navigation -->
   <div class="nav-row">
-    <div class="container-fluid position-relative">
-      <div class="nav-scroll" id="navScroll" role="region" aria-label="Scrollable primary navigation" tabindex="0">
-        <nav id="primaryNav" class="nav-inline" aria-label="Primary navigation" role="navigation">
-          <a class="nav-link px-3" href="/projects.html">Projects</a>
-          <a class="nav-link px-3" href="/events.html">Events</a>
-          <a class="nav-link px-3" href="/contact_page.html">Contact Us</a>
-          <a class="nav-link px-3" href="/portfolio.html">Portfolio</a>
-          <!-- Profile tab will be dynamically inserted here by JS -->
-        </nav>
-      </div>
-
-      <!-- Mobile-only “>>” indicator -->
-      <button type="button" id="navHintRight" class="nav-hint-right" aria-hidden="true" tabindex="-1">>></button>
+    <div class="container-fluid">
+      <nav id="primaryNav" class="nav-inline" aria-label="Primary navigation">
+        <a class="nav-link px-3" href="/projects.html">Projects</a>
+        <a class="nav-link px-3" href="/events.html">Events</a>
+        <a class="nav-link px-3" href="/under_construction.html">Community</a>
+        <a class="nav-link px-3" href="/wcag_508.html">WCAG/Section 508</a>
+      </nav>
     </div>
   </div>
 </header>
 
 <script>
-  // Active-page marker (original behavior preserved)
+  // Mark the current page in the primary navigation.
   (function () {
     const path = location.pathname.replace(/\/+$/, '').toLowerCase();
+
     document
-      .querySelectorAll('nav[aria-label="Primary navigation"] a.nav-link')
-      .forEach(a => {
-        const href = (a.getAttribute('href') || '').replace(/\/+$/, '').toLowerCase();
-        if (href && (path === href)) {
-          a.classList.add('active');
-          a.setAttribute('aria-current', 'page');
+      .querySelectorAll('#primaryNav a.nav-link')
+      .forEach(link => {
+        const href = (link.getAttribute('href') || '')
+          .replace(/\/+$/, '')
+          .toLowerCase();
+
+        if (href && path === href) {
+          link.classList.add('active');
+          link.setAttribute('aria-current', 'page');
         }
       });
-  })();
-
-  // Edge fades + mobile-only “>>” indicator visibility + optional nudge scroll
-  (function () {
-    const scroller = document.getElementById('navScroll');
-    const navRow   = document.querySelector('.nav-row');
-    const hintR    = document.getElementById('navHintRight');
-    if (!scroller || !navRow || !hintR) return;
-
-    const isDesktop = () => window.matchMedia('(min-width: 768px)').matches;
-
-    const updateFades = () => {
-      const { scrollLeft, scrollWidth, clientWidth } = scroller;
-      const atLeft  = scrollLeft <= 0;
-      const atRight = Math.ceil(scrollLeft + clientWidth) >= scrollWidth;
-
-      // Edge fades (via CSS variables)
-      navRow.style.cssText += `
-        --leftOpacity:${atLeft ? 0 : 1};
-        --rightOpacity:${atRight ? 0 : 1};
-      `;
-      const s = document.getElementById('navFadeVars') || (() => {
-        const el = document.createElement('style');
-        el.id = 'navFadeVars';
-        document.head.appendChild(el);
-        return el;
-      })();
-      s.textContent = `
-        .nav-row::before { opacity: var(--leftOpacity, 0); }
-        .nav-row::after  { opacity: var(--rightOpacity, 1); }
-      `;
-
-      // On desktop: always hide the hint
-      if (isDesktop()) {
-        hintR.hidden = true;
-        return;
-      }
-
-      // On mobile: show hint only if more content to the right
-      hintR.hidden = atRight;
-    };
-
-    // Optional: clicking “>>” nudges right
-    hintR.addEventListener('click', () => {
-      if (isDesktop()) return; // no-op on desktop
-      scroller.scrollBy({ left: Math.max(120, scroller.clientWidth * 0.4), behavior: 'smooth' });
-    });
-
-    scroller.addEventListener('scroll', updateFades, { passive: true });
-    window.addEventListener('resize', updateFades);
-    if ('ResizeObserver' in window) new ResizeObserver(updateFades).observe(scroller);
-    updateFades();
   })();
 </script>

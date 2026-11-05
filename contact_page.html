@@ -1,237 +1,312 @@
+<!-- /community.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Contact — MadLabzDevs</title>
-  <meta name="description" content="Contact Benjamin Bradley at MadLabz for accessibility-first apps and ideas." />
+  <meta
+    name="description"
+    content="A future community space for sharing accessibility barriers, ideas, prototypes, and ways to help."
+  />
+  <title>Community | MadLabzDevs</title>
+
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
   <link href="/css/styles.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Benjamin Bradley",
-    "email": "mailto:clemzonb@gmail.com",
-    "url": "https://www.madlabzdevs.net",
-    "worksFor": {
-      "@type": "Organization",
-      "name": "MadLabz",
-      "url": "https://www.madlabzdevs.net"
+
+  <style>
+    body.dark-mode {
+      padding-top: calc(32px + 48px) !important;
     }
-  }
-  </script>
+
+    .skip-link {
+      position: absolute;
+      z-index: 2000;
+      top: 0.5rem;
+      left: 0.5rem;
+      padding: 0.75rem 1rem;
+      color: #111;
+      background: #fff;
+      border: 2px solid #111;
+      border-radius: 0.25rem;
+      transform: translateY(-200%);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .skip-link:focus-visible {
+      outline: 3px solid #0d6efd;
+      outline-offset: 3px;
+    }
+
+    main {
+      scroll-margin-top: 7rem;
+    }
+
+    .community-content {
+      max-width: 55rem;
+      margin-inline: auto;
+    }
+
+    .community-section {
+      margin-top: 2.5rem;
+    }
+
+    .section-shortcuts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin: 1.5rem 0 2rem;
+      padding: 0;
+      list-style: none;
+    }
+
+    .section-shortcuts a {
+      display: inline-block;
+      min-height: 2.75rem;
+      padding: 0.625rem 0.875rem;
+      border: 2px solid currentColor;
+      border-radius: 0.25rem;
+    }
+
+    .draft-notice {
+      padding: 1rem;
+      border: 2px solid currentColor;
+      border-radius: 0.375rem;
+    }
+
+    .draft-form fieldset {
+      min-width: 0;
+    }
+
+    .draft-form label,
+    .draft-form legend {
+      font-weight: 600;
+    }
+
+    .draft-form .form-text {
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    .draft-form .form-check-label {
+      font-weight: 400;
+    }
+
+    .post-placeholder {
+      padding: 1rem;
+      border: 1px solid currentColor;
+      border-radius: 0.375rem;
+    }
+  </style>
+
   <script type="module" src="/js/header.js"></script>
 </head>
-<body id="page-contact" class="dark-mode">
+<body class="dark-mode">
+  <a class="skip-link" href="#mainContent">Skip to main content</a>
+
   <div id="shared-header"></div>
-  <div class="pt-5 mt-5"></div>
 
-  <main class="container py-5">
-    <!-- Heading -->
-    <header class="text-center mb-5">
-      <h1 class="display-5 text-light mb-3">Get in touch</h1>
-      <p class="lead text-secondary mb-0">
-        Questions, collaboration, or feedback? Reach out any time.
-      </p>
-    </header>
+  <main class="container py-4" id="mainContent" tabindex="-1">
+    <div class="community-content">
+      <header>
+        <h1>Community</h1>
+        <p class="lead">
+          A place to share accessibility barriers, ideas, prototypes, and
+          practical ways to help. The goal is to connect people who notice a
+          problem with people who may have ideas, experience, or skills to
+          contribute.
+        </p>
+        <p>
+          This community space is a plan in progress. The discussion board and
+          submission form are not active yet.
+        </p>
+      </header>
 
-    <div class="row g-4">
-      <!-- Contact Card -->
-      <section class="col-12 col-lg-5">
-        <div class="card bg-dark border-secondary h-100 shadow-sm">
-          <div class="card-body">
-            <h2 class="h4 text-light mb-4">
-              <i class="bi bi-person-vcard me-2"></i>Contact Details
-            </h2>
+      <nav aria-label="On this page">
+        <ul class="section-shortcuts">
+          <li><a href="#community-board">Community board</a></li>
+          <li><a href="#share-submission">Share something</a></li>
+          <li><a href="#community-guidelines">Community guidelines</a></li>
+        </ul>
+      </nav>
 
-            <dl class="row mb-0">
-              <dt class="col-4 col-sm-3 text-secondary">Name</dt>
-              <dd class="col-8 col-sm-9 text-light">Benjamin Bradley</dd>
+      <section
+        class="community-section"
+        id="community-board"
+        aria-labelledby="community-board-heading"
+      >
+        <h2 id="community-board-heading">Community board</h2>
+        <p>
+          This is where reviewed community submissions may appear. Posts could
+          include an accessibility barrier someone encountered, an idea or
+          prototype they want to discuss, or a request for help finding
+          collaborators.
+        </p>
 
-              <dt class="col-4 col-sm-3 text-secondary">Organization</dt>
-              <dd class="col-8 col-sm-9 text-light">MadLabz</dd>
-
-              <dt class="col-4 col-sm-3 text-secondary">Website</dt>
-              <dd class="col-8 col-sm-9">
-                <a class="link-light link-underline-opacity-25 link-underline-opacity-100-hover"
-                   href="https://www.madlabzdevs.net" target="_blank" rel="noopener noreferrer">
-                  www.madlabzdevs.net
-                </a>
-              </dd>
-
-              <dt class="col-4 col-sm-3 text-secondary">Email</dt>
-              <dd class="col-8 col-sm-9">
-                <a id="mailtoLink"
-                   class="link-light link-underline-opacity-25 link-underline-opacity-100-hover"
-                   href="mailto:clemzonb@gmail.com">
-                   clemzonb@gmail.com
-                </a>
-              </dd>
-            </dl>
-
-            <div class="d-flex flex-wrap gap-2 mt-4">
-              <a class="btn btn-primary"
-                 href="mailto:clemzonb@gmail.com?subject=Hello%20MadLabz&body=Hi%20Benjamin%2C%0A%0A">
-                <i class="bi bi-envelope-fill me-2"></i>Email Benjamin
-              </a>
-              <button id="copyEmailBtn" class="btn btn-outline-secondary">
-                <i class="bi bi-clipboard-check me-2"></i>Copy Email
-              </button>
-              <button id="downloadVcfBtn" class="btn btn-outline-secondary">
-                <i class="bi bi-download me-2"></i>Download vCard
-              </button>
-            </div>
-
-            <p id="copyStatus" class="visually-hidden" role="status" aria-live="polite"></p>
-
-            <hr class="border-secondary my-4">
-
-            <div class="small text-secondary">
-              <i class="bi bi-shield-lock me-1"></i>
-              We only use your message to respond. No tracking forms or third-party processors are used on this page.
-            </div>
-          </div>
-        </div>
+        <!-- FUTURE: Show approved submissions here, grouped or filtered by topic. -->
+        <article class="post-placeholder" aria-labelledby="board-placeholder-heading">
+          <h3 id="board-placeholder-heading">Community posts will appear here</h3>
+          <p>
+            Submissions will be reviewed before publication. Public replies
+            and discussion threads may be added later if a manageable
+            moderation plan is in place.
+          </p>
+        </article>
       </section>
 
-      <!-- Message Form -->
-      <section class="col-12 col-lg-7">
-        <div class="card bg-dark border-secondary h-100 shadow-sm">
-          <div class="card-body">
-            <h2 class="h4 text-light mb-4">
-              <i class="bi bi-chat-dots me-2"></i>Send a Message
-            </h2>
+      <section
+        class="community-section"
+        id="share-submission"
+        aria-labelledby="share-submission-heading"
+      >
+        <h2 id="share-submission-heading">Share something</h2>
+        <p>
+          When submissions open, you’ll be able to share a barrier, an idea or
+          prototype, a rant or rave, or an offer to help. Submissions will be
+          reviewed before anything is posted publicly.
+        </p>
 
-            <form id="contactForm" novalidate>
-              <div class="mb-3">
-                <label for="inputName" class="form-label text-secondary">Your Name</label>
-                <input type="text" class="form-control bg-dark text-light border-secondary" id="inputName" placeholder="Jane Doe"/>
-              </div>
-
-              <div class="mb-3">
-                <label for="inputEmail" class="form-label text-secondary">Your Email</label>
-                <input type="email" class="form-control bg-dark text-light border-secondary" id="inputEmail" placeholder="you@example.com"/>
-              </div>
-
-              <div class="mb-3">
-                <label for="inputSubject" class="form-label text-secondary">Subject</label>
-                <input type="text" class="form-control bg-dark text-light border-secondary" id="inputSubject" placeholder="How can we collaborate?"/>
-              </div>
-
-              <div class="mb-3">
-                <label for="inputMessage" class="form-label text-secondary">Message</label>
-                <textarea class="form-control bg-dark text-light border-secondary" id="inputMessage" rows="6" placeholder="Tell me a bit about your project or question..."></textarea>
-              </div>
-
-              <div class="d-flex flex-wrap gap-2">
-                <button type="submit" class="btn btn-primary">
-                  <i class="bi bi-send-fill me-2"></i>Open Email App
-                </button>
-                <button type="button" id="copyComposedBtn" class="btn btn-outline-secondary" disabled>
-                  <i class="bi bi-clipboard me-2"></i>Copy Composed Message
-                </button>
-              </div>
-
-              <div id="mailtoPreview" class="form-text text-secondary mt-3" style="word-break: break-all;"></div>
-            </form>
-          </div>
+        <div class="draft-notice" id="submission-status">
+          <p class="mb-0">
+            <strong>Submission form draft:</strong> This form is not active
+            and does not send or save information.
+          </p>
         </div>
+
+        <!--
+          FUTURE:
+          Connect this form to a secure submission service and moderation queue.
+          Add server-side validation, spam protection, and an accessible
+          confirmation message. Publish a privacy notice before collecting data.
+        -->
+        <form class="draft-form mt-4" aria-describedby="submission-status">
+          <fieldset disabled>
+            <legend>Submission details</legend>
+
+            <div class="mb-3">
+              <label for="submissionType" class="form-label">What would you like to share?</label>
+              <select id="submissionType" name="submissionType" class="form-select">
+                <option value="">Choose a topic</option>
+                <option value="barrier">An accessibility barrier</option>
+                <option value="idea">An idea or prototype</option>
+                <option value="rant-rave">A rant or rave</option>
+                <option value="collaboration">An offer to help or request for collaborators</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="submissionTitle" class="form-label">Short title</label>
+              <input
+                id="submissionTitle"
+                name="submissionTitle"
+                class="form-control"
+                type="text"
+                maxlength="120"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="submissionDetails" class="form-label">Tell us more</label>
+              <textarea
+                id="submissionDetails"
+                name="submissionDetails"
+                class="form-control"
+                rows="6"
+              ></textarea>
+              <span class="form-text">
+                For a barrier report, you could describe what you were trying
+                to do, what happened, and what access technology or approach
+                you used. Please don’t include private information.
+              </span>
+            </div>
+
+            <div class="mb-3">
+              <label for="displayName" class="form-label">
+                Name or display name <span>(optional)</span>
+              </label>
+              <input
+                id="displayName"
+                name="displayName"
+                class="form-control"
+                type="text"
+                maxlength="80"
+                autocomplete="nickname"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="emailAddress" class="form-label">
+                Email address <span>(required when submissions open)</span>
+              </label>
+              <input
+                id="emailAddress"
+                name="emailAddress"
+                class="form-control"
+                type="email"
+                autocomplete="email"
+                required
+                aria-describedby="emailPrivacy"
+              />
+              <span class="form-text" id="emailPrivacy">
+                Your email would be used to contact you about your submission.
+                It would not be displayed publicly unless you choose that
+                option below.
+              </span>
+            </div>
+
+            <div class="form-check mb-3">
+              <input
+                id="displayEmail"
+                name="displayEmail"
+                class="form-check-input"
+                type="checkbox"
+              />
+              <label class="form-check-label" for="displayEmail">
+                I want my email address displayed with my public post.
+              </label>
+            </div>
+
+            <button class="btn btn-primary" type="button" disabled>
+              Submissions are not open yet
+            </button>
+          </fieldset>
+        </form>
+
+        <!-- FUTURE: Decide how optional contact information and email display consent are stored. -->
+      </section>
+
+      <section
+        class="community-section"
+        id="community-guidelines"
+        aria-labelledby="community-guidelines-heading"
+      >
+        <h2 id="community-guidelines-heading">Community guidelines</h2>
+        <p>
+          The community should make room for honest frustration and strong
+          opinions while keeping discussion useful and respectful.
+        </p>
+        <ul>
+          <li>Describe the barrier, experience, or idea clearly.</li>
+          <li>Focus criticism on products, services, and design decisions, not personal attacks.</li>
+          <li>Do not post private, identifying, or sensitive information about yourself or others.</li>
+          <li>Share claims as your experience unless you can point to reliable supporting information.</li>
+          <li>Understand that submissions may be edited for clarity, privacy, or safety before publication.</li>
+        </ul>
+        <p>
+          A future version of this page will explain how submissions are
+          reviewed, how long review may take, and how to request removal of a
+          post.
+        </p>
       </section>
     </div>
   </main>
 
-  <script>
-    // Core details
-    const CONTACT = {
-      name: "Benjamin Bradley",
-      org: "MadLabz",
-      email: "clemzonb@gmail.com",
-      website: "https://www.madlabzdevs.net"
-    };
+  <div id="shared-footer"></div>
 
-    // Copy email to clipboard
-    document.getElementById('copyEmailBtn').addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(CONTACT.email);
-        const status = document.getElementById('copyStatus');
-        status.textContent = "Email address copied to clipboard.";
-        status.classList.remove('visually-hidden');
-        setTimeout(() => status.classList.add('visually-hidden'), 2000);
-      } catch {
-        alert("Could not copy the email. Please copy it manually: " + CONTACT.email);
-      }
-    });
-
-    // Download vCard (.vcf)
-    document.getElementById('downloadVcfBtn').addEventListener('click', () => {
-      const vcf = [
-        "BEGIN:VCARD",
-        "VERSION:3.0",
-        `FN:${CONTACT.name}`,
-        `N:${CONTACT.name};;;;`,
-        `ORG:${CONTACT.org}`,
-        `EMAIL;TYPE=INTERNET:${CONTACT.email}`,
-        `URL:${CONTACT.website}`,
-        "END:VCARD"
-      ].join("\\n");
-      const blob = new Blob([vcf], { type: "text/vcard;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "Benjamin_Bradley.vcf";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    });
-
-    // Form -> mailto composer
-    const form = document.getElementById('contactForm');
-    const preview = document.getElementById('mailtoPreview');
-    const copyComposedBtn = document.getElementById('copyComposedBtn');
-
-    function buildMailtoLink(values) {
-      const subject = encodeURIComponent(values.subject || "Hello MadLabz");
-      const bodyLines = [
-        values.message || "",
-        "",
-        `— ${values.name || "Anonymous"}`,
-        values.reply ? `Reply-to: ${values.reply}` : ""
-      ].filter(Boolean).join("\\n");
-      const body = encodeURIComponent(bodyLines);
-      return `mailto:${CONTACT.email}?subject=${subject}&body=${body}`;
-    }
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const values = {
-        name: document.getElementById('inputName').value.trim(),
-        reply: document.getElementById('inputEmail').value.trim(),
-        subject: document.getElementById('inputSubject').value.trim(),
-        message: document.getElementById('inputMessage').value.trim()
-      };
-      const mailto = buildMailtoLink(values);
-      preview.textContent = mailto;
-      copyComposedBtn.disabled = false;
-
-      // Try to open the user's email client
-      window.location.href = mailto;
-    });
-
-    copyComposedBtn.addEventListener('click', async () => {
-      if (!preview.textContent) return;
-      try {
-        await navigator.clipboard.writeText(preview.textContent);
-        copyComposedBtn.innerHTML = '<i class="bi bi-clipboard-check me-2"></i>Copied!';
-        setTimeout(() => copyComposedBtn.innerHTML = '<i class="bi bi-clipboard me-2"></i>Copy Composed Message', 1500);
-      } catch {
-        alert("Copy failed. You can manually copy the link shown above.");
-      }
-    });
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="/js/footer.js"></script>
 </body>
 </html>
